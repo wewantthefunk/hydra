@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hydra Event Manager</title>
+    <link rel="stylesheet" type="text/css" href="/static/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/landing.css">
+    <link rel="stylesheet" type="text/css" href="/static/hydra.css">
+    <script type="text/javascript" src="/static/crypto_key.js"></script>
+    <script type="text/javascript" src="/static/crypto.js"></script>
+    <script type="text/javascript" src="/static/universal.js"></script>
+    <script type="text/javascript" src="/static/landing.js"></script>
+</head>
+<body onload="finishedLoad();">
+    <div id="heading">
+        <h2>Hydra Event Manager</h2>
+        <span id="user" onclick="toggleUserMenu();">Welcome!</span>
+        <input type="button" id="createEvent" onclick="createEvent();" value="Create" class="headerButton"/>
+    </div>
+    <div id="userMenu">
+        <span class="closeModal" onclick="toggleUserMenu();">x</span>
+        <ul>
+            <li onclick="exit();">Exit</li>
+        </ul>
+    </div>
+</body>

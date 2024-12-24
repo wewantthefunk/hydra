@@ -1,0 +1,12 @@
+#main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Set the height of the body to fill the viewport */
+    margin: 0; /* Remove default body margins for better centering */
+    flex-direction: column;
+}
+
+#main div {
+    margin:5px;
+}
