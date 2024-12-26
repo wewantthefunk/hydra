@@ -2,14 +2,9 @@ from flask import Flask, render_template, request, jsonify
 from flask_mail import Mail
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
-import crypto_asymmetric, crypto_symmetric, utilities, constants
+import crypto_asymmetric, crypto_symmetric, utilities, constants, businesslogic
 import base64, sqlite3
 from datetime import datetime
-
-PRIVATE_KEY = None
-MAIL = None
-VERIFIED_ACCOUNT = 1
-UNVERIFIED_ACCOUNT = 0
 
 app = Flask(__name__)
 
@@ -43,7 +38,6 @@ def getusers():
 
 @app.route('/login', methods=['POST'])
 def login():
-    global PRIVATE_KEY
     if request.is_json:
         data = request.get_json()
 
@@ -54,53 +48,17 @@ def login():
             'tempPassword': data.get('field3')
         }
 
-        byte_array = base64.b64decode(processed_data['tempPassword'])
-        tempPassword = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        result = businesslogic.login(processed_data['username'], processed_data['password'], processed_data['tempPassword'])
 
-        byte_array = base64.b64decode(processed_data['username'])
-        uname = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
-
-        conn = sqlite3.connect('data/user_db.db')
-
-        # Create a cursor object
-        CURSOR = conn.cursor()
-
-        # Retrieve all users
-        CURSOR.execute("SELECT * FROM users where username = '" + uname + "'")
-
-        # Fetch all the rows
-        rows = CURSOR.fetchall()
-
-        if len(rows) < 1:
-            return jsonify({'error': 'Invalid Username and Password'}), 403
-        
-        byte_array = base64.b64decode(processed_data['password'])
-
-        password = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
-
-        passphrase = crypto_symmetric.decrypt(base64.b64decode(rows[0][2]) , password.encode('utf-8'))
-
-        level = str(rows[0][4])
-
-        if rows[0][5] == UNVERIFIED_ACCOUNT:
-            return jsonify({'error': 'Your Account is Not Verified'}), 401
-        elif passphrase == 'valid password: ' + uname:
-            token = utilities.generate_random_string(15)
-            jdate = utilities.date_to_julian(datetime.now())
-            CURSOR.execute("DELETE FROM session WHERE issued < " + str(jdate) + " OR username = '" + uname + "'")
-            conn.commit()
-            CURSOR.execute("INSERT INTO session (token, username, issued) VALUES ('" + token + "','" + uname + "'," + str(jdate) + ")")
-            conn.commit()
-            tp = base64.b64encode(crypto_symmetric.encrypt(token, tempPassword.encode('utf-8'))).decode('ascii')
-            return jsonify({'message': 'success', 'token': tp, 'level': level}), 200
-        else:
-            return jsonify({'error': 'Invalid Username and Password'}), 403
+        if result.result != constants.RESULT_OK:
+            return jsonify({'error': result.message}), result.result
+            
+        return jsonify({'message': 'success', 'token': result.tmp_password, 'level': result.level}), constants.RESULT_OK
     else:
         return jsonify({'error': 'Invalid Request'}), 400
 
 @app.route("/check", methods=['POST'])
 def checkToken():
-    global PRIVATE_KEY
     if request.is_json:
         data = request.get_json()
 
@@ -111,10 +69,10 @@ def checkToken():
         }
 
         byte_array = base64.b64decode(processed_data['token'])
-        token = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        token = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         byte_array = base64.b64decode(processed_data['username'])
-        uname = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        uname = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         jdate = utilities.date_to_julian(datetime.now())
 
@@ -137,7 +95,6 @@ def checkToken():
     
 @app.route('/verifyaccount', methods=['POST'])
 def verifyaccount():
-    global PRIVATE_KEY
     if request.is_json:
         data = request.get_json()
 
@@ -149,13 +106,13 @@ def verifyaccount():
         }
 
         byte_array = base64.b64decode(processed_data['email'])
-        email = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        email = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         byte_array = base64.b64decode(processed_data['password'])
-        password = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        password = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         byte_array = base64.b64decode(processed_data['code'])
-        code = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        code = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         conn = sqlite3.connect('data/user_db.db')
 
@@ -174,7 +131,7 @@ def verifyaccount():
         if passphrase != 'valid password: ' + rows[0][1]:
             return jsonify({'error': 'Invalid Verification Information'}), 403
         
-        CURSOR.execute("UPDATE users SET isVerified = " + str(VERIFIED_ACCOUNT) + " WHERE id = " + str(rows[0][0]))
+        CURSOR.execute("UPDATE users SET isVerified = " + str(constants.VERIFIED_ACCOUNT) + " WHERE id = " + str(rows[0][0]))
         conn.commit()
 
         if str(rows[0][4]) == "0":
@@ -184,7 +141,6 @@ def verifyaccount():
 
 @app.route('/generateverify', methods=['POST'])
 def generateverify():
-    global PRIVATE_KEY, VERIFIED_ACCOUNT
     if request.is_json:
         data = request.get_json()
 
@@ -194,7 +150,7 @@ def generateverify():
         }
 
         byte_array = base64.b64decode(processed_data['email'])
-        email = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        email = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         conn = sqlite3.connect('data/user_db.db')
 
@@ -208,7 +164,7 @@ def generateverify():
         if len(rows) < 1:
             return jsonify({'error': 'Email Does Not Exist'}), 400
         
-        if rows[0][5] == VERIFIED_ACCOUNT:
+        if rows[0][5] == constants.VERIFIED_ACCOUNT:
             return jsonify({'error': 'Account Already Verified'}), 406
         
         vcode = utilities.generate_random_string(6)
@@ -222,16 +178,9 @@ def generateverify():
 
     return jsonify({'error': 'Invalid Request'}), 400
 
-@app.route('/testmail')
-def testmail():
-    global MAIL
-    r = utilities.send_email(["wewantthefusnk@yahoo.com"], "test email", "this is a test email\n\ndo not reply", MAIL)
-    return jsonify({'message': r}), 200
-
 def load_private_key():
-    global PRIVATE_KEY
     with open("private/private.pem", "rb") as f:
-        PRIVATE_KEY = serialization.load_pem_private_key(
+        constants.PRIVATE_KEY = serialization.load_pem_private_key(
             f.read(),
             password=None,  # If the key is encrypted, provide the password here. Otherwise, use `None`.
             backend=default_backend()
@@ -239,8 +188,6 @@ def load_private_key():
 
 @app.route("/checkadmin")
 def checkAdminVerification():
-    global UNVERIFIED_ACCOUNT
-
     conn = sqlite3.connect('data/user_db.db')
 
     # Create a cursor object
@@ -253,14 +200,13 @@ def checkAdminVerification():
     if len(rows) < 1:
         exit(1000)
 
-    if rows[0][5] == UNVERIFIED_ACCOUNT:
+    if rows[0][5] == constants.UNVERIFIED_ACCOUNT:
         send_verification_email(rows[0][3], rows[0][6])
 
     return jsonify({'message': 'success'}), 200 
 
 @app.route("/createaccount", methods=['POST'])
 def createaccount():
-    global PRIVATE_KEY
     if request.is_json:
         data = request.get_json()
 
@@ -272,13 +218,13 @@ def createaccount():
         }
 
         byte_array = base64.b64decode(processed_data['email'])
-        email = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        email = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         byte_array = base64.b64decode(processed_data['password'])
-        password = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        password = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         byte_array = base64.b64decode(processed_data['username'])
-        username = crypto_asymmetric.rsa_decrypt(private_key=PRIVATE_KEY, encrypted_message=byte_array)
+        username = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
         conn = sqlite3.connect('data/user_db.db')
 
@@ -306,14 +252,13 @@ def createaccount():
         return jsonify({'message': 'Account Creation Successful! You must verify your account before you can login!'}), 200
 
 def send_verification_email(email: str, code: str):
-    global MAIL
     hostJson = utilities.load_json_file('private/url.json')
     url = hostJson['url']
 
     portJson = utilities.load_json_file('private/port.json')
     port=portJson['port']
 
-    utilities.send_email([email], 'Hydra Event Server Verification', 'Your Verification Code Is:\n\n  ' + code + '\n\nFollow the link to http://' + url + ":" + str(port) + '/verify and enter the information to verify your account.\n\nThank you,\n\nThe Hydra Event Manager Team', MAIL)
+    utilities.send_email([email], 'Hydra Event Server Verification', 'Your Verification Code Is:\n\n  ' + code + '\n\nFollow the link to http://' + url + ":" + str(port) + '/verify and enter the information to verify your account.\n\nThank you,\n\nThe Hydra Event Manager Team', constants.MAIL)
 
 if __name__ == '__main__':
     load_private_key()
@@ -327,6 +272,6 @@ if __name__ == '__main__':
         app.config['MAIL_USERNAME'] = mailInfo['uname']
         app.config['MAIL_PASSWORD'] = mailInfo['password']
         app.config['MAIL_USE_TLS'] = True
-        MAIL = Mail(app)
+        constants.MAIL = Mail(app)
 
     app.run(debug=True, port=portJson['port'], host=hostJson['url'])
