@@ -3,7 +3,7 @@ import base64
 from datetime import datetime
 
 def login(username: str, password: str, temp_password: str):
-    byte_array = base64.b64decode(tempPassword)
+    byte_array = base64.b64decode(temp_password)
     tempPassword = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
     byte_array = base64.b64decode(username)

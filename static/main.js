@@ -14,7 +14,7 @@ async function login() {
 
     message.innerHTML = result['message'];
 
-    if (result['message'] == 'success') {
+    if (result['message'] == SUCCESS_LOGIN_MSG) {
         const token = await decryptString(base64ToUint8Array(result['token']), tempPassword);
         sessionStorage.setItem('uname', uname);
         sessionStorage.setItem('token', token);

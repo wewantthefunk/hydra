@@ -50,12 +50,12 @@ def login():
 
         result = businesslogic.login(processed_data['username'], processed_data['password'], processed_data['tempPassword'])
 
-        if result.result != constants.RESULT_OK:
-            return jsonify({'error': result.message}), result.result
+        if result['result'] != constants.RESULT_OK:
+            return jsonify({'error': result['message']}), result['result']
             
-        return jsonify({'message': 'success', 'token': result.tmp_password, 'level': result.level}), constants.RESULT_OK
+        return jsonify({'message': 'Successful Login', 'token': result['tmp_password'], 'level': result['level']}), constants.RESULT_OK
     else:
-        return jsonify({'error': 'Invalid Request'}), 400
+        return jsonify({'error': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
 
 @app.route("/check", methods=['POST'])
 def checkToken():

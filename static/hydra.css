@@ -3,32 +3,36 @@ body {
     padding: 0;
     margin: 0;
 }
+
 h1 {
     font-weight: bold;
     font-size: larger;
     font-family: 'Lato', sans-serif;
-    color:royalblue;
+    color: royalblue;
 }
+
 h2 {
     font-weight: bold;
     font-size: larger;
     font-family: 'Lato', sans-serif;
-    color:#fff;
+    color: #fff;
 }
+
 ul {
     list-style-type: none;
     padding: 10px;
     margin: 0;
     text-decoration: underline;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 span {
     font-family: 'Lato', sans-serif;
-    font-weight:normal;
+    font-weight: normal;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"],
+input[type="password"] {
     border-radius: 7px;
     padding: 5px;
     background-color: #fff;
@@ -38,6 +42,29 @@ input[type="button"] {
     border-radius: 7px;
     font-family: 'Lato', sans-serif;
     padding: 11px;
+}
+
+.center-div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    opacity: 1.0;
+}
+
+.hidden {
+    display: none;
+}
+
+.full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    opacity: 0.75;
 }
 
 #heading {
@@ -69,17 +96,17 @@ input[type="button"] {
 
 .nonHeaderButton {
     color: #fff;
-    background-color:royalblue;
+    background-color: royalblue;
 }
 
 #bannerhome:hover {
-    cursor:pointer;
+    cursor: pointer;
     text-decoration: underline;
 }
 
 #createEvent {
     position: absolute;
-    left:  275px;
+    left: 275px;
     top: 5px;
 }
 
@@ -96,18 +123,18 @@ input[type="button"] {
 }
 
 #userMenuImg {
-    height:30px;
+    height: 30px;
     width: 30px;
     border-radius: 7px;
     margin-top: -5px;
 }
 
 .closeModal {
-    border:1px solid #333;
+    border: 1px solid #333;
     background-color: royalblue;
-    padding-left:2px;
-    padding-right:2px;
-    padding-top:1px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 1px;
     padding-bottom: 1px;
     position: inherit;
     top: 3px;
@@ -117,7 +144,7 @@ input[type="button"] {
 }
 
 #maindiv {
-    position:absolute;
+    position: absolute;
     top: 50px;
     left: 200px;
     height: 93.5%;
@@ -141,7 +168,7 @@ input[type="button"] {
     background-color: aliceblue;
 }
 
-.link  {
+.link {
     text-decoration: underline;
     cursor: pointer;
 }

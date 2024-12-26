@@ -2,6 +2,7 @@ let isUserMenuVisible = false;
 let userMenuOpened = false;
 
 const PLACEHOLDER = "&nbsp;";
+const SUCCESS_LOGIN_MSG = 'Successful Login';
 
 async function postJsonToApi(url, data, errmsg) {
     try {
@@ -129,10 +130,18 @@ function admin() {
 };
 
 function navigate(url) {
+    const processing = document.getElementById("processing");
+    if (processing != null && processing != 'undefined') {
+        processing.style.display = 'block';
+    }
+    const overlay = document.getElementById("overlay");
+    if (overlay != null && overlay != 'undefined') {
+        overlay.style.display = 'block';
+    }
     isUserMenuVisible = false;
     setTimeout(() => {
         window.location.href = url;
-    }, 150);
+    }, 400);
 };
 
 function toggleUserMenu() {

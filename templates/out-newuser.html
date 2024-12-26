@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Create Account - {{ app_name }}</title>
@@ -11,34 +12,38 @@
     <script type="text/javascript" src="/static/universal.js"></script>
     <script type="text/javascript" src="/static/newuser.js"></script>
 </head>
-    <body onload="finishedLoad();">
-        <div id="main">
-            <h1>{{ app_name }}</h1>
-            <h1>Create New Account</h1>
-            <div>
-                <input type="text" id="uname" placeholder="User Name"/>
-            </div>
-            <div>
-                <input type="text" id="email" placeholder="Email"/>
-            </div>
-            <div>
-                <input type="password" id="pwd" placeholder="Password" />
-            </div>
-            <div>
-                <input type="password" id="cpwd" placeholder="Confirm Password" />
-            </div>
-            <div>
-                <input type="button" value="Create" onclick="createAccount()"/>
-            </div>
-            <div>
-                <span id="message">&nbsp;</span>
-            </div>
-            <div>
-                <span id="verify" onclick="verify();">Verify Account</span>
-            </div>
-            <div>
-                <span id="goback" onclick="goback();">Return to Login</span>
-            </div>
+
+<body onload="finishedLoad();">
+    <div id="main">
+        <h1>{{ app_name }}</h1>
+        <h1>Create New Account</h1>
+        <div>
+            <input type="text" id="uname" placeholder="User Name" />
         </div>
-    </body>
+        <div>
+            <input type="text" id="email" placeholder="Email" />
+        </div>
+        <div>
+            <input type="password" id="pwd" placeholder="Password" />
+        </div>
+        <div>
+            <input type="password" id="cpwd" placeholder="Confirm Password" />
+        </div>
+        <div>
+            <input type="button" value="Create" onclick="createAccount()" />
+        </div>
+        <div>
+            <span id="message">&nbsp;</span>
+        </div>
+        <div>
+            <span id="verify" onclick="verify();">Verify Account</span>
+        </div>
+        <div>
+            <span id="goback" onclick="goback();">Return to Login</span>
+        </div>
+    </div>
+
+    {% include 'all-processing.html' %}
+</body>
+
 </html>
