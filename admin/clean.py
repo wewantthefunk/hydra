@@ -9,6 +9,14 @@ def delete_file(file_path):
         except OSError as e:
             print(f"Error deleting file: {e.strerror}")
 
+def write_to_file(filename, data):
+    with open(filename, 'w') as file:
+        file.write(data)
+
 delete_file('private/private.pem')
 delete_file('static/crypto_key.js')
 delete_file('data/user_db.db')
+delete_file('private/mail.json')
+delete_file('private/port.json')
+delete_file('private/url.json')
+write_to_file('static/admin_verified.js', "admin_verified=0;")

@@ -1,4 +1,5 @@
 private/private.pem
+private/smtp.pass
 data/user_db.db
 static/crypto_key.js
 hydra-env/

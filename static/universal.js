@@ -1,7 +1,9 @@
 let isUserMenuVisible = false;
 let userMenuOpened = false;
 
-async function postJsonToApi(url, data, tempPassword) {
+const PLACEHOLDER = "&nbsp;";
+
+async function postJsonToApi(url, data, errmsg) {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -18,8 +20,65 @@ async function postJsonToApi(url, data, tempPassword) {
         const jsonResponse = await response.json();
         return jsonResponse;
     } catch (error) {
-        return { "message": "Invalid Name and Password!" };
+        return { "message": errmsg, "status": error.message };
     }
+};
+
+async function getApi(url) {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {}
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+    } catch (error) {
+        return { "message": "Invalid Name and Password!", "status": error.message };
+    }
+};
+
+function validateEmail(email) {
+    const regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    return regex.test(email);
+};
+
+function checkPasswordStrength(password) {
+    // Check length
+    if (password.length < 12 || password.length > 25) {
+        return false;
+    }
+
+    // Check for at least two uppercase letters, lowercase letters, numbers and special characters
+    const upperCaseRegex = /[A-Z].*[A-Z]/;
+    const lowerCaseRegex = /[a-z].*[a-z]/;
+    const numberRegex = /\d.*\d/;
+    const specialCharRegex = /[!@#$%^&*].*[!@#$%^&*]/;
+
+    if (!upperCaseRegex.test(password) || !lowerCaseRegex.test(password) || !numberRegex.test(password) || !specialCharRegex.test(password)) {
+        return false;
+    }
+
+    // Check for repeating characters of 3 or more
+    const repeatRegex = /(.)\1\1/;
+    if (repeatRegex.test(password)) {
+        return false;
+    }
+
+    // Check for common patterns
+    const commonPatterns = ['123', 'abc', 'qwe', 'password'];
+    for (let pattern of commonPatterns) {
+        if (password.toLowerCase().includes(pattern)) {
+            return false;
+        }
+    }
+
+    // Pass all checks
+    return true;
 };
 
 function generateRandomString(length) {
@@ -49,9 +108,24 @@ function base64ToUint8Array(base64) {
 };
 
 function exit() {
+    sessionStorage.setItem("token", null);
+    sessionStorage.setItem("level", "9999");
+    sessionStorage.setItem("uname", null);
     isUserMenuVisible = true;
     toggleUserMenu();
     navigate("/");
+};
+
+function account() {
+    navigate("/account");
+};
+
+function home() {
+    navigate("/home");
+};
+
+function admin() {
+    navigate("/admin");
 };
 
 function navigate(url) {
@@ -77,6 +151,51 @@ function closeAllModals() {
     toggleUserMenu();
 };
 
+function getWindowSize() {
+    var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    return { width: width, height: height };
+};
+
+function getElementHeight(element) {
+    var styles = window.getComputedStyle(element);
+    var margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
+    return element.offsetHeight + margin;
+};
+
+function getElementWidth(element) {
+    var styles = window.getComputedStyle(element);
+    var margin = parseFloat(styles['marginRight']) + parseFloat(styles['marginLeft']);
+    return element.offsetWidth + margin;
+};
+
+function calcsizes() {
+    const maindiv = document.getElementById('maindiv');
+    const leftmenu = document.getElementById('leftmenu');
+
+    const sizes = getWindowSize();
+
+    const heading = document.getElementById('heading');
+
+    let headingOffset = 0;
+
+    if (heading != null && heading != 'undefined') {
+        headingOffset = getElementHeight(heading);
+    }
+
+    if (maindiv != null && maindiv != 'undefined') {
+        maindiv.style.height = (sizes['height'] - headingOffset) + 'px';
+    }
+
+    if (leftmenu != null && leftmenu != 'undefined') {
+        leftmenu.style.height = (sizes['height'] - headingOffset) + 'px';
+
+        if (maindiv != null && maindiv != 'undefined') {
+            maindiv.style.width = (sizes['width'] - getElementWidth(leftmenu) - 45) + 'px';
+        }
+    }
+};
+
 async function universalFinishedLoad() {
     const token = sessionStorage.getItem('token');
     if (token == 'undefined' || token == null) {
@@ -88,9 +207,32 @@ async function universalFinishedLoad() {
     const tp = await encryptWithPublicKey(token);
     const u = await encryptWithPublicKey(uname);
 
-    const result = await postJsonToApi("/check", {'field1': tp, 'field2': u});
+    const result = await postJsonToApi("/check", { 'field1': tp, 'field2': u });
 
     if (result['message'] != 'success') {
         navigate('/');
     }
+
+    LEVEL = sessionStorage.getItem('level');
+
+    if (LEVEL == 'undefined' || LEVEL == null) {
+        navigate("/");
+    }
+
+    if (parseInt(LEVEL) > 1) {
+        document.getElementById("createEvent").style.display = 'none';
+    }
+
+    if (sessionStorage.getItem('level') == '0') {
+        const a = document.getElementById('admin');
+        if (a != null && a != 'undefined') {
+            a.style.display = 'block';
+        }
+    }
+
+    window.addEventListener('resize', function (event) {
+        calcsizes();
+    });
+
+    calcsizes();
 };

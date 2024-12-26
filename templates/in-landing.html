@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hydra Event Manager</title>
+    <title>{{ app_name }}</title>
     <link rel="stylesheet" type="text/css" href="/static/fonts.css">
     <link rel="stylesheet" type="text/css" href="/static/landing.css">
     <link rel="stylesheet" type="text/css" href="/static/hydra.css">
@@ -12,15 +12,9 @@
     <script type="text/javascript" src="/static/landing.js"></script>
 </head>
 <body onload="finishedLoad();">
-    <div id="heading">
-        <h2>Hydra Event Manager</h2>
-        <span id="user" onclick="toggleUserMenu();">Welcome!</span>
-        <input type="button" id="createEvent" onclick="createEvent();" value="Create" class="headerButton"/>
+    <div id="maindiv">
+        <h1>My Events</h1>
     </div>
-    <div id="userMenu">
-        <span class="closeModal" onclick="toggleUserMenu();">x</span>
-        <ul>
-            <li onclick="exit();">Exit</li>
-        </ul>
-    </div>
+
+   {% include 'in-menus.html' %}
 </body>

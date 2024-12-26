@@ -11,8 +11,14 @@
     margin:5px;
 }
 
-#newUser, #verify {
+#goback {
+    font-size: small;
     text-decoration: underline;
     cursor: pointer;
-    font-size: small;
+}
+
+#verify {
+    text-decoration: underline;
+    cursor: pointer;
+    display:none;
 }

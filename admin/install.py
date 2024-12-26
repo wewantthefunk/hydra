@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import serialization, hashes, padding
-import os, sqlite3, random, string, base64
+import os, sqlite3, random, string, base64, socket
 
 PRIVATE_KEY = None
 PUBLIC_KEY = None
@@ -96,7 +96,7 @@ def save_keys():
 
     write_to_file("private/private.pem", private_out)
 
-def create_sql(passphrase):
+def create_sql(passphrase, email, adminName, vcode):
     # Create a connection to the database
     conn = sqlite3.connect('data/user_db.db')
 
@@ -106,19 +106,32 @@ def create_sql(passphrase):
     # Create a table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users
-        (id INTEGER PRIMARY KEY, username TEXT, passphrase TEXT)
+        (id INTEGER PRIMARY KEY, username TEXT, passphrase TEXT, email TEXT, usertype INTEGER, isVerified INTEGER, verificationCode TEXT, isActive INTEGER)
     ''')
-
-    # Insert a user
-    cursor.execute("INSERT INTO users (username, passphrase) VALUES ('admin', '" + passphrase + "')")
+    
+    if passphrase != None:
+        # Insert a user
+        cursor.execute("INSERT INTO users (username, passphrase, email, usertype, isVerified, verificationCode, isActive) VALUES ('" + adminName + "', '" + passphrase + "','" + email + "', 0, 0,'" + vcode + "',1)")
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS session
         (username TEXT, token TEXT PRIMARY KEY, issued INTEGER)
     ''')
 
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS events
+        (id INTEGER PRIMARY KEY, name TEXT, startDate DATE, endDate DATE, startTime TIME, endTime TIME, maxAttendees INTEGER, location TEXT)
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS attendees
+        (id INTEGER PRIMARY KEY, userId INTEGER, eventId INTEGER)
+    ''')
+
     # Commit the changes
     conn.commit()
+
+    conn.close()
 
 def generate_random_string(length):
     # Define the characters to choose from for each category
@@ -135,23 +148,89 @@ def generate_random_string(length):
 
     return random_string
 
-generate_keys()
-save_keys()
+def file_exists(filepath):
+    """
+    Check if a file exists at the given path.
 
-admin_pwd = generate_random_string(25)
-admin_passphrase = 'valid password: admin'
+    :param filepath: The path of the file to be checked.
+    :type filepath: str
+    :return: True if the file exists, False otherwise.
+    :rtype: bool
+    """
+    return os.path.isfile(filepath)
 
-encrypted = encrypt(admin_passphrase, admin_pwd.encode('utf-8'))
+def get_ip_address():
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    return ip_address
 
-decrypted = decrypt(encrypted, admin_pwd.encode('utf-8'))
+passphrase = None
+email = ''
+adminName = ''
 
-print("Your admin username is 'admin'")
-print("THIS IS YOUR ADMIN PASSWORD! COPY IT NOW, AS YOU WILL NOT HAVE ACCESS TO IT AGAIN!")
-print('   ' + admin_pwd)
-print()
-print('The password cryptography is successful if the following two lines match. If they do not match something is wrong and you should run the clean.sh script and try again!')
-print()
-print(admin_passphrase)
-print(decrypted)
+if not file_exists('private/url.json'):
+    url = get_ip_address()
 
-create_sql(base64.b64encode(encrypted).decode('ascii'))
+    url1 = input("Enter the URL for the Hydra server (default " + url + "): ")
+
+    if url1 != '':
+        url = url1
+
+    write_to_file('private/url.json', '{\n  "url":"' + url + '"\n}')
+
+if not file_exists('private/port.json'):
+    port = ''
+    while not isinstance(port, (int)):
+        port = input("Enter the port for the Hydra server (default 47863): ")
+        if port == '':
+            port = 47863
+
+    write_to_file('private/port.json', '{\n  "port":' + str(port) + '\n}')
+
+if not file_exists('private/mail.json'):
+    need_mail_server = input("Do you want to configure a mail server? (y/n): ")
+
+    if need_mail_server == 'y' or need_mail_server == 'Y':
+        server = input("Enter server IP address or URL: ")
+        port = ''
+        while not isinstance(port, (int)):
+            port = input("Enter server port (default 587): ")
+            if port == '':
+                port = 587
+        username = input("Enter your mail username: ")
+        password = input("Enter your mail password: ")
+
+        write_to_file('private/mail.json', '{\n  "server":"' + server + '",\n  "port":' + str(port) + ',\n  "uname":"' + username + '",\n  "password":"' + password + '"\n}')
+
+if not file_exists('static/crypto_key.js') and not file_exists('private/private.pem'):
+    generate_keys()
+    save_keys()
+
+    adminName = input("Enter your admin username: ")
+    email = input("Enter your administrator email address: ")
+
+    admin_pwd = generate_random_string(25)
+    admin_passphrase = 'valid password: ' + adminName
+
+    encrypted = encrypt(admin_passphrase, admin_pwd.encode('utf-8'))
+
+    decrypted = decrypt(encrypted, admin_pwd.encode('utf-8'))
+
+    print("Your admin username is '" + adminName + "'")
+    print("THIS IS YOUR ADMIN PASSWORD! COPY IT NOW, AS YOU WILL NOT HAVE ACCESS TO IT AGAIN!")
+    print()
+    print('   ' + admin_pwd)
+    print()
+    print('The password cryptography is successful if the following two lines match. If they do not match something is wrong and you should run the clean.sh script and try again!')
+    print()
+    print(admin_passphrase)
+    print(decrypted)
+
+    passphrase = base64.b64encode(encrypted).decode('ascii')
+else:
+    print('Passwords already created, skipping')
+    print('Building database objects')
+
+vcode = generate_random_string(6)
+
+create_sql(passphrase, email, adminName=adminName, vcode=vcode)

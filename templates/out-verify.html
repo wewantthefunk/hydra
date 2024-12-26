@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account - {{ app_name }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/hydra.css">
+    <link rel="stylesheet" type="text/css" href="/static/verify.css">
+    <script type="text/javascript" src="/static/crypto_key.js"></script>
+    <script type="text/javascript" src="/static/crypto.js"></script>
+    <script type="text/javascript" src="/static/universal.js"></script>
+    <script type="text/javascript" src="/static/verify.js"></script>
+</head>
+
+<body onload="finishedLoad();">
+    <div id="main">
+        <h1>{{ app_name }}</h1>
+        <h1>Verify Account</h1>
+        <div>
+            <input type="text" id="email" placeholder="Email Address" />
+        </div>
+        <div>
+            <input type="password" id="pwd" placeholder="Password" />
+        </div>
+        <div>
+            <input type="text" id="code" placeholder="Verification Code" />
+        </div>
+        <div>
+            <input type="button" value="Verify" id="verify" onclick="verify();" />
+        </div>
+        <div id="genverify">
+            <span id="genverifyspan" onclick="generateverify();">Send Verification Email</span>
+        </div>
+        <div>
+            <span id="message">&nbsp;</span>
+        </div>
+        <div>
+            <span id="goback" onclick="goback();">Return to Login Page</span>
+        </div>
+    </div>
+</body>
+
+</html>

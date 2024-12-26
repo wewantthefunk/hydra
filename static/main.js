@@ -1,6 +1,6 @@
 async function login() {
     const message = document.getElementById("message");
-    message.innerHTML = '';
+    message.innerHTML = PLACEHOLDER;
     
     const uname = document.getElementById("uname").value;
     const pwd = document.getElementById("pwd").value;
@@ -10,7 +10,7 @@ async function login() {
     const p = await encryptWithPublicKey(pwd);
     const tp = await encryptWithPublicKey(tempPassword);
 
-    const result = await postJsonToApi("/login", {"field1":u,"field2": p, "field3": tp}, tp);
+    const result = await postJsonToApi("/login", {"field1":u,"field2": p, "field3": tp}, "Invalid Username and Password");
 
     message.innerHTML = result['message'];
 
@@ -18,12 +18,24 @@ async function login() {
         const token = await decryptString(base64ToUint8Array(result['token']), tempPassword);
         sessionStorage.setItem('uname', uname);
         sessionStorage.setItem('token', token);
-        navigate('landing');
+        sessionStorage.setItem('level', result['level']);
+        navigate('home');
+    } else {
+        if (result['status'].indexOf('401') > -1) {
+            message.innerHTML = "Account Not Verified. Click the 'Verify Account' link below."
+        }
     }
 };
 
+function createAccount() {
+    navigate("/newuser");
+};
+
+function verifyAccount() {
+    navigate("/verify");
+}
+
 function finishedLoad() {
-    document.getElementById("uname").value = "admin";
-    document.getElementById("pwd").value = "FnM0g@#2mihCrurFcv0SuCxsK";
-    console.log("finshed load");
+    document.getElementById("uname").value = "christian";
+    document.getElementById("pwd").value = "xH4WT@wvrM!!1tCT&Oap07TWC";
 };

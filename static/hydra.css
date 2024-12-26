@@ -72,6 +72,11 @@ input[type="button"] {
     background-color:royalblue;
 }
 
+#bannerhome:hover {
+    cursor:pointer;
+    text-decoration: underline;
+}
+
 #createEvent {
     position: absolute;
     left:  275px;
@@ -90,6 +95,13 @@ input[type="button"] {
     background-color: aliceblue;
 }
 
+#userMenuImg {
+    height:30px;
+    width: 30px;
+    border-radius: 7px;
+    margin-top: -5px;
+}
+
 .closeModal {
     border:1px solid #333;
     background-color: royalblue;
@@ -102,4 +114,38 @@ input[type="button"] {
     right: 3px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+#maindiv {
+    position:absolute;
+    top: 50px;
+    left: 200px;
+    height: 93.5%;
+    width: 85%;
+    padding-left: 15px;
+    padding-right: 30px;
+    overflow: auto;
+}
+
+#leftmenu {
+    position: fixed;
+    left: 0;
+    min-width: 185px;
+    max-width: 185px;
+    width: 185px;
+    top: 50px;
+    border-right: 3px solid #333;
+    height: 93.5%;
+    padding-left: 15px;
+    overflow: auto;
+    background-color: aliceblue;
+}
+
+.link  {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#admin {
+    display: none;
 }

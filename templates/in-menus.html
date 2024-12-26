@@ -1,0 +1,29 @@
+ <!--
+        These are the semi-static elements and they need to be rendered last for the z-index
+    -->
+    <div id="leftmenu">
+        <div>
+            &nbsp;
+        </div>
+        <div id="home" class="link" onclick="home();">
+            <span>Home</span>
+        </div>
+        <div id="admin" class="link" onclick="admin();">
+            <span>Admin</span>
+        </div>
+        <div id="exit" class="link" onclick="exit();">
+            <span>Exit</span>
+        </div>
+    </div>
+    <div id="heading">
+        <h2 onclick="home();" id="bannerhome">{{ app_name }}</h2>
+        <span id="user" onclick="toggleUserMenu();"><img id="userMenuImg" src="static/menu.jpg"/></span>
+        <input type="button" id="createEvent" onclick="createEvent();" value="Create" class="headerButton"/>
+    </div>
+    <div id="userMenu">
+        <span class="closeModal" onclick="toggleUserMenu();">x</span>
+        <ul>
+            <li onclick="account();">Account</li>
+            <li onclick="exit();">Exit</li>
+        </ul>
+    </div>
