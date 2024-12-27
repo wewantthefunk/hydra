@@ -4,6 +4,7 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt autoremove -y
 sudo apt install nginx -y
+sudo apt install jq -y
 
 # activate the virtual environment
 
