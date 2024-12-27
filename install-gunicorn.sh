@@ -9,10 +9,6 @@ sudo apt install nginx -y
 
 source hydra-env/bin/activate
 
-echo "from hydra import app" > hydra_gunicorn.py
-echo "if __name__ == "__main__":" >> hydra_gunicorn.py
-echo "    app.run()" >> hydra_gunicorn.py
-
 # configure gunicorn
 
 pip install gunicorn
@@ -27,6 +23,20 @@ echo "You entered: ${user_input}"
 current_dir=$(pwd)
 
 echo ${current_dir}
+
+echo "[Unit]" > ghydra.service
+echo "Description=Gunicorn instance to serve myproject" >> ghydra.service
+echo "After=network.target" >> ghydra.service
+
+echo "[Service]" >> ghydra.service
+echo "User=sammy" >> ghydra.service
+echo "Group=www-data" >> ghydra.service
+echo "WorkingDirectory=${current_dir}" >> ghydra.service
+echo "Environment=\"PATH=${current_dir}/hydra-env/bin\"" >> ghydra.service
+echo "ExecStart=${current_dir}/hydra-env/bin/gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi:app" >> ghydra.service
+
+echo "[Install]" >> ghydra.service
+echo "WantedBy=multi-user.target" >> ghydra.service
 
 #echo "server {" > /etc/nginx/sites/available/${user_input}
 #echo "  listen 80;" >> /etc/nginx/sites/available/${user_input}
