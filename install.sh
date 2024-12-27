@@ -22,3 +22,9 @@ pip install wheel
 
 # install the configuration for the the hydra application
 python admin/install.py false
+
+echo "Your Hydra server is ready to run"
+echo "For development and testing purposes, you can execute the ./start-dev.sh script"
+echo ""
+echo "For a production environment, install gunicorn and nginx"
+echo "  the ./install-gunicorn.sh script is included to aid in this on Debian based systems"
