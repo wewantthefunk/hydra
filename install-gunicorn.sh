@@ -49,15 +49,17 @@ sudo systemctl enable ghydra
 
 #configure nginx
 
-sudo echo "server {" > /etc/nginx/sites-available/ghydra
-sudo echo "  listen 80;" >> /etc/nginx/sites-available/ghydra
-sudo echo "  localhost ${user_input} www.${user_input};" >> /etc/nginx/sites-available/ghydra
-sudo echo " " >> /etc/nginx/sites-available/ghydra
-sudo echo "  location / {" >> /etc/nginx/sites-available/ghydra
-sudo echo "    include proxy_params;" >> /etc/nginx/sites-available/ghydra
-sudo echo "    proxy_pass http://unix:${current_dir}/ghydra.sock" >> /etc/nginx/sites-available/ghydra
-sudo echo "  }" >> /etc/nginx/sites-available/ghydra
-sudo echo "}" >> /etc/nginx/sites-available/ghydra
+sudo echo "server {" > ghydra.nginx
+sudo echo "  listen 80;" >> ghydra.nginx
+sudo echo "  localhost ${user_input} www.${user_input};" >> ghydra.nginx
+sudo echo " " >> ghydra.nginx
+sudo echo "  location / {" >> ghydra.nginx
+sudo echo "    include proxy_params;" >> ghydra.nginx
+sudo echo "    proxy_pass http://unix:${current_dir}/ghydra.sock" >> ghydra.nginx
+sudo echo "  }" >> ghydra.nginx
+sudo echo "}" >> ghydra.nginx
+
+sudo mv ghydra.nginx /etc/nginx/sites-available/ghydra
 
 sudo ln -s /etc/nginx/sites-available/ghydra /etc/nginx/sites-enabled
 
