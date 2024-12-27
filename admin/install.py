@@ -201,6 +201,7 @@ def execute(is_test_mode: bool):
         print("---------------------------")
 
     if not file_exists('private/mail.json'):
+        print("Configure SMTP Mail Server")
         server = input("Enter server IP address or URL: ")
         port = ''
         while not isinstance(port, (int)):
@@ -215,6 +216,7 @@ def execute(is_test_mode: bool):
         print("---------------------------")
 
     if not file_exists('static/crypto_key.js') and not file_exists('private/private.pem'):
+        print("Configure Your Administrator Login")
         generate_keys()
         save_keys()
 
