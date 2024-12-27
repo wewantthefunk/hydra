@@ -55,7 +55,7 @@ sudo systemctl enable ghydra
 
 sudo echo "server {" > ghydra.nginx
 sudo echo "  listen 80;" >> ghydra.nginx
-sudo echo "  localhost ${user_input} www.${user_input};" >> ghydra.nginx
+sudo echo "  ${user_input} www.${user_input};" >> ghydra.nginx
 sudo echo " " >> ghydra.nginx
 sudo echo "  location / {" >> ghydra.nginx
 sudo echo "    include proxy_params;" >> ghydra.nginx
