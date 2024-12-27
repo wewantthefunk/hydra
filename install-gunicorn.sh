@@ -16,8 +16,6 @@ pip install gunicorn
 
 port=$(jq -r '.port' private/port.json)
 
-gunicorn --bind 0.0.0.0:${port} wsgi:app
-
 read -p "Enter the domain for your Hydra server: " user_input
 echo "You entered: ${user_input}"
 
