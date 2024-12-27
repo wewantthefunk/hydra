@@ -35,19 +35,34 @@ echo "Group=www-data" >> ghydra.service
 echo "WorkingDirectory=${current_dir}" >> ghydra.service
 echo "Environment=\"PATH=${current_dir}/hydra-env/bin\"" >> ghydra.service
 echo "ExecStart=${current_dir}/start-gunicorn.sh" >> ghydra.service
-#echo "ExecStart=${current_dir}/hydra-env/bin/gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi:app" >> ghydra.service
 echo " "
 echo "[Install]" >> ghydra.service
 echo "WantedBy=multi-user.target" >> ghydra.service
 
-#echo "server {" > /etc/nginx/sites/available/${user_input}
-#echo "  listen 80;" >> /etc/nginx/sites/available/${user_input}
-#echo "  localhost ${user_input} www.${user_input};" >> /etc/nginx/sites/available/${user_input}
-#echo " " >> /etc/nginx/sites/available/${user_input}
-#echo "  location / {" >> /etc/nginx/sites/available/${user_input}
-#echo "    include proxy_params;" >> /etc/nginx/sites/available/${user_input}
-#echo "    proxy_pass http://unix:${current_dir}/hydra.sock
+sudo cp ghydra.service /etc/systemd/system/ghydra.service
 
-sudo ln -s /etc/nginx/sites-available/hydra /etc/nginx/sites-enabled
+chmod +x start-gunicorn.sh
+
+sudo systemctl start ghydra
+
+sudo systemctl enable ghydra
+
+#configure nginx
+
+echo "server {" > /etc/nginx/sites/available/ghydra
+echo "  listen 80;" >> /etc/nginx/sites/available/ghydra
+echo "  localhost ${user_input} www.${user_input};" >> /etc/nginx/sites/available/ghydra
+echo " " >> /etc/nginx/sites/available/ghydra
+echo "  location / {" >> /etc/nginx/sites/available/ghydra
+echo "    include proxy_params;" >> /etc/nginx/sites/available/ghydra
+echo "    proxy_pass http://unix:${current_dir}/ghydra.sock" >> /etc/nginx/sites/available/ghydra
+echo "  }" >> /etc/nginx/sites/available/ghydra
+echo "}" >> /etc/nginx/sites/available/ghydra
+
+sudo ln -s /etc/nginx/sites-available/ghydra /etc/nginx/sites-enabled
+
+sudo nginx -t
+
+sudo systemctl restart nginx
 
 sudo ufw allow 'Nginx Full'

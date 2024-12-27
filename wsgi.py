@@ -5,10 +5,9 @@ from flask_mail import Mail
 if __name__ == '__main__':
 
     if len(sys.argv) < 2:
-        print("Path to SQLite database file required!")
-        exit(1000)
-
-    constants.DB_LOCATION = sys.argv[1]
+        constants.DB_LOCATION = "data/user_db.db"
+    else:
+        constants.DB_LOCATION = sys.argv[1]
     
     utilities.load_private_key()
     mailInfo = utilities.load_mail_server_info()
@@ -23,4 +22,4 @@ if __name__ == '__main__':
     portJson = utilities.load_json_file('private/port.json')
     hostJson = utilities.load_json_file('private/url.json')
 
-    app.run(debug=True, port=portJson['port'], host=hostJson['url'])
+    app.run(debug=False, port=portJson['port'], host=hostJson['url'])
