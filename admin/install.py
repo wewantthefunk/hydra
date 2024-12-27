@@ -3,11 +3,19 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import serialization, hashes, padding
-import os, sqlite3, random, string, base64, socket
+import os, sqlite3, random, string, base64, socket, sys
 
 PRIVATE_KEY = None
 PUBLIC_KEY = None
 
+def str_to_bool(s: str):
+    if s.lower().strip() == "true":
+        return True
+    elif s.lower().strip() == "false":
+        return False
+    else:
+        raise ValueError("Invalid boolean string")
+    
 def encrypt(plaintext: str, password: bytes) -> bytes:
     salt = os.urandom(16)  # Generate a random salt for key derivation
     iv = os.urandom(16)  # Generate a random IV for AES-CBC encryption
@@ -164,33 +172,35 @@ def get_ip_address():
     ip_address = socket.gethostbyname(hostname)
     return ip_address
 
-passphrase = None
-email = ''
-adminName = ''
+def execute(is_test_mode: bool):
+    passphrase = None
+    email = ''
+    adminName = ''
 
-if not file_exists('private/url.json'):
-    url = get_ip_address()
+    if not file_exists('private/url.json'):
+        url = get_ip_address()
 
-    url1 = input("Enter the URL for the Hydra server (default " + url + "): ")
+        url1 = input("Enter the URL for the Hydra server (default " + url + "): ")
 
-    if url1 != '':
-        url = url1
+        if url1 != '':
+            url = url1
 
-    write_to_file('private/url.json', '{\n  "url":"' + url + '"\n}')
+        write_to_file('private/url.json', '{\n  "url":"' + url + '"\n}')
 
-if not file_exists('private/port.json'):
-    port = ''
-    while not isinstance(port, (int)):
-        port = input("Enter the port for the Hydra server (default 47863): ")
-        if port == '':
-            port = 47863
+        print("---------------------------")
 
-    write_to_file('private/port.json', '{\n  "port":' + str(port) + '\n}')
+    if not file_exists('private/port.json'):
+        port = ''
+        while not isinstance(port, (int)):
+            port = input("Enter the port for the Hydra server (default 47863): ")
+            if port == '':
+                port = 47863
 
-if not file_exists('private/mail.json'):
-    need_mail_server = input("Do you want to configure a mail server? (y/n): ")
+        write_to_file('private/port.json', '{\n  "port":' + str(port) + '\n}')
 
-    if need_mail_server == 'y' or need_mail_server == 'Y':
+        print("---------------------------")
+
+    if not file_exists('private/mail.json'):
         server = input("Enter server IP address or URL: ")
         port = ''
         while not isinstance(port, (int)):
@@ -202,35 +212,48 @@ if not file_exists('private/mail.json'):
 
         write_to_file('private/mail.json', '{\n  "server":"' + server + '",\n  "port":' + str(port) + ',\n  "uname":"' + username + '",\n  "password":"' + password + '"\n}')
 
-if not file_exists('static/crypto_key.js') and not file_exists('private/private.pem'):
-    generate_keys()
-    save_keys()
+        print("---------------------------")
 
-    adminName = input("Enter your admin username: ")
-    email = input("Enter your administrator email address: ")
+    if not file_exists('static/crypto_key.js') and not file_exists('private/private.pem'):
+        generate_keys()
+        save_keys()
 
-    admin_pwd = generate_random_string(25)
-    admin_passphrase = 'valid password: ' + adminName
+        adminName = input("Enter your admin username: ")
+        email = input("Enter your administrator email address: ")
 
-    encrypted = encrypt(admin_passphrase, admin_pwd.encode('utf-8'))
+        admin_pwd = generate_random_string(25)
+        admin_passphrase = 'valid password: ' + adminName
 
-    decrypted = decrypt(encrypted, admin_pwd.encode('utf-8'))
+        encrypted = encrypt(admin_passphrase, admin_pwd.encode('utf-8'))
 
-    print("Your admin username is '" + adminName + "'")
-    print("THIS IS YOUR ADMIN PASSWORD! COPY IT NOW, AS YOU WILL NOT HAVE ACCESS TO IT AGAIN!")
-    print()
-    print('   ' + admin_pwd)
-    print()
-    print('The password cryptography is successful if the following two lines match. If they do not match something is wrong and you should run the clean.sh script and try again!')
-    print()
-    print(admin_passphrase)
-    print(decrypted)
+        decrypted = decrypt(encrypted, admin_pwd.encode('utf-8'))
 
-    passphrase = base64.b64encode(encrypted).decode('ascii')
-else:
-    print('Passwords already created, skipping')
-    print('Building database objects')
+        print("Your admin username is '" + adminName + "'")
+        print("THIS IS YOUR ADMIN PASSWORD! COPY IT NOW, AS YOU WILL NOT HAVE ACCESS TO IT AGAIN!")
+        print()
+        print('   ' + admin_pwd)
+        print()
+        print('The password cryptography is successful if the following two lines match. If they do not match something is wrong and you should run the clean.sh script and try again!')
+        print()
+        print(admin_passphrase)
+        print(decrypted)
 
-vcode = generate_random_string(6)
+        passphrase = base64.b64encode(encrypted).decode('ascii')
+    else:
+        print('Passwords already created, skipping')
+        print('Building database objects')
 
-create_sql(passphrase, email, adminName=adminName, vcode=vcode)
+    print("---------------------------")
+
+    vcode = generate_random_string(6)
+
+    create_sql(passphrase, email, adminName=adminName, vcode=vcode)
+
+if __name__ == '__main__':
+    is_test_mode = False
+    if len(sys.argv) > 1:
+        is_test_mode = str_to_bool(sys.argv[1])
+
+    print(sys.argv)
+    print(is_test_mode)
+    execute(is_test_mode=is_test_mode)

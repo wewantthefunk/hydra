@@ -36,6 +36,5 @@ function verifyAccount() {
 }
 
 function finishedLoad() {
-    document.getElementById("uname").value = "christian";
-    document.getElementById("pwd").value = "xH4WT@wvrM!!1tCT&Oap07TWC";
+    
 };

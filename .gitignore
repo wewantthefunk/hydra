@@ -4,3 +4,9 @@ data/user_db.db
 static/crypto_key.js
 hydra-env/
 __pycache__/
+test_data/admin_pwd.txt
+cypress/
+Cypress/
+test_data/test.db
+nohup.out
+.vscode/

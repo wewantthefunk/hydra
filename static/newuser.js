@@ -55,8 +55,5 @@ function verify() {
 }
 
 function finishedLoad() {
-    document.getElementById('pwd').value = 'YVf#oy5v&biCMt8SF&Pm';
-    document.getElementById('cpwd').value = 'YVf#oy5v&biCMt8SF&Pm';
-    document.getElementById('uname').value = 'oakandlion';
-    document.getElementById('email').value = 'oakandlionsociety@gmail.com';
+    
 };

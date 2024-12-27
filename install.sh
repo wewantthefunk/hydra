@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python admin/install.py
+python admin/install.py false

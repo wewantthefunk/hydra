@@ -3,6 +3,7 @@ let userMenuOpened = false;
 
 const PLACEHOLDER = "&nbsp;";
 const SUCCESS_LOGIN_MSG = 'Successful Login';
+const USER_LEVEL = 99;
 
 async function postJsonToApi(url, data, errmsg) {
     try {
@@ -41,6 +42,13 @@ async function getApi(url) {
     } catch (error) {
         return { "message": "Invalid Name and Password!", "status": error.message };
     }
+};
+
+function validElement(e) {
+    if (e != null && e != 'undefined')
+        return true;
+
+    return false;
 };
 
 function validateEmail(email) {
