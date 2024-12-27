@@ -43,6 +43,10 @@ sudo cp ghydra.service /etc/systemd/system/ghydra.service
 
 chmod +x start-gunicorn.sh
 
+sudo systemctl stop ghydra
+
+sudo systemctl daemon-reload
+
 sudo systemctl start ghydra
 
 sudo systemctl enable ghydra
