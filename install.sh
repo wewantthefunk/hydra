@@ -1,8 +1,8 @@
 #!/bin/bash
 
-python -m venv hydra
+python -m venv hydra-env
 
-source hydra/bin/activate
+source hydra-env/bin/activate
 
 pip install cryptography
 pip install flask
