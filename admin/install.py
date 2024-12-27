@@ -178,7 +178,7 @@ def execute(is_test_mode: bool):
     adminName = ''
 
     if not file_exists('private/url.json'):
-        url = get_ip_address()
+        url = "0.0.0.0"
 
         url1 = input("Enter the URL for the Hydra server (default " + url + "): ")
 
