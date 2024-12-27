@@ -1,5 +1,8 @@
 private/private.pem
 private/smtp.pass
+private/mail.json
+private/port.json
+private/url.json
 data/user_db.db
 static/crypto_key.js
 hydra-env/
@@ -10,3 +13,4 @@ Cypress/
 test_data/test.db
 nohup.out
 .vscode/
+null/
