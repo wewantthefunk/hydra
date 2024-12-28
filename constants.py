@@ -1,6 +1,6 @@
 APP_NAME = 'Hydra'
 
-DB_LOCATION = ""
+DB_LOCATION = "data/user_db.db"
 
 PRIVATE_KEY = None
 MAIL = None
