@@ -13,6 +13,25 @@ async function verify() {
     const result = await postJsonToApi("/verifyaccount", {"field1":em,"field2": p, "field3": c}, "Invalid Verification Information");
 
     message.innerHTML = result['message'];
+
+    if (result['message'].indexOf('') > -1) {
+        setTimeout(async () => {
+            message.innerHTML = 'Logging In';
+            const tempPassword = generateRandomString(12);
+            const tp = await encryptWithPublicKey(tempPassword);
+            const lresult = await postJsonToApi("/login", {"field1":em,"field2": p, "field3": tp}, "Invalid Username and Password");
+
+            if (lresult['message'] == SUCCESS_LOGIN_MSG) {
+                const token = await decryptString(result['token'], tempPassword);
+                sessionStorage.setItem('uname', uname);
+                sessionStorage.setItem('token', token);
+                sessionStorage.setItem('level', result['level']);
+                navigate('/home');
+            } else {
+                navigate("/");
+            }
+        }, 1000);
+    }
 };
 
 async function generateverify() {

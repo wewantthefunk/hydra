@@ -6,7 +6,7 @@ def login(username: str, password: str, temp_password: str):
     tempPassword = decrypt_string(temp_password)
     uname = decrypt_string(username)
 
-    rows = dataaccess.get_user(uname)
+    rows = dataaccess.get_user_by_email_or_username(uname, uname)
 
     if len(rows) != 1:
         return {'result': constants.RESULT_FORBIDDEN, "message": 'Invalid Username and Password'}
