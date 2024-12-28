@@ -25,8 +25,8 @@ def login(username: str, password: str, temp_password: str):
         result = dataaccess.create_user_session(jdate, uname, token)
         if (result):
             #tp = base64.b64encode(crypto_symmetric.encrypt(token, tempPassword.encode('utf-8'))).decode('ascii')
-            tp = tempPassword
-            return {'result': constants.RESULT_OK, 'tmp_password': tp, 'level': level}
+            tp = token
+            return {'result': constants.RESULT_OK, 'token': tp, 'level': level}
         else:
             return {"message": "Server Error", 'result': constants.RESULT_UNVERIFIED_ACCOUNT }
     else:

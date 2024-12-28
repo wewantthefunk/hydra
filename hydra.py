@@ -50,7 +50,7 @@ def login():
         if result['result'] != constants.RESULT_OK:
             return jsonify({'error': result['message']}), result['result']
             
-        return jsonify({'message': 'Successful Login', 'token': result['tmp_password'], 'level': result['level']}), constants.RESULT_OK
+        return jsonify({'message': 'Successful Login', 'token': result['token'], 'level': result['level']}), constants.RESULT_OK
     
     return jsonify({'error': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
 
