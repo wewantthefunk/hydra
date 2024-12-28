@@ -47,7 +47,7 @@ async function generateverify() {
 
     const result = await postJsonToApi("/generateverify", {"field1":em}, "Invalid Verification Information"); 
 
-    if (toString(result['status']).indexOf('406') > -1) {
+    if (String(result['status']).indexOf('406') > -1) {
         message.innerHTML = 'Account Already Verified';
         return;
     }
