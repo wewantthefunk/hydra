@@ -71,7 +71,7 @@ def check_admin(username: str):
     return {'message': "User Is NOT Admin", 'result': constants.RESULT_FORBIDDEN}
 
 def generate_verify(email: str):
-    e = decrypt_string(e)
+    e = decrypt_string(email)
 
     rows = dataaccess.get_user_by_email(e)
 
