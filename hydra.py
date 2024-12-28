@@ -104,7 +104,7 @@ def generateverify():
         if result['result'] == constants.RESULT_OK:
             send_verification_email(result['email'], result['vcode'])
 
-            return jsonify({'message': 'Verification Email Sent'}), constants.RESULT_OK
+            return jsonify({'message': 'Verification Email Sent', 'status': result['result'], 'result': result['message']}), result['result']
 
     return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
 
