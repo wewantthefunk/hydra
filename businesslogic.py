@@ -19,7 +19,7 @@ def login(username: str, password: str, temp_password: str):
 
     if rows[0].is_verified == constants.UNVERIFIED_ACCOUNT:
         return {'message': 'Your Account is Not Verified', 'result': constants.RESULT_UNVERIFIED_ACCOUNT}
-    elif passphrase == 'valid password: ' + uname:
+    elif passphrase == 'valid password: ' + rows[0].username:
         token = utilities.generate_random_string(15)
         jdate = utilities.date_to_julian(datetime.now())
         result = dataaccess.create_user_session(jdate, uname, token)
