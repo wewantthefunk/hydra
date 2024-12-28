@@ -5,6 +5,8 @@ const PLACEHOLDER = "&nbsp;";
 const SUCCESS_LOGIN_MSG = 'Successful Login';
 const USER_LEVEL = 99;
 
+let IS_HTTPS = false;
+
 async function postJsonToApi(url, data, errmsg) {
     try {
         const response = await fetch(url, {
@@ -229,6 +231,11 @@ function calcsizes() {
     }
 };
 
+function isUrlHttps(url) {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'https:';
+};
+
 async function universalFinishedLoad() {
     const token = sessionStorage.getItem('token');
     if (token == 'undefined' || token == null) {
@@ -268,4 +275,10 @@ async function universalFinishedLoad() {
     });
 
     calcsizes();
+
+    IS_HTTPS = isUrlHttps(window.location.href);
+
+    const use_encrypt = IS_HTTPS ? 'True' : '';
+
+    await postJsonToApi("/setencryption", {'field1': use_encrypt}, '');
 };

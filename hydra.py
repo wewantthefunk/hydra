@@ -149,6 +149,20 @@ def createaccount():
     
     return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
 
+@app.route("/setencryption", methods=['POST'])
+def setencryption():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'encrypt': data.get('field1')
+        }
+
+        constants.USE_ENCRYPTION = bool(processed_data['encrypt'])
+
+    return jsonify({'message': "OK"}), constants.RESULT_OK
+
 def send_verification_email(email: str, code: str):
     hostJson = utilities.load_json_file('private/url.json')
     url = hostJson['url']

@@ -2,6 +2,8 @@ APP_NAME = 'Hydra'
 
 DB_LOCATION = "data/user_db.db"
 
+USE_ENCRYPTION = False
+
 PRIVATE_KEY = None
 MAIL = None
 VERIFIED_ACCOUNT = 1

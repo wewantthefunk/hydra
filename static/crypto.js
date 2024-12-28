@@ -1,4 +1,7 @@
 async function encryptWithPublicKey(data) {
+    if (IS_HTTPS)
+        return encryptWithRsaPublicKey(data);
+    
     return data;
 }
 
