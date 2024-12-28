@@ -3,20 +3,15 @@ import base64
 from datetime import datetime
 
 def login(username: str, password: str, temp_password: str):
-    byte_array = base64.b64decode(temp_password)
-    tempPassword = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
-
-    byte_array = base64.b64decode(username)
-    uname = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    tempPassword = decrypt_string(temp_password)
+    uname = decrypt_string(username)
 
     rows = dataaccess.get_user(uname)
 
     if len(rows) != 1:
         return {'result': constants.RESULT_FORBIDDEN, "message": 'Invalid Username and Password'}
-    
-    byte_array = base64.b64decode(password)
 
-    password = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    password = decrypt_string(password)
 
     passphrase = crypto_symmetric.decrypt(base64.b64decode(rows[0].passphrase) , password.encode('utf-8'))
 
@@ -29,7 +24,8 @@ def login(username: str, password: str, temp_password: str):
         jdate = utilities.date_to_julian(datetime.now())
         result = dataaccess.create_user_session(jdate, uname, token)
         if (result):
-            tp = base64.b64encode(crypto_symmetric.encrypt(token, tempPassword.encode('utf-8'))).decode('ascii')
+            #tp = base64.b64encode(crypto_symmetric.encrypt(token, tempPassword.encode('utf-8'))).decode('ascii')
+            tp = tempPassword
             return {'result': constants.RESULT_OK, 'tmp_password': tp, 'level': level}
         else:
             return {"message": "Server Error", 'result': constants.RESULT_UNVERIFIED_ACCOUNT }
@@ -37,14 +33,9 @@ def login(username: str, password: str, temp_password: str):
         return {'message': 'Invalid Username and Password', 'result': constants.RESULT_FORBIDDEN }
     
 def create_account(email: str, password: str, username: str):
-    byte_array = base64.b64decode(email)
-    email = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
-
-    byte_array = base64.b64decode(password)
-    password = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
-
-    byte_array = base64.b64decode(username)
-    username = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    email = decrypt_string(email)
+    password = decrypt_string(password)
+    username = decrypt_string(username)
 
     rows = dataaccess.get_user_by_email_or_username(email = email, username=username)
 
@@ -65,8 +56,7 @@ def create_account(email: str, password: str, username: str):
     return {'message': 'Server Error', 'result': constants.RESULT_SERVER_ERROR}
 
 def check_admin(username: str):
-    byte_array = base64.b64decode(username)
-    username = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    username = decrypt_string(username)
 
     rows = dataaccess.check_admin(username)
 
@@ -81,8 +71,7 @@ def check_admin(username: str):
     return {'message': "User Is NOT Admin", 'result': constants.RESULT_FORBIDDEN}
 
 def generate_verify(email: str):
-    byte_array = base64.b64decode(email)
-    e = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    e = decrypt_string(e)
 
     rows = dataaccess.get_user_by_email(e)
 
@@ -100,14 +89,9 @@ def generate_verify(email: str):
         return {'message': 'Verification Code Generated', 'result': constants.RESULT_OK, 'email': e, 'vcode': vcode}
 
 def verify_account(email: str, password: str, code: str):
-    byte_array = base64.b64decode(email)
-    e = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
-
-    byte_array = base64.b64decode(password)
-    p = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
-
-    byte_array = base64.b64decode(code)
-    c = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    e = decrypt_string(email)
+    p = decrypt_string(password)
+    c = decrypt_string(code)
 
     rows = dataaccess.get_user_by_email_and_verification_code(email=e, code=c)
 
@@ -124,11 +108,8 @@ def verify_account(email: str, password: str, code: str):
     return result
 
 def check_token(token: str, username: str):
-    byte_array = base64.b64decode(token)
-    t = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
-
-    byte_array = base64.b64decode(username)
-    u = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    t = decrypt_string(token)
+    u = decrypt_string(username)
 
     jdate = utilities.date_to_julian(datetime.now())   
 
@@ -138,3 +119,10 @@ def check_token(token: str, username: str):
         return {'message': 'Invalid Token', 'result': constants.RESULT_FORBIDDEN}
     
     return {'message': 'success', 'result': constants.RESULT_OK}
+
+def decrypt_string(s: str):
+    return s
+    #byte_array = base64.b64decode(s)
+    #u = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+
+    #return u

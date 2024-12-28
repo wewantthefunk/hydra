@@ -1,4 +1,8 @@
 async function encryptWithPublicKey(data) {
+    return data;
+}
+
+async function encryptWithRsaPublicKey(data) {
     const publicKey = await importPublicKey(publicKeyPem);
     const encryptedData = await window.crypto.subtle.encrypt(
         { name: 'RSA-OAEP' },
