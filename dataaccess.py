@@ -2,6 +2,7 @@ import sqlite3
 from typing import List
 import constants
 
+
 class User:
     def __init__(self, email, username, id, user_type, passphrase, is_verified=False, verification_code='000000', is_active=True):
         self.email = email
