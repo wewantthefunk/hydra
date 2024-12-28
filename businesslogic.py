@@ -120,15 +120,19 @@ def check_token(token: str, username: str):
     return {'message': 'success', 'result': constants.RESULT_OK}
 
 def decrypt_string(s: str):
-    return s
-    #byte_array = base64.b64decode(s)
-    #u = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
+    if constants.USE_ENCRYPTION:
+        byte_array = base64.b64decode(s)
+        u = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
-    #return u
+        return u
+    
+    return s
 
 def decrypt_symmetric_string(s: str, p: str):
+    if constants.USE_ENCRYPTION:
+        return base64.b64encode(crypto_symmetric.encrypt(s, p.encode('utf-8'))).decode('ascii')
+    
     return s
-    #return base64.b64encode(crypto_symmetric.encrypt(s, p.encode('utf-8'))).decode('ascii')
 
 def unverify_user(name: str) -> bool:
     rows = dataaccess.get_user_by_email_or_username(name, name)
