@@ -42,10 +42,11 @@ def login():
         processed_data = {
             'username': data.get('field1'),
             'password': data.get('field2'),
-            'tempPassword': data.get('field3')
+            'tempPassword': data.get('field3'),
+            'e': data.get('e')
         }
 
-        result = businesslogic.login(processed_data['username'], processed_data['password'], processed_data['tempPassword'])
+        result = businesslogic.login(processed_data['username'], processed_data['password'], processed_data['tempPassword'], utilities.use_encrypt(processed_data['e']))
 
         if result['result'] != constants.RESULT_OK:
             return jsonify({'error': result['message']}), result['result']
@@ -62,10 +63,11 @@ def checkToken():
         # Process the JSON data here as needed
         processed_data = {
             'token': data.get('field1'),
-            'username': data.get('field2')
+            'username': data.get('field2'),
+            'e': data.get('e')
         }
 
-        result = businesslogic.check_token(processed_data['token'], processed_data['username'])
+        result = businesslogic.check_token(processed_data['token'], processed_data['username'], utilities.use_encrypt(processed_data['e']))
         
         return jsonify({'message': result['message']}), result['result']
     
@@ -80,10 +82,11 @@ def verifyaccount():
         processed_data = {
             'email': data.get('field1'),
             'password': data.get('field2'),
-            'code': data.get('field3')
+            'code': data.get('field3'),
+            'e': data.get('e')
         }
 
-        result = businesslogic.verify_account(processed_data['email'], processed_data['password'], processed_data['code'])        
+        result = businesslogic.verify_account(processed_data['email'], processed_data['password'], processed_data['code'], utilities.use_encrypt(processed_data['e']))        
 
         return jsonify({'message': result['message']}), result['result']
     
@@ -96,10 +99,11 @@ def generateverify():
 
         # Process the JSON data here as needed
         processed_data = {
-            'email': data.get('field1')
+            'email': data.get('field1'),
+            'e': data.get('e')
         }
 
-        result = businesslogic.generate_verify(processed_data['email'])
+        result = businesslogic.generate_verify(processed_data['email'], utilities.use_encrypt(processed_data['e']))
         
         if result['result'] == constants.RESULT_OK:
             send_verification_email(result['email'], result['vcode'])
@@ -117,10 +121,11 @@ def checkAdminVerification():
         processed_data = {
             'email': data.get('field1'),
             'password': data.get('field2'),
-            'username': data.get('field3')
+            'username': data.get('field3'),
+            'e': data.get('e')
         }
 
-        result = businesslogic.check_admin(processed_data['username'])
+        result = businesslogic.check_admin(processed_data['username'], utilities.use_encrypt(processed_data['e']))
 
         return jsonify({'message': result['message']}), result['result']
     
@@ -135,10 +140,11 @@ def createaccount():
         processed_data = {
             'email': data.get('field1'),
             'password': data.get('field2'),
-            'username': data.get('field3')
+            'username': data.get('field3'),
+            'e': data.get('e')
         }
 
-        result = businesslogic.create_account(processed_data['email'], processed_data['password'], processed_data['username'])
+        result = businesslogic.create_account(processed_data['email'], processed_data['password'], processed_data['username'], utilities.use_encrypt(processed_data['e']))
 
         if result['result'] == constants.RESULT_OK:
             send_verification_email(result['email'], result['vcode'])
@@ -148,24 +154,6 @@ def createaccount():
         return jsonify({"error": result['message']}), result['result']
     
     return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
-
-@app.route("/setencryption", methods=['POST'])
-def setencryption():
-    if request.is_json:
-        data = request.get_json()
-
-        # Process the JSON data here as needed
-        processed_data = {
-            'encrypt': data.get('field1')
-        }
-
-        constants.USE_ENCRYPTION = bool(processed_data['encrypt'])
-
-    return jsonify({'message': "OK", 'encrypt': str(constants.USE_ENCRYPTION)}), constants.RESULT_OK
-
-@app.route("/showencryption", methods=['GET'])
-def showencryption():
-    return jsonify({'encrypt': str(constants.USE_ENCRYPTION)})
 
 def send_verification_email(email: str, code: str):
     hostJson = utilities.load_json_file('private/url.json')

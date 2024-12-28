@@ -77,3 +77,9 @@ def load_mail_server_info():
     if file_exists('private/mail.json'):
         mailInfo = load_json_file('private/mail.json')
         return mailInfo
+    
+def use_encrypt(v: str) -> bool:
+    if v == '1':
+        return True
+    
+    return False

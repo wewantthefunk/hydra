@@ -1,7 +1,7 @@
 async function encryptWithPublicKey(data) {
-    if (IS_HTTPS)
+    if (IS_HTTPS === '1')
         return encryptWithRsaPublicKey(data);
-    
+
     return data;
 }
 
@@ -47,6 +47,9 @@ function arrayBufferToBase64(buffer) {
 };
 
 async function decryptString(ciphertext, password) {
+    if (IS_HTTPS === '1')
+        return decryptStringSymmetric(ciphertext, password);
+    
     return ciphertext;
 }
 

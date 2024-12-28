@@ -5,9 +5,12 @@ const PLACEHOLDER = "&nbsp;";
 const SUCCESS_LOGIN_MSG = 'Successful Login';
 const USER_LEVEL = 99;
 
-let IS_HTTPS = false;
+let IS_HTTPS = 0;
 
 async function postJsonToApi(url, data, errmsg) {
+    if (data['e'] == null || data['e'] == 'undefined') {
+        data['e'] = IS_HTTPS;
+    }
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -233,7 +236,7 @@ function calcsizes() {
 
 function isUrlHttps(url) {
     const parsedUrl = new URL(url);
-    return parsedUrl.protocol === 'https:';
+    return parsedUrl.protocol === 'https:' ? '1':'0';
 };
 
 async function universalFinishedLoad() {
@@ -277,16 +280,8 @@ async function universalFinishedLoad() {
     calcsizes();
 
     IS_HTTPS = isUrlHttps(window.location.href);
-
-    const use_encrypt = IS_HTTPS ? 'True' : '';
-
-    await postJsonToApi("/setencryption", {'field1': use_encrypt}, '');
 };
 
 async function outsideFinishedLoad() {
     IS_HTTPS = isUrlHttps(window.location.href);
-
-    const use_encrypt = IS_HTTPS ? 'True' : '';
-
-    await postJsonToApi("/setencryption", {'field1': use_encrypt}, '');
 };
