@@ -24,8 +24,7 @@ def login(username: str, password: str, temp_password: str):
         jdate = utilities.date_to_julian(datetime.now())
         result = dataaccess.create_user_session(jdate, uname, token)
         if (result):
-            #tp = base64.b64encode(crypto_symmetric.encrypt(token, tempPassword.encode('utf-8'))).decode('ascii')
-            tp = token
+            tp = decrypt_symmetric_string(token, tempPassword)
             return {'result': constants.RESULT_OK, 'token': tp, 'level': level}
         else:
             return {"message": "Server Error", 'result': constants.RESULT_UNVERIFIED_ACCOUNT }
@@ -126,3 +125,7 @@ def decrypt_string(s: str):
     #u = crypto_asymmetric.rsa_decrypt(private_key=constants.PRIVATE_KEY, encrypted_message=byte_array)
 
     #return u
+
+def decrypt_symmetric_string(s: str, p: str):
+    return s
+    #return base64.b64encode(crypto_symmetric.encrypt(s, p.encode('utf-8'))).decode('ascii')
