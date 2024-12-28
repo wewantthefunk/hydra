@@ -156,6 +156,16 @@ def send_verification_email(email: str, code: str):
     portJson = utilities.load_json_file('private/port.json')
     port=portJson['port']
 
+    if constants.MAIL == None:
+        mailInfo = utilities.load_mail_server_info()
+
+        app.config['MAIL_SERVER']=mailInfo['server']
+        app.config['MAIL_PORT'] = mailInfo['port']
+        app.config['MAIL_USERNAME'] = mailInfo['uname']
+        app.config['MAIL_PASSWORD'] = mailInfo['password']
+        app.config['MAIL_USE_TLS'] = True
+        constants.MAIL = Mail(app)
+
     utilities.send_email([email], 'Hydra Event Server Verification', 'Your Verification Code Is:\n\n  ' + code + '\n\nFollow the link to http://' + url + ":" + str(port) + '/verify and enter the information to verify your account.\n\nThank you,\n\nThe Hydra Event Manager Team', constants.MAIL)
 
 if __name__ == '__main__':
