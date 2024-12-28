@@ -161,7 +161,7 @@ def setencryption():
 
         constants.USE_ENCRYPTION = bool(processed_data['encrypt'])
 
-    return jsonify({'message': "OK"}), constants.RESULT_OK
+    return jsonify({'message': "OK", 'encrypt': str(constants.USE_ENCRYPTION)}), constants.RESULT_OK
 
 @app.route("/showencryption", methods=['GET'])
 def showencryption():
