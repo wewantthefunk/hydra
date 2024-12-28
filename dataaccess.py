@@ -200,8 +200,15 @@ def get_session_by_username_token_and_issued(jdate: int, uname: str, token: str)
     CURSOR.execute("DELETE FROM session WHERE issued < " + str(jdate))
     conn.commit()
 
+    urows = get_user_by_email_or_username(uname, uname)
+
+    if len(urows) < 1:
+        return []
+    
+    uname = urows[0].username
+
     # Retrieve all users
-    CURSOR.execute("SELECT * FROM session WHERE (username = '" + uname + "' OR email = '" + uname + "') AND token = '" + token + "' AND issued = " + str(jdate))
+    CURSOR.execute("SELECT * FROM session WHERE (username = '" + uname + "' OR username = '" + urows[0].email + "') AND token = '" + token + "' AND issued = " + str(jdate))
     rows = CURSOR.fetchall()
 
     result = []
