@@ -129,3 +129,12 @@ def decrypt_string(s: str):
 def decrypt_symmetric_string(s: str, p: str):
     return s
     #return base64.b64encode(crypto_symmetric.encrypt(s, p.encode('utf-8'))).decode('ascii')
+
+def unverify_user(name: str) -> bool:
+    rows = dataaccess.get_user_by_email_or_username(name, name)
+
+    if len(rows) < 1:
+        print("User Not Found")
+        return False
+    
+    return dataaccess.unverify_user(rows[0].id)

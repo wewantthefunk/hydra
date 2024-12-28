@@ -269,3 +269,16 @@ def verify_account(id: int, passphrase: str):
     conn.close()
 
     return {'message': 'Account Verified', 'result': constants.RESULT_OK}
+
+def unverify_user(id: int) -> bool:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()    
+    
+    CURSOR.execute("UPDATE users SET isVerified = " + str(constants.UNVERIFIED_ACCOUNT) + " WHERE id = " + str(id))
+    conn.commit()
+
+    conn.close()
+
+    return True
