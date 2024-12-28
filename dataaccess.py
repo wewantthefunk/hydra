@@ -201,7 +201,7 @@ def get_session_by_username_token_and_issued(jdate: int, uname: str, token: str)
     conn.commit()
 
     # Retrieve all users
-    CURSOR.execute("SELECT * FROM session WHERE username = '" + uname + "' AND token = '" + token + "' AND issued = " + str(jdate))
+    CURSOR.execute("SELECT * FROM session WHERE (username = '" + uname + "' OR email = '" + uname + "') AND token = '" + token + "' AND issued = " + str(jdate))
     rows = CURSOR.fetchall()
 
     result = []
@@ -237,7 +237,7 @@ def check_admin(username: str) -> List[User]:
     CURSOR = conn.cursor()
 
     # Retrieve all users
-    CURSOR.execute("SELECT * FROM users WHERE (usertype = " + constants.ADMIN_USER + ' OR usertype = ' + constants.SUPER_USER + ") AND username = '" + username + "'")
+    CURSOR.execute("SELECT * FROM users WHERE (usertype = " + constants.ADMIN_USER + ' OR usertype = ' + constants.SUPER_USER + ") AND (username = '" + username + "' OR email = '" + username + "')")
     rows = CURSOR.fetchall()
 
     result = []
