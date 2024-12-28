@@ -44,6 +44,10 @@ function arrayBufferToBase64(buffer) {
 };
 
 async function decryptString(ciphertext, password) {
+    return ciphertext;
+}
+
+async function decryptStringSymmetric(ciphertext, password) {
     // Extract the salt, IV, and actual ciphertext from the input byte array
     const salt = new Uint8Array(ciphertext.slice(0, 16));  // Ensure it's a Uint8Array
     const iv = new Uint8Array(ciphertext.slice(16, 32));    // Ensure it's a Uint8Array
