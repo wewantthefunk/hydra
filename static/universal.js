@@ -138,14 +138,8 @@ function admin() {
 };
 
 function navigate(url) {
-    const processing = document.getElementById("processing");
-    if (processing != null && processing != 'undefined') {
-        processing.style.display = 'block';
-    }
-    const overlay = document.getElementById("overlay");
-    if (overlay != null && overlay != 'undefined') {
-        overlay.style.display = 'block';
-    }
+    startProcessing();
+    stopProcessing();
     isUserMenuVisible = false;
     setTimeout(() => {
         window.location.href = url;
@@ -166,6 +160,20 @@ function toggleUserMenu() {
 function closeAllModals() {
     isUserMenuVisible = true;
     toggleUserMenu();
+};
+
+function startProcessing() {
+    const processing = document.getElementById("processing");
+    if (processing != null && processing != 'undefined') {
+        processing.style.display = 'block';
+    }
+};
+
+function stopProcessing() {
+    const overlay = document.getElementById("overlay");
+    if (overlay != null && overlay != 'undefined') {
+        overlay.style.display = 'block';
+    }
 };
 
 function getWindowSize() {

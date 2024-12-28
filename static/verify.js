@@ -1,4 +1,6 @@
 async function verify() {
+    startProcessing();
+
     const message = document.getElementById("message");
     message.innerHTML = PLACEHOLDER;
     
@@ -32,9 +34,13 @@ async function verify() {
             }
         }, 1000);
     }
+
+    stopProcessing();
 };
 
 async function generateverify() {
+    startProcessing();
+
     message.innerHTML = PLACEHOLDER;
 
     const email = document.getElementById("email").value.trim();
@@ -49,10 +55,11 @@ async function generateverify() {
 
     if (String(result['status']).indexOf('406') > -1) {
         message.innerHTML = 'Account Already Verified';
-        return;
+    } else {
+        message.innerHTML = result['message'];
     }
-    
-    message.innerHTML = result['message'];
+
+    stopProcessing();
 };
 
 function goback() {
