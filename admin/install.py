@@ -146,7 +146,7 @@ def generate_random_string(length):
     uppercase_letters = string.ascii_uppercase
     lowercase_letters = string.ascii_lowercase
     numbers = string.digits
-    special_symbols = "^&$%#@!"
+    special_symbols = "^_-#@"
 
     # Combine all characters into one string
     all_characters = uppercase_letters + lowercase_letters + numbers + special_symbols

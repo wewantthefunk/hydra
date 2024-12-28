@@ -168,14 +168,7 @@ def send_verification_email(email: str, code: str):
 
     utilities.send_email([email], 'Hydra Event Server Verification', 'Your Verification Code Is:\n\n  ' + code + '\n\nFollow the link to http://' + url + ":" + str(port) + '/verify and enter the information to verify your account.\n\nThank you,\n\nThe Hydra Event Manager Team', constants.MAIL)
 
-if __name__ == '__main__':
-
-    if len(sys.argv) < 2:
-        print("Path to SQLite database file required!")
-        exit(1000)
-
-    constants.DB_LOCATION = sys.argv[1]
-    
+if __name__ == '__main__':  
     utilities.load_private_key()
     mailInfo = utilities.load_mail_server_info()
 
