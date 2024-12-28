@@ -165,7 +165,7 @@ def setencryption():
 
 @app.route("/showencryption", methods=['GET'])
 def showencryption():
-    return jsonify({'encrypt', str(constants.USE_ENCRYPTION)})
+    return jsonify({'encrypt': str(constants.USE_ENCRYPTION)})
 
 def send_verification_email(email: str, code: str):
     hostJson = utilities.load_json_file('private/url.json')
