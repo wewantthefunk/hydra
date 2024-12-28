@@ -163,6 +163,10 @@ def setencryption():
 
     return jsonify({'message': "OK"}), constants.RESULT_OK
 
+@app.route("/showencryption", methods=['GET'])
+def showencryption():
+    return jsonify({'encrypt', str(constants.USE_ENCRYPTION)})
+
 def send_verification_email(email: str, code: str):
     hostJson = utilities.load_json_file('private/url.json')
     url = hostJson['url']
