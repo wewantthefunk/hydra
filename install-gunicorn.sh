@@ -14,16 +14,11 @@ source hydra-env/bin/activate
 
 pip install gunicorn
 
-port=$(jq -r '.port' private/port.json)
-
-read -p "Enter the domain for your Hydra server: " user_input
-echo "You entered: ${user_input}"
-
 current_dir=$(pwd)
 
 me=$(whoami)
 
-echo ${current_dir}
+# create the ghydra.service
 
 echo "[Unit]" > ghydra.service
 echo "Description=Gunicorn instance to serve myproject" >> ghydra.service
@@ -33,16 +28,18 @@ echo "[Service]" >> ghydra.service
 echo "User=${me}" >> ghydra.service
 echo "Group=www-data" >> ghydra.service
 echo "WorkingDirectory=${current_dir}" >> ghydra.service
-echo "Environment=\"PATH=${current_dir}/hydra-env/bin\"" >> ghydra.service
 echo "ExecStart=${current_dir}/start-gunicorn.sh" >> ghydra.service
 echo " "
 echo "[Install]" >> ghydra.service
 echo "WantedBy=multi-user.target" >> ghydra.service
 
+# copy the ghydra.service file to the systemctl folder
 sudo cp ghydra.service /etc/systemd/system/ghydra.service
 
+# make sure our startup script is executable
 chmod +x start-gunicorn.sh
 
+# start the service
 sudo systemctl stop ghydra
 
 sudo systemctl daemon-reload
@@ -51,24 +48,3 @@ sudo systemctl start ghydra
 
 sudo systemctl enable ghydra
 
-#configure nginx
-
-sudo echo "server {" > ghydra.nginx
-sudo echo "  listen 80;" >> ghydra.nginx
-sudo echo "  ${user_input} www.${user_input};" >> ghydra.nginx
-sudo echo " " >> ghydra.nginx
-sudo echo "  location / {" >> ghydra.nginx
-sudo echo "    include proxy_params;" >> ghydra.nginx
-sudo echo "    proxy_pass http://unix:${current_dir}/ghydra.sock" >> ghydra.nginx
-sudo echo "  }" >> ghydra.nginx
-sudo echo "}" >> ghydra.nginx
-
-sudo mv ghydra.nginx /etc/nginx/sites-available/ghydra
-
-sudo ln -s /etc/nginx/sites-available/ghydra /etc/nginx/sites-enabled
-
-sudo nginx -t
-
-sudo systemctl restart nginx
-
-sudo ufw allow 'Nginx Full'

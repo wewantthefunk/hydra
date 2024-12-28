@@ -19,7 +19,7 @@ async function login() {
         sessionStorage.setItem('uname', uname);
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('level', result['level']);
-        navigate('home');
+        navigate('/home');
     } else {
         if (result['status'].indexOf('401') > -1) {
             message.innerHTML = "Account Not Verified. Click the 'Verify Account' link below."
