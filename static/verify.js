@@ -33,9 +33,8 @@ async function verify() {
                 navigate("/");
             }
         }, 1000);
-    }
-
-    stopProcessing();
+    } else 
+        stopProcessing();
 };
 
 async function generateverify() {
