@@ -235,6 +235,9 @@ function calcsizes() {
 };
 
 function isUrlHttps(url) {
+    if (url.indexOf('localhost') > -1 || url.indexOf("127.0.0.1") > -1)
+        return '1';
+    
     const parsedUrl = new URL(url);
     return parsedUrl.protocol === 'https:' ? '1':'0';
 };
