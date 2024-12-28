@@ -14,7 +14,7 @@ async function verify() {
 
     message.innerHTML = result['message'];
 
-    if (result['message'].indexOf('') > -1) {
+    if (result['message'].indexOf('Account Verified') > -1) {
         setTimeout(async () => {
             message.innerHTML = 'Logging In';
             const tempPassword = generateRandomString(12);
