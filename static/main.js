@@ -35,6 +35,6 @@ function verifyAccount() {
     navigate("/verify");
 }
 
-function finishedLoad() {
-    
+async function finishedLoad() {
+    await outsideFinishedLoad();
 };

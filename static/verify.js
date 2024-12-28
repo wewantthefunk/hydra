@@ -65,6 +65,6 @@ function goback() {
     navigate("/");
 };
 
-function finishedLoad() {
-
+async function finishedLoad() {
+    await outsideFinishedLoad();
 };
