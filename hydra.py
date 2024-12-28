@@ -106,7 +106,7 @@ def generateverify():
 
             return jsonify({'message': 'Verification Email Sent', 'status': result['result'], 'result': result['message']}), result['result']
 
-    return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'error': "Invalid Request", 'message': result['message'], 'status': result['result']}), result['result']
 
 @app.route("/checkadmin", methods=['POST'])
 def checkAdminVerification():
