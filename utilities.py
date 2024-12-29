@@ -66,13 +66,19 @@ def write_to_file(filename, data):
         file.write(data)
 
 def load_private_key():
+    print('utilities loading private key')
     if file_exists('private/private.pem'):
+        print('found the key file')
         with open("private/private.pem", "rb") as f:
             constants.PRIVATE_KEY = serialization.load_pem_private_key(
                 f.read(),
                 password=None,  # If the key is encrypted, provide the password here. Otherwise, use `None`.
                 backend=default_backend()
             )
+    else:
+        print("can't find the key file")
+
+    print('------------')
 
 def load_mail_server_info():
     if file_exists('private/mail.json'):
