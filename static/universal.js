@@ -144,7 +144,6 @@ function admin() {
 
 function navigate(url) {
     startProcessing();
-    stopProcessing();
     isUserMenuVisible = false;
     setTimeout(() => {
         window.location.href = url;
