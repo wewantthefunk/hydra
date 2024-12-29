@@ -1,4 +1,5 @@
 async function login() {
+    startProcessing();
     const message = document.getElementById("message");
     message.innerHTML = PLACEHOLDER;
     
@@ -13,6 +14,8 @@ async function login() {
     const result = await postJsonToApi("/login", {"field1":u,"field2": p, "field3": tp}, "Invalid Username and Password");
 
     message.innerHTML = result['message'];
+
+    stopProcessing();
 
     if (result['message'] == SUCCESS_LOGIN_MSG) {
         const token = await decryptString(result['token'], tempPassword);

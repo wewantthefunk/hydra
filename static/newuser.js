@@ -1,4 +1,5 @@
 async function createAccount() {
+    startProcessing();
     const username = document.getElementById("uname").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById('pwd').value.trim();
@@ -44,6 +45,8 @@ async function createAccount() {
     if (result['message'] != dm) {
         document.getElementById('verify').style.display = 'block';
     }
+
+    stopProcessing();
 };
 
 function goback() {
