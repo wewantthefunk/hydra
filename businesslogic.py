@@ -125,7 +125,7 @@ def decrypt_string(s: str, encrypt: bool = False) -> str:
         print(constants.PRIVATE_KEY)
         if constants.PRIVATE_KEY is None: 
             print('loading from utilities')
-            constants.PRIVATE_KEY = utilities.load_private_key()
+            utilities.load_private_key()
 
         print(constants.PRIVATE_KEY)
 

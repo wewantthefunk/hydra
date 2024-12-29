@@ -1,13 +1,14 @@
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
-import utilities
+import utilities, constants
 
 def rsa_decrypt(private_key, encrypted_message):
     print('in crypto_asymmetric')
     print(private_key)
     if type(private_key) is type(None):
         print('loading from utilities')
-        private_key = utilities.load_private_key()
+        utilities.load_private_key()
+        private_key = constants.PRIVATE_KEY
         
     print(private_key)
     if type(private_key) is type(None):
