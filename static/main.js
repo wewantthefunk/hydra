@@ -2,7 +2,7 @@ async function login() {
     startProcessing();
     const message = document.getElementById("message");
     message.innerHTML = PLACEHOLDER;
-    
+
     const uname = document.getElementById("uname").value;
     const pwd = document.getElementById("pwd").value;
     const tempPassword = generateRandomString(12);
@@ -11,7 +11,7 @@ async function login() {
     const p = await encryptWithPublicKey(pwd);
     const tp = await encryptWithPublicKey(tempPassword);
 
-    const result = await postJsonToApi("/login", {"field1":u,"field2": p, "field3": tp}, "Invalid Username and Password");
+    const result = await postJsonToApi("/login", { "field1": u, "field2": p, "field3": tp }, "Invalid Username and Password");
 
     message.innerHTML = result['message'];
 
@@ -40,4 +40,11 @@ function verifyAccount() {
 
 async function finishedLoad() {
     await outsideFinishedLoad();
+
+    const toggleButton = document.getElementById('password-view');
+    if (toggleButton != null && toggleButton != 'undefined') {
+        toggleButton.addEventListener('click', () => {
+            togglePasswordReveal(toggleButton, 'pwd');
+        });
+    }
 };

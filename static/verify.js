@@ -67,4 +67,11 @@ function goback() {
 
 async function finishedLoad() {
     await outsideFinishedLoad();
+
+    const toggleButton = document.getElementById('password-view');
+    if (toggleButton != null && toggleButton != 'undefined') {
+        toggleButton.addEventListener('click', () => {
+            togglePasswordReveal(toggleButton, 'pwd');
+        });
+    }
 };

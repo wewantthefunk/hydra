@@ -7,6 +7,11 @@ const USER_LEVEL = 99;
 
 let IS_HTTPS = 0;
 
+const HIDE_PASSWORD_IMAGE = 'static/hide-static.png';
+const SHOW_PASSWORD_IMAGE = 'static/reveal-static.png';
+const HIDE_PASSWORD_MESSAGE = 'Click to hide password';
+const SHOW_PASSWORD_MESSAGE = 'Click to show password';
+
 async function postJsonToApi(url, data, errmsg) {
     if (data['e'] == null || data['e'] == 'undefined') {
         data['e'] = IS_HTTPS;
@@ -236,9 +241,9 @@ function calcsizes() {
 function isUrlHttps(url) {
     if (url.indexOf('localhost') > -1 || url.indexOf("127.0.0.1") > -1)
         return '1';
-    
+
     const parsedUrl = new URL(url);
-    return parsedUrl.protocol === 'https:' ? '1':'0';
+    return parsedUrl.protocol === 'https:' ? '1' : '0';
 };
 
 async function universalFinishedLoad() {
@@ -286,4 +291,16 @@ async function universalFinishedLoad() {
 
 async function outsideFinishedLoad() {
     IS_HTTPS = isUrlHttps(window.location.href);
+};
+
+function togglePasswordReveal(toggleButton, id) {
+    if (toggleButton.getAttribute('src') == SHOW_PASSWORD_IMAGE) {
+        document.getElementById(id).type = 'text';
+        toggleButton.setAttribute('src', HIDE_PASSWORD_IMAGE)
+        toggleButton.setAttribute('title', HIDE_PASSWORD_MESSAGE);
+    } else {
+        document.getElementById(id).type = 'password';
+        toggleButton.setAttribute('src', SHOW_PASSWORD_IMAGE);
+        toggleButton.setAttribute('title', SHOW_PASSWORD_MESSAGE);
+    }
 };

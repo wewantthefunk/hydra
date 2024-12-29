@@ -176,3 +176,10 @@ input[type="button"] {
 #admin {
     display: none;
 }
+
+#password-view, #cpassword-view {
+    height: 30px;
+    width: 30px;
+    position: fixed;
+    cursor:pointer;
+}
