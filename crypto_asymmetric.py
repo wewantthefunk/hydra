@@ -3,8 +3,10 @@ from cryptography.hazmat.primitives.asymmetric import padding
 import utilities
 
 def rsa_decrypt(private_key, encrypted_message):
+    print('in crypto_asymmetric')
     print(private_key)
     if type(private_key) is type(None):
+        print('loading from utilities')
         private_key = utilities.load_private_key()
         
     print(private_key)
