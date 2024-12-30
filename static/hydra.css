@@ -38,6 +38,10 @@ input[type="password"] {
     background-color: #fff;
 }
 
+.required {
+    border-color: red;
+}
+
 input[type="button"] {
     border-radius: 7px;
     font-family: 'Lato', sans-serif;
@@ -51,6 +55,20 @@ input[type="button"] {
     transform: translate(-50%, -50%);
     z-index: 999;
     opacity: 1.0;
+}
+
+.center-div-horizontal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    opacity: 1.0;
+    justify-content: center;
+}
+
+.center {
+    margin-left: 25%;
 }
 
 .hidden {
@@ -177,9 +195,13 @@ input[type="button"] {
     display: none;
 }
 
-#password-view, #cpassword-view {
+#password-view, #cpassword-view, #copy-value {
     height: 30px;
     width: 30px;
     position: fixed;
     cursor:pointer;
+}
+
+.topspacer {
+    margin-top:5px;
 }

@@ -244,7 +244,7 @@ def check_admin(username: str) -> List[User]:
     CURSOR = conn.cursor()
 
     # Retrieve all users
-    CURSOR.execute("SELECT * FROM users WHERE (usertype = " + constants.ADMIN_USER + ' OR usertype = ' + constants.SUPER_USER + ") AND (username = '" + username + "' OR email = '" + username + "')")
+    CURSOR.execute("SELECT * FROM users WHERE isActive = 1 AND (usertype = " + str(constants.ADMIN_USER) + ' OR usertype = ' + str(constants.SUPER_USER) + ") AND (username = '" + username + "' OR email = '" + username + "')")
     rows = CURSOR.fetchall()
 
     result = []

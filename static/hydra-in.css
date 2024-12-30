@@ -1,0 +1,26 @@
+#createEventDiv {
+    background-color: aliceblue;
+    height:80%;
+    width:80%;
+    border:2px solid #333;
+    border-radius: 5px;
+    display: block;
+    position: fixed;
+    top: 70px;
+    left: 210px;
+    padding: 10px;
+}
+
+#createEventDiv input[type="text"] {
+    margin-bottom: 5px;
+}
+
+#createEventButton {
+    width: 185.06px;
+    cursor: pointer;
+}
+
+.createEventClose {
+    margin-right:8%;
+    margin-top:4.5%;
+}

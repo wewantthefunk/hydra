@@ -116,6 +116,22 @@ function generateRandomString(length) {
     return result;
 };
 
+function generateRandomStringNoSymbols(length) {
+    // Define all possible characters that can be used in the random string
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+
+    // Generate a random string of the specified length
+    for (let i = 0; i < length; i++) {
+        // Get a random index from the characters string
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        // Add the character at the random index to the result string
+        result += characters[randomIndex];
+    }
+
+    return result;
+};
+
 function base64ToUint8Array(base64) {
     const binaryString = atob(base64); // Decode Base64 to binary string
     const length = binaryString.length;
@@ -304,3 +320,112 @@ function togglePasswordReveal(toggleButton, id) {
         toggleButton.setAttribute('title', SHOW_PASSWORD_MESSAGE);
     }
 };
+
+function copyToClipboard(textBoxId) {
+    // Get the text field
+    var copyText = document.getElementById(textBoxId);
+  
+    // Select the text field
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+  
+    // Copy the text inside the text field
+    document.execCommand("copy");
+  };
+
+  function validateNumericInput(inputElement) {
+    // Remove any non-numeric characters except for the minus sign (-)
+    var cleanedValue = inputElement.value.replace(/[^0-9-]/g, '');
+  
+    // Limit the number of minus signs to at most one (at the beginning)
+    if (cleanedValue.startsWith('-')) {
+      cleanedValue = '-' + cleanedValue.slice(1).replace(/-/g, '');
+    } else {
+      cleanedValue = cleanedValue.replace(/-/g, '');
+    }
+  
+    // Update the input field with the cleaned value
+    inputElement.value = cleanedValue;
+  };
+
+  function validateDateInput(inputElement) {
+    // Remove any non-numeric characters except for slashes (/)
+    var cleanedValue = inputElement.value.replace(/[^0-9\/]/g, '');
+  
+    // Limit the number of slashes to at most two (after the month and day)
+    if (cleanedValue.split('/').length > 3) {
+      cleanedValue = cleanedValue.slice(0, -1);
+    }
+  
+    // Update the input field with the cleaned value
+    inputElement.value = cleanedValue;
+  };
+
+  function validateDate(dateString) {
+    // Split the input string into month, day, and year components
+    const parts = dateString.split('/');
+  
+    if (parts.length !== 3 || isNaN(Number(parts[0])) || isNaN(Number(parts[1])) || isNaN(Number(parts[2]))) {
+      return false; // Invalid format or non-numeric components
+    }
+  
+    const month = parseInt(parts[0], 10);
+    const day = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+  
+    if (isNaN(month) || isNaN(day) || isNaN(year)) {
+      return false; // Non-numeric components after conversion to integers
+    }
+  
+    if (month < 1 || month > 12 || day < 1) {
+      return false; // Invalid month or day
+    }
+  
+    const daysInMonth = new Date(year, month, 0).getDate();
+  
+    if (day > daysInMonth) {
+      return false; // Too many days for the given month and year
+    }
+  
+    const currentYear = new Date().getFullYear();
+  
+    if (year < currentYear) {
+      return false; // Year is less than the current year
+    }
+  
+    return true; // Valid date
+  };
+
+  function isDate1LessThanOrEqual(dateString1, dateString2) {
+    // Parse input dates from string format into Date objects
+    const date1 = new Date(dateString1);
+    const date2 = new Date(dateString2);
+  
+    if (isNaN(date1.getTime()) || isNaN(date2.getTime())) {
+      throw new Error('Invalid date format'); // Throw an error for invalid dates
+    }
+  
+    // Check if date1 is less than or equal to date2 using getTime() method
+    return date1 <= date2;
+  };
+
+  function validateTimeInput(inputElement) {
+    // Remove any non-numeric characters except for slashes (/)
+    var cleanedValue = inputElement.value.replace(/[^0-9\:]/g, '');
+  
+    // Limit the number of slashes to at most two (after the month and day)
+    if (cleanedValue.split(':').length > 2) {
+      cleanedValue = cleanedValue.slice(0, -1);
+    }
+  
+    // Update the input field with the cleaned value
+    inputElement.value = cleanedValue;
+  };
+
+  function checkRequired(o) {
+    if (o.value.trim() == '') {
+        o.classList.add("required");
+    } else {
+        o.classList.remove("required");
+    }
+  };

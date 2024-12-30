@@ -1,0 +1,30 @@
+<div id="createEventDiv">
+        <h1>Create New Event</h1>
+        <div class="center-div-horizontal">
+                <input type="text" id="eventName" placeholder="Event Name" class="center required" title="Event Name" onblur="checkRequired(this);"/>
+                <br/>
+                <input type="text" id="startDate" placeholder="Start Date" class="required" title="Start Date" oninput="validateDateInput(this);" onblur="checkRequired(this);"/> 
+                <input type="text" id="endDate" placeholder="End Date" class="required" title="End Date" oninput="validateDateInput(this);" onblur="checkRequired(this);"/>
+                <br/>
+                <input type="text" id="startTime" placeholder="Start Time" class="required" title="Start Time" oninput="validateTimeInput(this);" onblur="checkRequired(this);"/> 
+                <input type="text" id="endTime" placeholder="End Time" class="required" title="End Time" oninput="validateTimeInput(this);" onblur="checkRequired(this);"/>
+                <br/>
+                <input type="text" id="location" placeholder="Location" class="center required" title="Location" onblur="checkRequired(this);"/>
+                <br/>
+                <input type="text" id="max" placeholder="Max Attendees" class="center required" title="Max Attendees" oninput="validateNumericInput(this);" onblur="checkRequired(this);"/>
+                <br/>
+                <span class="center">Invite Only</span><input type="checkbox" id="inviteOnly"/>
+                <br/>
+                <input type="text" id="invite" placeholder="Event Id" class="center topspacer" title="Event ID" readonly value="12345" />
+                <img src="static/copy.png" id="copy-value" title="Copy Invite Link" class="topspacer" onclick="copylink();"/>
+                <br/>
+                <span id="createNewEventMessage" class="center">&nbsp;</span>
+                <br/>
+                <span id="createNewEventMessage2" class="center">&nbsp;</span>
+                <br/>
+                <input type="button" value="Create" id="createEventButton" class="center topspacer" title="Create Event" onclick="saveNewEvent();"/>
+                
+        </div>
+        <span class="closeModal createEventClose" onclick="closeCreateEvent();">X</span>
+</div>
+<script type="text/javascript" src="static/create-event.js"></script>

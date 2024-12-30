@@ -53,7 +53,7 @@ def login():
             
         return jsonify({'message': 'Successful Login', 'token': result['token'], 'level': result['level']}), constants.RESULT_OK
     
-    return jsonify({'error': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
 
 @app.route("/check", methods=['POST'])
 def checkToken():
@@ -71,7 +71,7 @@ def checkToken():
         
         return jsonify({'message': result['message']}), result['result']
     
-    return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
     
 @app.route('/verifyaccount', methods=['POST'])
 def verifyaccount():
@@ -90,7 +90,7 @@ def verifyaccount():
 
         return jsonify({'message': result['message']}), result['result']
     
-    return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
 
 @app.route('/generateverify', methods=['POST'])
 def generateverify():
@@ -110,7 +110,7 @@ def generateverify():
 
             return jsonify({'message': 'Verification Email Sent', 'status': result['result'], 'result': result['message']}), result['result']
 
-    return jsonify({'error': "Invalid Request", 'message': result['message'], 'status': str(result['result'])}), result['result']
+    return jsonify({'message': "Invalid Request", 'message': result['message'], 'status': str(result['result'])}), result['result']
 
 @app.route("/checkadmin", methods=['POST'])
 def checkAdminVerification():
@@ -129,7 +129,7 @@ def checkAdminVerification():
 
         return jsonify({'message': result['message']}), result['result']
     
-    return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
 
 @app.route("/createaccount", methods=['POST'])
 def createaccount():
@@ -151,9 +151,46 @@ def createaccount():
 
             return jsonify({'message': 'Account Creation Successful! You must verify your account before you can login!'}), constants.RESULT_OK
         
-        return jsonify({"error": result['message']}), result['result']
+        return jsonify({"message": result['message']}), result['result']
     
-    return jsonify({'error': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+
+@app.route('/createevent', methods=['POST'])
+def create_event():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'token': data.get('field1'),
+            'eventname': data.get('field2'),
+            'startdate': data.get('field3'),
+            'enddate': data.get('field4'),
+            'location': data.get('field5'),
+            'max': data.get('field6'),
+            'isinvite': data.get('field7'),
+            'code': data.get('field8'),
+            'e': data.get('e'),
+            'uname': data.get('field9'),
+            'starttime': data.get('field10'),
+            'endtime': data.get('field11')
+        }
+
+        r = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
+
+        if not r:
+            return jsonify({'message': "User Not Authorized to Create Events"}), constants.RESULT_FORBIDDEN
+        
+        r = businesslogic.check_admin_post(processed_data['uname'], processed_data['e'])
+
+        if not r:
+            return jsonify({'message': "User Not Authorized to Create Events"}), constants.RESULT_FORBIDDEN
+        
+
+
+        return jsonify({'message': "Event Created"}), constants.RESULT_OK
+
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
 
 def send_verification_email(email: str, code: str):
     hostJson = utilities.load_json_file('private/url.json')

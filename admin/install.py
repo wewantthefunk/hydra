@@ -128,7 +128,7 @@ def create_sql(passphrase, email, adminName, vcode):
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS events
-        (id INTEGER PRIMARY KEY, name TEXT, startDate DATE, endDate DATE, startTime TIME, endTime TIME, maxAttendees INTEGER, location TEXT)
+        (id INTEGER PRIMARY KEY, name TEXT, startDate DATE, endDate DATE, startTime TIME, endTime TIME, maxAttendees INTEGER, location TEXT, inviteType INTEGER, code TEXT)
     ''')
 
     cursor.execute('''

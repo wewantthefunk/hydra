@@ -119,6 +119,22 @@ def check_token(token: str, username: str, encrypt: bool):
     
     return {'message': 'success', 'result': constants.RESULT_OK}
 
+def check_token_post(token: str, username: str, encrypt: bool) -> bool:
+    token_r = check_token(token, username, encrypt)
+
+    if (token_r['result'] != constants.RESULT_OK):
+        return False
+
+    return True
+
+def check_admin_post(username: str, encrypt: bool) -> bool:
+    admin_r = check_admin(username, encrypt)
+
+    if (admin_r['result'] != constants.RESULT_OK):
+        return False
+    
+    return True
+
 def decrypt_string(s: str, encrypt: bool = False) -> str:
     if encrypt:
         if constants.PRIVATE_KEY is None:
@@ -145,3 +161,6 @@ def unverify_user(name: str) -> bool:
         return False
     
     return dataaccess.unverify_user(rows[0].id)
+
+def create_new_event(name: str, start: str, end: str, location: str, invite_only: str, code: str, encrypt: bool = False) -> str:
+    return True
