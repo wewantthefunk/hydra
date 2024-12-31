@@ -25,7 +25,7 @@ def login(username: str, password: str, temp_password: str, encrypt: bool):
         result = dataaccess.create_user_session(jdate, uname, token)
         if (result):
             tp = decrypt_symmetric_string(token, tempPassword, encrypt)
-            return {'result': constants.RESULT_OK, 'token': tp, 'level': level}
+            return {'result': constants.RESULT_OK, 'token': tp, 'level': level, 'uname': rows[0].username}
         else:
             return {"message": "Server Error", 'result': constants.RESULT_UNVERIFIED_ACCOUNT }
     else:
@@ -58,6 +58,21 @@ def check_admin(username: str, encrypt: bool):
     username = decrypt_string(username, encrypt)
 
     rows = dataaccess.check_admin(username)
+
+    if len(rows) > 0:
+        r = constants.RESULT_OK
+        m = 'User Is Admin'
+        if rows[0].is_verified == constants.UNVERIFIED_ACCOUNT:
+            r = constants.RESULT_UNVERIFIED_ACCOUNT
+            m = "Unverified Account"
+        return {'message': m, 'result': r, 'email': rows[0].email, 'vcode': rows[0].verification_code, 'is_verified': rows[0].is_verified}
+    
+    return {'message': "User Is NOT Admin", 'result': constants.RESULT_FORBIDDEN}
+
+def check_organizer(username: str, encrypt: bool):
+    username = decrypt_string(username, encrypt)
+
+    rows = dataaccess.check_organizer(username)
 
     if len(rows) > 0:
         r = constants.RESULT_OK
@@ -117,20 +132,30 @@ def check_token(token: str, username: str, encrypt: bool):
     if len(rows) < 1:
         return {'message': 'Invalid Token', 'result': constants.RESULT_FORBIDDEN}
     
-    return {'message': 'success', 'result': constants.RESULT_OK}
+    rows = dataaccess.get_user(rows[0].username)
 
-def check_token_post(token: str, username: str, encrypt: bool) -> bool:
+    return {'message': 'success', 'userId': rows[0].id, 'result': constants.RESULT_OK}
+
+def check_token_post(token: str, username: str, encrypt: bool):
     token_r = check_token(token, username, encrypt)
 
     if (token_r['result'] != constants.RESULT_OK):
-        return False
+        return [False, token_r]
 
-    return True
+    return [True, token_r]
 
 def check_admin_post(username: str, encrypt: bool) -> bool:
     admin_r = check_admin(username, encrypt)
 
     if (admin_r['result'] != constants.RESULT_OK):
+        return False
+    
+    return True
+
+def check_organizer_post(username: str, encrypt: bool) -> bool:
+    organizer_r = check_organizer(username, encrypt)
+
+    if (organizer_r['result'] != constants.RESULT_OK):
         return False
     
     return True
@@ -162,5 +187,26 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(name: str, start: str, end: str, location: str, invite_only: str, code: str, encrypt: bool = False) -> str:
-    return True
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, encrypt: bool = False) -> str:
+    n = decrypt_string(name, encrypt)
+    sd = decrypt_string(startdate, encrypt)
+    ed = decrypt_string(enddate, encrypt)
+    st = decrypt_string(starttime, encrypt)
+    et = decrypt_string(endtime, encrypt)
+    l = decrypt_string(location, encrypt)
+    io = decrypt_string(invite_only, encrypt)
+    if io == 'true':
+        io = '1'
+    else:
+        io = '0'
+    m = decrypt_string(max, encrypt)
+    c = decrypt_string(code, encrypt)
+
+    ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
+
+    if ev.id > 0:
+        return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
+
+    id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c)
+
+    return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}

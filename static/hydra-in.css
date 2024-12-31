@@ -4,14 +4,17 @@
     width:80%;
     border:2px solid #333;
     border-radius: 5px;
-    display: block;
+    display: none;
     position: fixed;
     top: 70px;
     left: 210px;
     padding: 10px;
+    box-shadow: 5px 5px 5px #999;
 }
 
-#createEventDiv input[type="text"] {
+#createEventDiv input[type="text"],
+#createEventDiv input[type="date"],
+#createEventDiv input[type="time"] {
     margin-bottom: 5px;
 }
 

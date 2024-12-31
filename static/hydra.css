@@ -1,4 +1,4 @@
-body {
+body, div {
     background-color: aliceblue;
     padding: 0;
     margin: 0;
@@ -18,12 +18,22 @@ h2 {
     color: #fff;
 }
 
+h3 {
+    font-weight: bold;
+    font-size: larger;
+    font-family: 'Lato', sans-serif;
+    color: royalblue;
+    padding:0;
+    margin:0;
+}
+
 ul {
     list-style-type: none;
     padding: 10px;
     margin: 0;
     text-decoration: underline;
     cursor: pointer;
+    font-family: 'Lato', sans-serif;
 }
 
 span {
@@ -32,10 +42,18 @@ span {
 }
 
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="date"],
+input[type="time"] {
     border-radius: 7px;
     padding: 5px;
     background-color: #fff;
+}
+
+input[type="date"],
+input[type="time"] {
+    width: 135px;
+    min-width: 135px;
 }
 
 .required {
@@ -204,4 +222,14 @@ input[type="button"] {
 
 .topspacer {
     margin-top:5px;
+}
+
+#out-menu {
+    position:fixed;
+    top: 10px;
+    right:10px;
+}
+
+#out-menu li {
+    font-weight: bolder;
 }

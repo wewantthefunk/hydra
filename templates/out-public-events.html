@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ app_name }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/out-public-events.css">
+    <link rel="stylesheet" type="text/css" href="/static/hydra.css">
+    <script type="text/javascript" src="/static/crypto_key.js"></script>
+    <script type="text/javascript" src="/static/crypto.js"></script>
+    <script type="text/javascript" src="/static/out-public-events.js"></script>
+    <script type="text/javascript" src="/static/universal.js"></script>
+</head>
+
+<body onload="finishedLoad();">
+    <div id="main">
+        <h1>{{ app_name }}</h1>
+        <div>
+            <h3>Public Events Available for Signup</h3>
+        </div>
+        <div>
+            <span id="goback" onclick="goback();">Return to Login</span>
+        </div>
+    </div>
+
+    {% include 'all-processing.html' %}
+</body>
+
+</html>

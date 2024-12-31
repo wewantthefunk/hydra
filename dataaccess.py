@@ -15,10 +15,24 @@ class User:
         self.is_active = is_active
 
 class Session:
-    def __init__(self, username, token, issued):
+    def __init__(self, username, token, issued, id):
         self.username = username
         self.token = token
         self.issued = issued
+        self.id = id
+
+class Event:
+    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max):
+        self.id = id
+        self.name = name
+        self.start_date = startdate
+        self.end_date = enddate
+        self.start_time = starttime
+        self.end_time = endtime
+        self.location = location
+        self.invite_only = inviteonly
+        self.invite_code = invitecode
+        self.max_attendees = max
 
 def get_all_users() -> List[User]:
     result = []
@@ -46,6 +60,7 @@ def get_all_users() -> List[User]:
                    )
         result.append(user)
 
+    CURSOR.close()
     conn.close()
 
     return result
@@ -76,6 +91,7 @@ def get_user(uname: str) -> List[User]:
                    )
         result.append(user)
 
+    CURSOR.close()
     conn.close()
 
     return result
@@ -104,6 +120,7 @@ def get_user_by_email(email: str) -> List[User]:
                    )
         result.append(user)
 
+    CURSOR.close()
     conn.close()
 
     return result
@@ -117,6 +134,7 @@ def update_user_verification_code(email: str, vcode: str) -> bool:
     CURSOR.execute("UPDATE users SET verificationCode = '" + vcode + "' WHERE email = '" + email + "'")
     conn.commit()
 
+    CURSOR.close()
     conn.close()
 
     return True
@@ -132,6 +150,7 @@ def create_user_session(jdate: int, uname: str, token: str) -> bool:
     CURSOR.execute("INSERT INTO session (token, username, issued) VALUES ('" + token + "','" + uname + "'," + str(jdate) + ")")
     conn.commit()
 
+    CURSOR.close()
     conn.close()
 
     return True
@@ -160,6 +179,7 @@ def get_user_by_email_or_username(email: str, username: str) -> List[User]:
                    )
         result.append(user)
 
+    CURSOR.close()
     conn.close()
 
     return result
@@ -187,6 +207,7 @@ def get_user_by_email_and_verification_code(email: str, code: str) -> List[User]
                    )
         result.append(user)
     
+    CURSOR.close()
     conn.close()
 
     return result
@@ -214,12 +235,16 @@ def get_session_by_username_token_and_issued(jdate: int, uname: str, token: str)
     result = []
 
     for row in rows:
-        session = Session(row[constants.SESSION_USER_NAME_COL], 
-                    row[constants.SESSION_TOKEN_COL], 
-                    row[constants.SESSION_ISSUED_COL]
-                   )
-        result.append(session)
+        rs = get_user(row[constants.SESSION_USER_NAME_COL])
+        if len(rs) > 0:
+            session = Session(row[constants.SESSION_USER_NAME_COL], 
+                        row[constants.SESSION_TOKEN_COL], 
+                        row[constants.SESSION_ISSUED_COL],
+                        rs[0].id
+                    )
+            result.append(session)
 
+    CURSOR.close()
     conn.close()
 
     return result
@@ -233,6 +258,7 @@ def create_account(username: str, passphrase: str, email: str, vcode: str):
     CURSOR.execute("INSERT INTO users (username, passphrase, email, usertype, isVerified, verificationCode, isActive) VALUES ('" + username + "', '" + passphrase + "','" + email + "', 99, 0,'" + vcode + "',1)")
     conn.commit()
 
+    CURSOR.close()
     conn.close()
 
     return True
@@ -261,6 +287,36 @@ def check_admin(username: str) -> List[User]:
                    )
         result.append(user)
 
+    CURSOR.close()
+    conn.close()
+
+    return result
+
+def check_organizer(username: str) -> List[User]:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    # Retrieve all users
+    CURSOR.execute("SELECT * FROM users WHERE isActive = 1 AND (usertype = " + str(constants.ADMIN_USER) + ' OR usertype = ' + str(constants.SUPER_USER) + ' OR usertype = ' + str(constants.ORGANIZER) + ") AND (username = '" + username + "' OR email = '" + username + "')")
+    rows = CURSOR.fetchall()
+
+    result = []
+
+    for row in rows:
+        user = User(row[constants.USER_EMAIL_COL], 
+                    row[constants.USER_NAME_COL], 
+                    row[constants.USER_ID_COL], 
+                    row[constants.USER_TYPE_COL],
+                    row[constants.USER_PASSPHRASE_COL],
+                    row[constants.USER_IS_VERIFIED_COL],
+                    row[constants.USER_VERIFICATION_CODE_COL],
+                    row[constants.USER_IS_ACTIVE_COL]
+                   )
+        result.append(user)
+
+    CURSOR.close()
     conn.close()
 
     return result
@@ -274,6 +330,7 @@ def verify_account(id: int, passphrase: str):
     CURSOR.execute("UPDATE users SET isVerified = " + str(constants.VERIFIED_ACCOUNT) + " WHERE id = " + str(id))
     conn.commit()
 
+    CURSOR.close()
     conn.close()
 
     return {'message': 'Account Verified', 'result': constants.RESULT_OK}
@@ -287,6 +344,60 @@ def unverify_user(id: int) -> bool:
     CURSOR.execute("UPDATE users SET isVerified = " + str(constants.UNVERIFIED_ACCOUNT) + " WHERE id = " + str(id))
     conn.commit()
 
+    CURSOR.close()
     conn.close()
 
     return True
+
+def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: str) -> Event:
+    result = Event(-1, '', '', '', '', '', '', 0, '', 0)
+
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    CURSOR.execute("SELECT * FROM events WHERE code = '" + code + "'")
+    r = CURSOR.fetchall()
+
+    found = False
+
+    if len(r) > 0:
+        result = Event(r[0][0], r[0][1], r[0][2], r[0][3], r[0][4], r[0][5], r[0][6], r[0][7], r[0][8], r[0][9])
+        found = True
+    
+    if not found:
+        CURSOR.execute("SELECT * FROM events WHERE name = '" + name + "'")
+        rows = CURSOR.fetchall()
+
+        if len(rows) > 0:
+            CURSOR.execute("SELECT * FROM event2owner WHERE ownerId = " + str(userId) + " AND eventId = " + str(rows[0][0]))
+            e = CURSOR.fetchall()
+            if len(e) > 0:
+                result = Event(rows[0][0], rows[0][1], rows[0][2], rows[0][3], rows[0][4], rows[0][5], rows[0][6], rows[0][7], rows[0][8], rows[0][9])
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
+def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str) -> Event:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()    
+    
+    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code) VALUES('"
+    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'"
+    sql = sql + ")"
+    CURSOR.execute(sql)
+    inserted_id = CURSOR.lastrowid
+
+    CURSOR.execute("INSERT INTO event2owner (ownerId, eventId) VALUES (" + str(inserted_id) + "," + str(userId) + ")")
+
+    conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max)

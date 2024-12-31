@@ -19,7 +19,7 @@ async function login() {
 
     if (result['message'] == SUCCESS_LOGIN_MSG) {
         const token = await decryptString(result['token'], tempPassword);
-        sessionStorage.setItem('uname', uname);
+        sessionStorage.setItem('uname', result['uname']);
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('level', result['level']);
         navigate('/home');

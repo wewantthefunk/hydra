@@ -10,9 +10,9 @@ async function finishedLoad() {
     if (validElement(level))
         level = parseInt(level);
     else
-        level = USER_LEVEL;
+        level = USER_LEVEL_ATTENDEE;
 
-    if (level > 1) {
+    if (level > USER_LEVEL_ADMIN) {
         home();
     }
 };

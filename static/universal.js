@@ -3,7 +3,10 @@ let userMenuOpened = false;
 
 const PLACEHOLDER = "&nbsp;";
 const SUCCESS_LOGIN_MSG = 'Successful Login';
-const USER_LEVEL = 99;
+const USER_LEVEL_ATTENDEE = 99;
+const USER_LEVEL_ORGANIZER = 50;
+const USER_LEVEL_ADMIN = 1;
+const USER_LEVEL_SUPERUSER = 0;
 
 let IS_HTTPS = 0;
 
@@ -25,9 +28,10 @@ async function postJsonToApi(url, data, errmsg) {
             body: JSON.stringify(data)
         });
 
-        if (!response.ok) {
+        /*if (!response.ok) {
+            const r = 
             throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        }*/
 
         const jsonResponse = await response.json();
         return jsonResponse;
@@ -289,11 +293,35 @@ async function universalFinishedLoad() {
         document.getElementById("createEvent").style.display = 'none';
     }
 
-    if (sessionStorage.getItem('level') == '0') {
+    if (parseInt(LEVEL) <= USER_LEVEL_ADMIN) {
         const a = document.getElementById('admin');
         if (a != null && a != 'undefined') {
             a.style.display = 'block';
         }
+    }
+
+    if (parseInt(LEVEL) > USER_LEVEL_ORGANIZER) {
+        const a = document.getElementById('createEvent');
+        if (a != null && a != 'undefined') {
+            a.style.display = 'none';
+        }
+    }
+
+    document.getElementById('menu_username').innerHTML = sessionStorage.getItem('uname');
+
+    switch (parseInt(LEVEL)) {
+        case USER_LEVEL_ADMIN:
+            document.getElementById("menu_level").innerHTML = "Admin";
+            break;
+        case USER_LEVEL_ORGANIZER:
+            document.getElementById("menu_level").innerHTML = "Organizer";
+            break;
+        case USER_LEVEL_ATTENDEE:
+            document.getElementById("menu_level").innerHTML = "Attendee";
+            break;
+        case USER_LEVEL_SUPERUSER:
+            document.getElementById("menu_level").innerHTML = "Super User";
+            break;
     }
 
     window.addEventListener('resize', function (event) {
@@ -362,6 +390,7 @@ function copyToClipboard(textBoxId) {
   };
 
   function validateDate(dateString) {
+    dateString = dateString.replaceAll("-", '/');
     // Split the input string into month, day, and year components
     const parts = dateString.split('/');
   
@@ -407,6 +436,22 @@ function copyToClipboard(textBoxId) {
   
     // Check if date1 is less than or equal to date2 using getTime() method
     return date1 <= date2;
+  };
+
+  function julianDayOfYear(dateString) {
+    // Parse input date from string format into Date object
+    const date = new Date(dateString);
+  
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid date format'); // Throw an error for invalid dates
+    }
+  
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const differenceInMilliseconds = date - startOfYear;
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const julianDay = Math.floor(differenceInMilliseconds / millisecondsPerDay) + 1;
+  
+    return julianDay;
   };
 
   function validateTimeInput(inputElement) {

@@ -5,8 +5,8 @@ function copylink() {
 function createNewEvent() {
     document.getElementById('createEventDiv').style.display = 'block';
     document.getElementById('invite').value = generateRandomStringNoSymbols(16);
-    document.getElementById("createNewEventMessage").innerHTML=PLACEHOLDER;
-    document.getElementById("createNewEventMessage2").innerHTML=PLACEHOLDER;
+    document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
+    document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
 };
 
 function closeCreateEvent() {
@@ -14,6 +14,7 @@ function closeCreateEvent() {
 };
 
 async function saveNewEvent() {
+    startProcessing();
     document.getElementById('createNewEventMessage').innerHTML = PLACEHOLDER;
     document.getElementById('createNewEventMessage2').innerHTML = PLACEHOLDER;
     const eventName = document.getElementById('eventName').value.trim();
@@ -66,8 +67,19 @@ async function saveNewEvent() {
         return;
     }
 
-    if (!validateDate(startDate)) {
+    let parts = startDate.split("-");
+    const sd = parts[1] + "/" + parts[2] + '/' + parts[0];
+    if (!validateDate(sd)) {
         document.getElementById('startDate').focus();
+        document.getElementById('createNewEventMessage').innerHTML = "Enter a valid date in";
+        document.getElementById('createNewEventMessage2').innerHTML = "MM/DD/YYYY format";
+        return;
+    }
+
+    parts = endDate.split("-");
+    const ed = parts[1] + "/" + parts[2] + '/' + parts[0];
+    if (!validateDate(ed)) {
+        document.getElementById('endDate').focus();
         document.getElementById('createNewEventMessage').innerHTML = "Enter a valid date in";
         document.getElementById('createNewEventMessage2').innerHTML = "MM/DD/YYYY format";
         return;
@@ -80,17 +92,33 @@ async function saveNewEvent() {
         return;
     }
 
-    postJsonToApi('/createevent', {
+    if (startDate == endDate) {
+        const st = parseInt(startTime.replace(":", ""));
+        const et = parseInt(endTime.replace(":", ""));
+
+        if (st > et) {
+            document.getElementById('startTime').focus();
+            document.getElementById('createNewEventMessage').innerHTML = "Start Time cannot be";
+            document.getElementById('createNewEventMessage2').innerHTML = "Greater than End Time";
+            return;
+        }
+    }
+
+    const result = await postJsonToApi('/createevent', {
         'field1': await encryptWithPublicKey(sessionStorage.getItem('token')),
         'field2': await encryptWithPublicKey(eventName),
         'field3': await encryptWithPublicKey(startDate),
         'field4': await encryptWithPublicKey(endDate),
         'field5': await encryptWithPublicKey(location),
         'field6': await encryptWithPublicKey(max),
-        'field7': await encryptWithPublicKey(document.getElementById('inviteOnly').value),
+        'field7': await encryptWithPublicKey(document.getElementById('inviteOnly').checked),
         'field8': await encryptWithPublicKey(document.getElementById('invite').value),
         'field9': await encryptWithPublicKey(sessionStorage.getItem('uname')),
         'field10': await encryptWithPublicKey(startTime),
         'field11': await encryptWithPublicKey(endTime)
     });
+
+    document.getElementById('createNewEventMessage').innerHTML = result['message']
+
+    stopProcessing();
 };

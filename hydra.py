@@ -17,6 +17,10 @@ def landing():
 def newuser():
     return render_template('out-newuser.html', app_name=constants.APP_NAME)
 
+@app.route('/outpublicevents')
+def outpublicevents():
+    return render_template('out-public-events.html', app_name=constants.APP_NAME)
+
 @app.route("/verify")
 def verify():
     return render_template("out-verify.html", app_name=constants.APP_NAME)
@@ -51,7 +55,7 @@ def login():
         if result['result'] != constants.RESULT_OK:
             return jsonify({'error': result['message']}), result['result']
             
-        return jsonify({'message': 'Successful Login', 'token': result['token'], 'level': result['level']}), constants.RESULT_OK
+        return jsonify({'message': 'Successful Login', 'token': result['token'], 'level': result['level'], 'uname': result['uname']}), constants.RESULT_OK
     
     return jsonify({'message': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
 
@@ -176,19 +180,30 @@ def create_event():
             'endtime': data.get('field11')
         }
 
-        r = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
+        session = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
+
+        if not session[0]:
+            return jsonify({'message': "User Not Authorized to Create Events"}), constants.RESULT_FORBIDDEN
+        
+        r = businesslogic.check_organizer_post(processed_data['uname'], processed_data['e'])
 
         if not r:
             return jsonify({'message': "User Not Authorized to Create Events"}), constants.RESULT_FORBIDDEN
         
-        r = businesslogic.check_admin_post(processed_data['uname'], processed_data['e'])
 
-        if not r:
-            return jsonify({'message': "User Not Authorized to Create Events"}), constants.RESULT_FORBIDDEN
-        
+        r = businesslogic.create_new_event(session[1]['userId'],
+                                           processed_data['eventname'],
+                                           processed_data['startdate'],
+                                           processed_data['enddate'],
+                                           processed_data['starttime'],
+                                           processed_data['endtime'],
+                                           processed_data['location'],
+                                           processed_data['isinvite'],
+                                           processed_data['max'],
+                                           processed_data['code'],
+                                           processed_data['e'])
 
-
-        return jsonify({'message': "Event Created"}), constants.RESULT_OK
+        return jsonify({'message': r['message']}), r['result']
 
     return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
 

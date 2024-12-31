@@ -131,9 +131,30 @@ def create_sql(passphrase, email, adminName, vcode):
         (id INTEGER PRIMARY KEY, name TEXT, startDate DATE, endDate DATE, startTime TIME, endTime TIME, maxAttendees INTEGER, location TEXT, inviteType INTEGER, code TEXT)
     ''')
 
+    # Check if 'inviteType' column exists in the 'events' table
+    cursor.execute("PRAGMA table_info(events)")
+    columns = [column[1] for column in cursor.fetchall()]
+
+    if 'inviteType' not in columns:
+        # Add new column 'inviteType' to the 'events' table if it doesn't exist
+        cursor.execute("ALTER TABLE events ADD COLUMN inviteType INTEGER")
+
+    # Check if 'code' column exists in the 'events' table
+    cursor.execute("PRAGMA table_info(events)")
+    columns = [column[1] for column in cursor.fetchall()]
+
+    if 'code' not in columns:
+        # Add new column 'code' to the 'events' table if it doesn't exist
+        cursor.execute("ALTER TABLE events ADD COLUMN code TEXT")
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS attendees
         (id INTEGER PRIMARY KEY, userId INTEGER, eventId INTEGER)
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS event2owner
+        (id INTEGER PRIMARY KEY, ownerId INTEGER, eventId INTEGER)
     ''')
 
     # Commit the changes
