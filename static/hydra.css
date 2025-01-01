@@ -233,3 +233,25 @@ input[type="button"] {
 #out-menu li {
     font-weight: bolder;
 }
+
+.clickable {
+    cursor:pointer;
+}
+
+#popup-msg-div {
+    min-width:500px;
+    max-width:500px;
+    min-height:30px;
+    max-height:30px;
+    border:1px solid #333;
+    border-radius: 10px;
+    padding:5px;
+    background-color:#2e9eae;
+    color: #333;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0; /* Remove default body margins for better centering */
+    flex-direction: column;
+}

@@ -1,23 +1,6 @@
-#main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /* Set the height of the body to fill the viewport */
-    margin: 0;
-    /* Remove default body margins for better centering */
-    flex-direction: column;
-    font-family: 'Lato', sans-serif;
-}
-
-#main div {
-    margin: 5px;
-}
-
-#goback, #cancel {
-    font-size: small;
-    text-decoration: underline;
-    cursor: pointer;
+#event-list-div {
+    width:80%;
+    margin-left:20px;
 }
 
 #event-list {
@@ -61,26 +44,4 @@
 #event-list img {
     width: 30px;
     height: 30px;
-}
-
-#loggedOutMsgDiv {
-    background-color: aliceblue;
-    height:30%;
-    width:30%;
-    border:2px solid #333;
-    border-radius: 5px;
-    display: none;
-    position: fixed;
-    top: 35%;
-    left: 35%;
-    padding: 10px;
-    box-shadow: 5px 5px 5px #999;
-}
-
-.topspacer {
-    margin-top:20px;
-}
-
-.leftspacer {
-    margin-left: 30px;
 }

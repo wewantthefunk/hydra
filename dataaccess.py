@@ -22,7 +22,7 @@ class Session:
         self.id = id
 
 class Event:
-    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max):
+    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, currentattendees = 0):
         self.id = id
         self.name = name
         self.start_date = startdate
@@ -33,6 +33,7 @@ class Event:
         self.invite_only = inviteonly
         self.invite_code = invitecode
         self.max_attendees = max
+        self.current_attendees = currentattendees
 
 def get_all_users() -> List[User]:
     result = []
@@ -401,3 +402,38 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
     conn.close()
 
     return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max)
+
+def get_public_events() -> List[Event]:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    # Retrieve all users
+    CURSOR.execute("SELECT * FROM events WHERE inviteType = " + str(constants.PUBLIC_EVENT))
+    rows = CURSOR.fetchall()
+
+    result = []
+
+    for row in rows:
+        CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
+        c = CURSOR.fetchall()
+
+        event = Event(row[constants.EVENT_ID_COL],
+                     row[constants.EVENT_NAME_COL],
+                     row[constants.EVENT_START_DATE_COL],
+                     row[constants.EVENT_END_DATE_COL],
+                     row[constants.EVENT_START_TIME_COL],
+                     row[constants.EVENT_END_TIME_COL],
+                     row[constants.EVENT_LOCATION_COL],
+                     row[constants.EVENT_INVITE_TYPE_COL],
+                     row[constants.EVENT_INVITE_CODE_COL],
+                     row[constants.EVENT_MAX_ATTENDEES_COL],
+                     c[0][0]
+                     )
+        result.append(event)
+
+    CURSOR.close()
+    conn.close()
+
+    return result

@@ -1,4 +1,5 @@
 async function finishedLoad() {
+    universalFinishedLoad();
     startProcessing();
     const result = await getApi('/getpublicevents');
     displayEventsTable(JSON.parse(result.message)['events']);
@@ -52,37 +53,43 @@ function displayEventsTable(events) {
         row.appendChild(max);
 
         const current = document.createElement('td');
-        current.textContent = String(parseInt(event.maxAttendees) - parseInt(event.currentAttendees));
+        const spotsLeft = parseInt(event.maxAttendees) - parseInt(event.currentAttendees);
+        current.textContent = String(spotsLeft);
         row.appendChild(current);
 
         const attend = document.createElement('td');
-        const cal = document.createElement('img');
-        cal.src = 'static/calendar.png';
-        cal.setAttribute("onclick", "attend('" + event.inviteCode + "');");
-        cal.setAttribute('title', "Attend");
-        cal.className = 'clickable';
-        attend.appendChild(cal);
+        if (spotsLeft > 0) {
+            const cal = document.createElement('img');
+            cal.src = 'static/calendar.png';
+            cal.setAttribute("onclick", "attend('" + event.inviteCode + "');");
+            cal.setAttribute('title', "Attend");
+            cal.className = 'clickable';
+            attend.appendChild(cal);
+        }
         row.appendChild(attend);
+
+        const link = document.createElement('td');
+        const code = document.createElement('input');
+        code.setAttribute('type', 'text');
+        code.setAttribute('readonly', 'readonly');
+        code.setAttribute('value', event.inviteCode);
+        code.setAttribute('id', 'i-' + event.inviteCode);
+        code.classList.add('hidden');
+        const copy = document.createElement('img');
+        copy.src = 'static/copy.png';
+        copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "');");
+        copy.setAttribute('title', "Copy Event Link");
+        copy.className = 'clickable';
+        link.appendChild(code);
+        link.appendChild(copy);
+
+        row.appendChild(link);
 
         // Append the new row to the table body
         tableBody.appendChild(row);
     });
 };
 
-async function attend(inviteCode) {
-    startProcessing();
-    const token = sessionStorage.getItem('token');
-    if (token == null || token == 'undefined' || token == 'null') {
-        stopProcessing();
+async function attend() {
 
-        document.getElementById("loggedOutMsgDiv").style.display = 'block';
-    }
-};
-
-function goback() {
-    navigate('/');
-};
-
-function hideWindow() {
-    hide(document.getElementById('loggedOutMsgDiv'));
 };

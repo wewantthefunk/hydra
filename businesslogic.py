@@ -210,3 +210,35 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c)
 
     return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
+
+def get_public_events():
+    events = dataaccess.get_public_events()
+
+    events_out = ''
+
+    first = True
+    for event in events:
+        e = ''
+
+        if not first:
+            e = e + ','
+
+        e = e + '{'
+        e = e + '"id":' + str(event.id) + ","
+        e = e + '"name":"' + event.name + '",'
+        e = e + '"startDate":"' + event.start_date + '",'
+        e = e + '"endDate":"' + event.end_date + '",'
+        e = e + '"startTime":"' + event.start_time + '",'
+        e = e + '"endTime":"' + event.end_time + '",'
+        e = e + '"maxAttendees":' + str(event.max_attendees) + ','
+        e = e + '"currentAttendees":' + str(event.current_attendees) + ','
+        e = e + '"location":"' + event.location + '",'
+        e = e + '"inviteType":' + str(event.invite_only) + ','
+        e = e + '"inviteCode":"' + event.invite_code + '"'
+        e = e + '}'
+
+
+        first = False
+        events_out = events_out + e
+    
+    return {'message': '{"events":[' + events_out + ']}', 'id': str(event.id), 'result': constants.RESULT_OK}

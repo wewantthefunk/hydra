@@ -5,21 +5,19 @@
     <meta charset="UTF-8">
     <title>{{ app_name }}</title>
     <link rel="stylesheet" type="text/css" href="/static/fonts.css">
-    <link rel="stylesheet" type="text/css" href="/static/out-public-events.css">
+    <link rel="stylesheet" type="text/css" href="/static/in-public-events.css">
     <link rel="stylesheet" type="text/css" href="/static/hydra.css">
+    <link rel="stylesheet" type="text/css" href="/static/hydra-in.css">
     <script type="text/javascript" src="/static/crypto_key.js"></script>
     <script type="text/javascript" src="/static/crypto.js"></script>
-    <script type="text/javascript" src="/static/out-public-events.js"></script>
     <script type="text/javascript" src="/static/universal.js"></script>
+    <script type="text/javascript" src="/static/in-public-events.js"></script>
 </head>
 
 <body onload="finishedLoad();">
-    <div id="main">
-        <h1>{{ app_name }}</h1>
-        <div>
-            <h3>Public Events Available for Signup</h3>
-        </div>
-        <div>
+    <div id="maindiv">
+        <h1>Public Events</h1>
+        <div id="event-list-div">
             <table id="event-list">
                 <thead>
                     <tr>
@@ -33,6 +31,7 @@
                         <th>Max Attendees</th>
                         <th>Spots Left</th>
                         <th>Attend</th>
+                        <th>Link</th>
                     </tr>
                 </thead>
                 <tbody id="event-list-body">
@@ -40,24 +39,11 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <span id="goback" onclick="goback();">Return to Login</span>
-        </div>
     </div>
 
-    <div id="loggedOutMsgDiv">
-        <div class="center-div-horizontal">
-            <h1>You must be Logged In to</h1><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Signup for an Event</h1>
-            <div>
-                <input class="center" type="button" id="goToLogin" value="Go To Login" onclick="navigate('/')" />
-            </div>
-            <div class="topspacer center">
-                <span class="leftspacer" id="cancel" onclick="hideWindow();">Cancel</span>
-            </div>
-        </div>
-    </div>
+    {% include 'in-menus.html' %}
+
+    {% include 'in-create-event-window.html' %}
 
     {% include 'all-processing.html' %}
 </body>
-
-</html>

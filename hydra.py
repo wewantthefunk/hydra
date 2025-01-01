@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_mail import Mail
 import utilities, constants, businesslogic
-import sys
 
 app = Flask(__name__)
 
@@ -33,8 +32,22 @@ def account():
 def admin():
     return render_template("in-admin.html", app_name=constants.APP_NAME)
 
+@app.route("/publicevents")
+def publicevents():
+    return render_template('in-public-events.html', app_name=constants.APP_NAME)
+
 @app.route('/getusers', methods=['POST'])
 def getusers():
+    pass
+
+@app.route('/getpublicevents')
+def getpublicevents():
+    result = businesslogic.get_public_events()
+
+    return jsonify({'message': result['message']}), constants.RESULT_OK
+
+@app.route('/attend/<invite>')
+def attend(inviteCode):
     pass
 
 @app.route('/login', methods=['POST'])

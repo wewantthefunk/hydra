@@ -19,6 +19,7 @@ pip install cryptography
 pip install flask
 pip install flask_mail
 pip install wheel
+pip install jdcal
 
 # install the configuration for the the hydra application
 python admin/install.py false

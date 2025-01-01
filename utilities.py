@@ -1,4 +1,5 @@
 import string, random, json, os
+from jdcal import gcal2jd
 from datetime import datetime
 from flask_mail import Message, Mail
 from cryptography.hazmat.primitives import serialization
@@ -44,22 +45,14 @@ def generate_random_string(length):
     return random_string
 
 def date_to_julian(date):
-    """Convert a datetime object or string to Julian Day."""
-    # If input is a string, convert it to a datetime object
-    if isinstance(date, str):
-        date = datetime.strptime(date, '%m/%d/%Y')
+    # Get the current date
+    now = datetime.now()
 
-    # Get the year, month and day from the datetime object
-    year = date.year
-    month = date.month
-    day = date.day
+    tt = now.timetuple() 
 
-    # Calculate Julian Day using the formula (from Wikipedia)
-    julian_day = day + ((153 * month - 457) // 5)
+    jd = int('%d%03d' % (tt.tm_year, tt.tm_yday))
 
-    result = str(year) + str(int(julian_day))
-    # Return the Julian Day as an integer
-    return int(result)
+    return jd
 
 def write_to_file(filename, data):
     with open(filename, 'w') as file:
