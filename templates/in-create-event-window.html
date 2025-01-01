@@ -14,9 +14,14 @@
                 <br/>
                 <input type="text" id="max" placeholder="Max Attendees" class="center required" title="Max Attendees" oninput="validateNumericInput(this);" onblur="checkRequired(this);"/>
                 <br/>
-                <span class="center">Invite Only</span><input type="checkbox" id="inviteOnly"/>
+                <select id="eventType" class="center">
+                        <option value="-1" selected>Choose Event Type</option>
+                        <option value="0">Public</option>
+                        <option value="1">Private</option>
+                        <option value="2">Invite Only</option>
+                </select>
                 <br/>
-                <input type="text" id="invite" placeholder="Event Id" class="center topspacer" title="Event ID" readonly value="12345" />
+                <input type="text" id="invite" placeholder="Event Id" class="center topspacer readonly" title="Event ID" readonly value="12345" />
                 <img src="static/copy.png" id="copy-value" title="Copy Invite Link" class="topspacer" onclick="copylink();"/>
                 <br/>
                 <br/>

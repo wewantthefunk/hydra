@@ -50,6 +50,29 @@ def getpublicevents():
 def attend(inviteCode):
     pass
 
+@app.route('/myevents', methods=['POST'])
+def my_events():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'token': data.get('field1'),
+            'username': data.get('field2'),
+            'e': data.get('e')
+        }
+
+        rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+        if not rt[0]:
+            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+        
+        result = businesslogic.get_my_events(rt[1]['userId'])
+
+        return jsonify({'message': result['message']}), constants.RESULT_OK
+    
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+
 @app.route('/login', methods=['POST'])
 def login():
     if request.is_json:

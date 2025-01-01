@@ -1,5 +1,5 @@
 async function finishedLoad() {
-    universalFinishedLoad();
+    await universalFinishedLoad();
     startProcessing();
     const result = await getApi('/getpublicevents');
     displayEventsTable(JSON.parse(result.message)['events']);

@@ -15,6 +15,29 @@
 <body onload="finishedLoad();">
     <div id="maindiv">
         <h1>My Events</h1>
+        <div id="event-list-div">
+            <table id="event-list">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Location</th>
+                        <th>Start Date</th>
+                        <th>Start Time</th>
+                        <th>End Date</th>
+                        <th>End Time</th>
+                        <th>Max Attendees</th>
+                        <th>Spots Left</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody id="event-list-body">
+
+                </tbody>
+            </table>
+        </div>
     </div>
 
    {% include 'in-menus.html' %}

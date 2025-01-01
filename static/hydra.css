@@ -44,10 +44,16 @@ span {
 input[type="text"],
 input[type="password"],
 input[type="date"],
-input[type="time"] {
+input[type="time"],
+select {
     border-radius: 7px;
     padding: 5px;
     background-color: #fff;
+}
+
+select {
+    width: 185px;
+    min-width: 185px;
 }
 
 input[type="date"],
@@ -58,6 +64,11 @@ input[type="time"] {
 
 .required {
     border-color: red;
+}
+
+.readonly {
+    border: none;
+    padding: 0;
 }
 
 input[type="button"] {
@@ -254,4 +265,5 @@ input[type="button"] {
     align-items: center;
     margin: 0; /* Remove default body margins for better centering */
     flex-direction: column;
+    display:none;
 }

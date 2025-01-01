@@ -394,7 +394,7 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.execute(sql)
     inserted_id = CURSOR.lastrowid
 
-    CURSOR.execute("INSERT INTO event2owner (ownerId, eventId) VALUES (" + str(inserted_id) + "," + str(userId) + ")")
+    CURSOR.execute("INSERT INTO event2owner (eventId, ownerId) VALUES (" + str(inserted_id) + "," + str(userId) + ")")
 
     conn.commit()
 
@@ -411,6 +411,59 @@ def get_public_events() -> List[Event]:
 
     # Retrieve all users
     CURSOR.execute("SELECT * FROM events WHERE inviteType = " + str(constants.PUBLIC_EVENT))
+    rows = CURSOR.fetchall()
+
+    result = []
+
+    for row in rows:
+        CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
+        c = CURSOR.fetchall()
+
+        event = Event(row[constants.EVENT_ID_COL],
+                     row[constants.EVENT_NAME_COL],
+                     row[constants.EVENT_START_DATE_COL],
+                     row[constants.EVENT_END_DATE_COL],
+                     row[constants.EVENT_START_TIME_COL],
+                     row[constants.EVENT_END_TIME_COL],
+                     row[constants.EVENT_LOCATION_COL],
+                     row[constants.EVENT_INVITE_TYPE_COL],
+                     row[constants.EVENT_INVITE_CODE_COL],
+                     row[constants.EVENT_MAX_ATTENDEES_COL],
+                     c[0][0]
+                     )
+        result.append(event)
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
+def get_my_events(user_id: int) -> List[Event]:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    CURSOR.execute("SELECT * FROM event2owner WHERE ownerId = " + str(user_id))
+    o_rows = CURSOR.fetchall()
+
+    if len(o_rows) < 1:
+        return []
+    
+    ids = ''
+    first = True
+
+    for o_row in o_rows:
+        if not first:
+            ids = ids + ','
+
+        ids = ids + str(o_row[constants.EVENT_OWNER_ID_COL])
+
+        first = False
+
+    # Retrieve all users
+    CURSOR.execute("SELECT * FROM events WHERE id in (" + ids + ")")
+
     rows = CURSOR.fetchall()
 
     result = []

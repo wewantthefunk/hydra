@@ -346,6 +346,12 @@ async function universalFinishedLoad() {
     calcsizes();
 
     IS_HTTPS = isUrlHttps(window.location.href);
+
+    const create_event_invite_code = document.getElementById('invite');
+
+    if (create_event_invite_code != null && create_event_invite_code != 'undefined') {
+        create_event_invite_code.style.backgroundColor = "#aaa";
+    }
 };
 
 async function outsideFinishedLoad() {

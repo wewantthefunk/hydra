@@ -14,7 +14,6 @@ function closeCreateEvent() {
 };
 
 async function saveNewEvent() {
-    startProcessing();
     document.getElementById('createNewEventMessage').innerHTML = PLACEHOLDER;
     document.getElementById('createNewEventMessage2').innerHTML = PLACEHOLDER;
     const eventName = document.getElementById('eventName').value.trim();
@@ -104,6 +103,16 @@ async function saveNewEvent() {
         }
     }
 
+    const etype = document.getElementById('eventType').value;
+
+    if (parseInt(etype) < 0) {
+        document.getElementById('eventType').focus();
+        document.getElementById('createNewEventMessage').innerHTML = "Select Event Type";
+        return;
+    }
+
+    startProcessing();
+
     const result = await postJsonToApi('/createevent', {
         'field1': await encryptWithPublicKey(sessionStorage.getItem('token')),
         'field2': await encryptWithPublicKey(eventName),
@@ -111,7 +120,7 @@ async function saveNewEvent() {
         'field4': await encryptWithPublicKey(endDate),
         'field5': await encryptWithPublicKey(location),
         'field6': await encryptWithPublicKey(max),
-        'field7': await encryptWithPublicKey(document.getElementById('inviteOnly').checked),
+        'field7': await encryptWithPublicKey(etype),
         'field8': await encryptWithPublicKey(document.getElementById('invite').value),
         'field9': await encryptWithPublicKey(sessionStorage.getItem('uname')),
         'field10': await encryptWithPublicKey(startTime),
@@ -120,5 +129,11 @@ async function saveNewEvent() {
 
     document.getElementById('createNewEventMessage').innerHTML = result['message']
 
-    stopProcessing();
+    if (result['message'] == 'Event Created') {
+        setTimeout(() => {
+            navigate(window.location.href);
+        }, 1000);
+    } else {
+        stopProcessing();
+    }
 };
