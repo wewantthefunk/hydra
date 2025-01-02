@@ -88,10 +88,9 @@ input[type="button"] {
 
 .center-div-horizontal {
     position: relative;
-    top: 50%;
-    left: 50%;
     align-items: center;
     display: flex;
+    flex-direction: column;
     margin:0;
     z-index: 999;
     opacity: 1.0;
@@ -252,16 +251,14 @@ input[type="button"] {
     cursor:pointer;
 }
 
-#popup-msg-div {
+#popup-msg-div, #popup-error-msg-div {
     min-width:500px;
     max-width:500px;
     min-height:30px;
     max-height:30px;
     border:1px solid #333;
     border-radius: 10px;
-    padding:5px;
-    background-color:#2e9eae;
-    color: #333;
+    padding:5px;    
     position: fixed;
     display: flex;
     justify-content: center;
@@ -272,11 +269,28 @@ input[type="button"] {
     box-shadow: 5px 5px 5px #999;
 }
 
-#popup-msg {
-    background-color: #2e9eae;
+#popup-msg-div {
+    background-color:#2e9eae;
+    color: #333;
+}
+
+#popup-error-msg-div {
+    background-color:#C70039;
+    color: #ddd;
+}
+
+#popup-msg, #popup-error-msg {
     justify-content: center;
     text-align: center;
     font-family: 'Lato', sans-serif;
     height: inherit;
     margin-top:5px;
+}
+
+#popup-msg {
+    background-color: #2e9eae;
+}
+
+#popup-error-msg {
+    background-color: #C70039;
 }

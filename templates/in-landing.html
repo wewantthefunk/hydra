@@ -41,6 +41,29 @@
         </div>
     </div>
 
+    <div id="delete-event-div">
+        <h1>Delete Event</h1>
+        <div>
+            Are you sure you want to delete this event?
+        </div>
+        <div>
+            <div id="delete-event-name">&nbsp;</div>
+            <span id="delete-event-id"></span>
+        </div>
+        <div class="topspacer">
+            <input type="button" id="delete-event-cancel" value="Cancel Delete" onclick="cancelDelete();"/>
+        </div>
+        <div>&nbsp;</div>
+        <div class="topspacer">
+            Type '<span id="delete-confirm-code">WWWWWW</span>' (without quotes) in the textbox below to confirm the delete.
+            <br/>
+            <input type="text" id="confirm-delete" placeholder="delete" class="topspacer"/>
+        </div>
+        <div class="topspacer">
+            <input type="button" id="delete-event-confirm" value="Confirm Delete" onclick="confirmDelete();"/>
+        </div>
+    </div>
+
    {% include 'in-menus.html' %}
 
    {% include 'in-create-event-window.html' %}

@@ -73,6 +73,30 @@ def my_events():
     
     return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
 
+@app.route('/deleteevent', methods=['POST'])
+def delete_event():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'eventId': data.get('field1'),
+            'token': data.get('field2'),
+            'username': data.get('field3'),
+            'e': data.get('e')
+        }
+
+        rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], utilities.use_encrypt(processed_data['e']))
+
+        if not rt[0]:
+            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+        
+        result = businesslogic.delete_event(rt[1]['userId'], processed_data['eventId'], processed_data['e'])
+
+        return jsonify({'message': result['message']}), result['result']
+    
+    return jsonify({'message': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
+
 @app.route('/login', methods=['POST'])
 def login():
     if request.is_json:

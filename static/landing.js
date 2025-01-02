@@ -77,7 +77,7 @@ async function displayEventsTable(events) {
         const del = document.createElement('td');
         const deli = document.createElement('img');
         deli.src = 'static/delete.png';
-        deli.setAttribute("onclick", "delete_event('" + event.id + "');");
+        deli.setAttribute("onclick", "delete_event(this.parentElement.parentElement);");
         deli.setAttribute('title', "Delete");
         deli.className = 'clickable';
         del.appendChild(deli);
@@ -113,4 +113,44 @@ async function displayEventsTable(events) {
         // Append the new row to the table body
         tableBody.appendChild(row);
     });
+};
+
+async function delete_event(event_row) {
+    const confirmCode = generateRandomString(6);
+    document.getElementById("delete-confirm-code").innerHTML = confirmCode;
+    document.getElementById("confirm-delete").setAttribute('placeholder', confirmCode);
+    document.getElementById('delete-event-name').innerHTML = event_row.childNodes[0].innerHTML;
+    document.getElementById('delete-event-id').innerHTML = event_row.childNodes[1].innerHTML;
+    document.getElementById('delete-event-div').style.display = 'block';
+};
+
+async function cancelDelete() {
+    document.getElementById('delete-event-div').style.display = 'none';
+};
+
+async function confirmDelete() {
+    const typed = document.getElementById('confirm-delete').value;
+    const code = document.getElementById("delete-confirm-code").innerHTML;
+
+    if (typed != code) {
+        showErrMsg("Confirm Delete Code Incorrect");
+        return;
+    }
+
+    startProcessing();
+
+    const u = await encryptWithPublicKey(sessionStorage.getItem('uname'));
+    const t = await encryptWithPublicKey(sessionStorage.getItem('token'));
+    const eid = await encryptWithPublicKey(document.getElementById('delete-event-id').innerHTML);
+
+    const result = await postJsonToApi('/deleteevent', {'field1': eid, 'field2': t, 'field3': u, 'e': IS_HTTPS});
+
+    if (result['message'] == 'Event Deleted') {
+        navigate('/home');
+        return;
+    }
+
+    showErrMsg(result['message']);
+
+    stopProcessing();
 };

@@ -264,6 +264,11 @@ function calcsizes() {
 
     popupmsg.style.top = '52px';
     popupmsg.style.left = ((sizes['width'] /2) - 250) + 'px';
+
+    const popuperrmsg = document.getElementById('popup-error-msg-div');
+
+    popuperrmsg.style.top = '52px';
+    popuperrmsg.style.left = ((sizes['width'] /2) - 250) + 'px';
 };
 
 function isUrlHttps(url) {
@@ -374,12 +379,22 @@ function togglePasswordReveal(toggleButton, id) {
 };
 
 function showMsg(text) {
+    const m = 
     document.getElementById('popup-msg').innerHTML = text;
     document.getElementById('popup-msg-div').style.display = 'block';
     setTimeout(() => {
         document.getElementById('popup-msg-div').style.display = 'none';
     }, 2000);
-}
+};
+
+function showErrMsg(text) {
+    const m = document.getElementById('popup-error-msg-div');
+    document.getElementById('popup-error-msg').innerHTML = text;
+    m.style.display = 'block';
+    setTimeout(() => {
+        m.style.display = 'none';
+    }, 2000);
+};
 
 function copyToClipboard(textBoxId) {
     // Get the text field

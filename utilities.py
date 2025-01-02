@@ -83,3 +83,11 @@ def use_encrypt(v: str) -> bool:
         return True
     
     return False
+
+def str_to_bool(s: str):
+    if s.lower().strip() == "true" or s.lower().strip() == '1':
+        return True
+    elif s.lower().strip() == "false" or s.lower().strip() == '0':
+        return False
+    else:
+        raise ValueError("Invalid boolean string")

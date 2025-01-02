@@ -46,3 +46,27 @@
     width: 30px;
     height: 30px;
 }
+
+#delete-event-div {
+    background-color: aliceblue;
+    height:30%;
+    width:30%;
+    border:2px solid #333;
+    border-radius: 5px;
+    display: none;
+    position: fixed;
+    top: 35%;
+    left: 35%;
+    padding: 10px;
+    box-shadow: 5px 5px 5px #999;
+    font-family: 'Lato', sans-serif;
+}
+
+#delete-event-name {
+    margin-left: 100px;
+    color: #C70039;
+}
+
+#delete-event-id {
+    display: none;
+}

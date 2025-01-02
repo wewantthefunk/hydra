@@ -161,7 +161,9 @@ def check_organizer_post(username: str, encrypt: bool) -> bool:
     return True
 
 def decrypt_string(s: str, encrypt: bool = False) -> str:
-    if encrypt:
+    e = utilities.str_to_bool(str(encrypt))
+
+    if e:
         if constants.PRIVATE_KEY is None:
             utilities.load_private_key()
 
@@ -173,7 +175,9 @@ def decrypt_string(s: str, encrypt: bool = False) -> str:
     return s
 
 def decrypt_symmetric_string(s: str, p: str, encrypt: bool = False) -> str:
-    if encrypt:
+    e = utilities.str_to_bool(str(encrypt))
+
+    if e:
         return base64.b64encode(crypto_symmetric.encrypt(s, p.encode('utf-8'))).decode('ascii')
     
     return s
@@ -274,3 +278,13 @@ def get_my_events(user_id: int):
         events_out = events_out + e
     
     return {'message': '{"events":[' + events_out + ']}', 'id': '-1', 'result': constants.RESULT_OK}
+
+def delete_event(user_id: int, event_id: int, encrypt: bool = False):
+    eid = decrypt_string(event_id, encrypt)
+
+    result = dataaccess.delete_event(user_id, eid)
+
+    if result:
+        return {'message': 'Event Deleted', 'result': constants.RESULT_OK}
+    
+    return {'message': 'Event Not Deleted', 'result': constants.RESULT_INVALID_REQUEST}

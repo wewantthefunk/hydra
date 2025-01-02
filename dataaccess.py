@@ -490,3 +490,25 @@ def get_my_events(user_id: int) -> List[Event]:
     conn.close()
 
     return result
+
+def delete_event(user_id: int, event_id: int):
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()    
+    
+    sql = "DELETE FROM attendees WHERE eventId = " + str(event_id)
+    CURSOR.execute(sql)
+
+    sql = "DELETE FROM event2owner WHERE eventId = " + str(event_id)
+    CURSOR.execute(sql)
+    
+    sql = "DELETE FROM events WHERE id = " + str(event_id)
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return True
