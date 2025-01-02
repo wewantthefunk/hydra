@@ -64,13 +64,6 @@ function hide(o) {
     }
 };
 
-function validElement(e) {
-    if (e != null && e != 'undefined')
-        return true;
-
-    return false;
-};
-
 function validateEmail(email) {
     const regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
     return regex.test(email);
@@ -269,7 +262,7 @@ function calcsizes() {
 
     const popupmsg = document.getElementById('popup-msg-div');
 
-    popupmsg.style.top = ((sizes['height'] / 2) - 15) + 'px';
+    popupmsg.style.top = '52px';
     popupmsg.style.left = ((sizes['width'] /2) - 250) + 'px';
 };
 
@@ -283,7 +276,7 @@ function isUrlHttps(url) {
 
 async function universalFinishedLoad() {
     const token = sessionStorage.getItem('token');
-    if (token == 'undefined' || token == null) {
+    if (!isValueValid(token)) {
         navigate("/");
     }
 
@@ -296,12 +289,22 @@ async function universalFinishedLoad() {
 
     if (result['message'] != 'success') {
         navigate('/');
+        return;
     }
 
     LEVEL = sessionStorage.getItem('level');
 
-    if (LEVEL == 'undefined' || LEVEL == null) {
+    if (!isValueValid(LEVEL)) {
         navigate("/");
+        return;
+    }
+
+    const destination = sessionStorage.getItem('destination');
+
+    if (isValueValid(destination)) {
+        sessionStorage.setItem('destination', null);
+        navigate(destination);
+        return;
     }
 
     if (parseInt(LEVEL) > 1) {
@@ -504,4 +507,12 @@ function checkRequired(o) {
     } else {
         o.classList.remove("required");
     }
+};
+
+function isValueValid(v) {
+    if (v == null || v == 'undefined' || v == 'null') {
+        return false;
+    }
+
+    return true;
 };

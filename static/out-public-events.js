@@ -71,12 +71,19 @@ function displayEventsTable(events) {
 
 async function attend(inviteCode) {
     startProcessing();
+    dest = "/attend/" + inviteCode;
     const token = sessionStorage.getItem('token');
-    if (token == null || token == 'undefined' || token == 'null') {
+    if (!isValueValid(token)) {
         stopProcessing();
 
         document.getElementById("loggedOutMsgDiv").style.display = 'block';
+
+        sessionStorage.setItem('destination', dest);
+
+        return;
     }
+
+    navigate(dest);
 };
 
 function goback() {
@@ -85,4 +92,36 @@ function goback() {
 
 function hideWindow() {
     hide(document.getElementById('loggedOutMsgDiv'));
+};
+
+async function login() {
+    startProcessing();
+    const message = document.getElementById("login-message");
+    message.innerHTML = PLACEHOLDER;
+
+    const uname = document.getElementById("uname").value;
+    const pwd = document.getElementById("password").value;
+    const tempPassword = generateRandomString(12);
+
+    const u = await encryptWithPublicKey(uname);
+    const p = await encryptWithPublicKey(pwd);
+    const tp = await encryptWithPublicKey(tempPassword);
+
+    const result = await postJsonToApi("/login", { "field1": u, "field2": p, "field3": tp }, "Invalid Username and Password");
+
+    message.innerHTML = result['message'];
+
+    stopProcessing();
+
+    if (result['message'] == SUCCESS_LOGIN_MSG) {
+        const token = await decryptString(result['token'], tempPassword);
+        sessionStorage.setItem('uname', result['uname']);
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('level', result['level']);
+        navigate('/home');
+    } else {
+        if (result['status'].indexOf('401') > -1) {
+            message.innerHTML = "Account Not Verified. Click the 'Verify Account' link below."
+        }
+    }
 };

@@ -84,3 +84,24 @@
 .leftspacer {
     margin-left: 30px;
 }
+
+#uname, #password {
+    margin-left: -20px;
+}
+
+#create-account {
+    margin-left: 5px;
+    text-decoration: underline;
+    cursor:pointer;
+}
+
+#cancel {
+    margin-left: 35px;
+}
+
+#login-message-div {
+    width: 100%;
+}
+#login-message {
+    margin-left:-30px;
+}

@@ -47,8 +47,8 @@ def getpublicevents():
     return jsonify({'message': result['message']}), constants.RESULT_OK
 
 @app.route('/attend/<invite>')
-def attend(inviteCode):
-    pass
+def attend(invite):
+    return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite)
 
 @app.route('/myevents', methods=['POST'])
 def my_events():
@@ -89,7 +89,7 @@ def login():
         result = businesslogic.login(processed_data['username'], processed_data['password'], processed_data['tempPassword'], utilities.use_encrypt(processed_data['e']))
 
         if result['result'] != constants.RESULT_OK:
-            return jsonify({'error': result['message']}), result['result']
+            return jsonify({'message': result['message']}), result['result']
             
         return jsonify({'message': 'Successful Login', 'token': result['token'], 'level': result['level'], 'uname': result['uname']}), constants.RESULT_OK
     

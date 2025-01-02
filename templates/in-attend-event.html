@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ app_name }}</title>
     <link rel="stylesheet" type="text/css" href="/static/fonts.css">
-    <link rel="stylesheet" type="text/css" href="/static/admin.css">
+    <link rel="stylesheet" type="text/css" href="/static/attend.css">
     <link rel="stylesheet" type="text/css" href="/static/hydra.css">
     <link rel="stylesheet" type="text/css" href="/static/hydra-in.css">
     <script type="text/javascript" src="/static/crypto_key.js"></script>
     <script type="text/javascript" src="/static/crypto.js"></script>
     <script type="text/javascript" src="/static/universal.js"></script>
-    <script type="text/javascript" src="/static/admin.js"></script>
+    <script type="text/javascript" src="/static/attend.js"></script>
 </head>
+
 <body onload="finishedLoad();">
     <div id="maindiv">
-        <h1>Server Administration</h1>
-        <div>
-            <div id="adminleftmenu">
-                <ul>
-                    <li onclick="showusers();">Show All Users</li>
-                    <li>Show All Events</li>
-                </ul>
-            </div>
-            <div id="adminmaindiv">
-                
-            </div>
+        <span id="invite_code">{{ invite_code }}</span>
+        <h1>Attend Event</h1>
+        <div id="event-info-div">
+            <input type="button" id="attend" value="Attend" onclick="attend();"/>
         </div>
     </div>
 
     {% include 'in-menus.html' %}
 
     {% include 'in-create-event-window.html' %}
-    
+
     {% include 'all-processing.html' %}
 </body>
+
+</html>

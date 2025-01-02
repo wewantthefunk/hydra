@@ -100,6 +100,16 @@ async function displayEventsTable(events) {
 
         row.appendChild(link);
 
+        const goto = document.createElement('td');
+        const gotoi = document.createElement('img');
+        gotoi.src = 'static/start.png';
+        gotoi.setAttribute("onclick", "gotoEvent('" + event.id + "');");
+        gotoi.setAttribute('title', "Go To Event");
+        gotoi.className = 'clickable';
+        goto.appendChild(gotoi);
+
+        row.appendChild(goto);
+
         // Append the new row to the table body
         tableBody.appendChild(row);
     });

@@ -266,4 +266,14 @@ input[type="button"] {
     margin: 0; /* Remove default body margins for better centering */
     flex-direction: column;
     display:none;
+    box-shadow: 5px 5px 5px #999;
+}
+
+#popup-msg {
+    background-color: #2e9eae;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    height: inherit;
+    margin-top:5px;
 }

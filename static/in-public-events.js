@@ -90,6 +90,6 @@ function displayEventsTable(events) {
     });
 };
 
-async function attend() {
-
+async function attend(code) {
+    navigate('/attend/' + code);
 };

@@ -5,9 +5,9 @@ function showusers() {
 async function finishedLoad() {
     await universalFinishedLoad();
 
-    const level = sessionStorage.getItem('level');
+    let level = sessionStorage.getItem('level');
 
-    if (validElement(level))
+    if (isValueValid(level))
         level = parseInt(level);
     else
         level = USER_LEVEL_ATTENDEE;
