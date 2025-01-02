@@ -2,6 +2,14 @@ async function finishedLoad() {
     startProcessing();
     const result = await getApi('/getpublicevents');
     displayEventsTable(JSON.parse(result.message)['events']);
+
+    const toggleButton = document.getElementById('password-view');
+    if (isValueValid(toggleButton)) {
+        toggleButton.addEventListener('click', () => {
+            togglePasswordReveal(toggleButton, 'password');
+        });
+    }
+
     stopProcessing();
 };
 

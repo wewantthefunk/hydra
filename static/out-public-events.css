@@ -82,11 +82,11 @@
 }
 
 .leftspacer {
-    margin-left: 30px;
+    margin-left: 80px;
 }
 
 #uname, #password {
-    margin-left: -20px;
+    margin-left: 20px;
 }
 
 #create-account {
@@ -101,7 +101,11 @@
 
 #login-message-div {
     width: 100%;
+    margin-left: 25px;
 }
 #login-message {
     margin-left:-30px;
+}
+#create-account-div, #cancel-div {
+    margin-left:47px;
 }

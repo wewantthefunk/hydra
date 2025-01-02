@@ -46,24 +46,24 @@
     </div>
 
     <div id="loggedOutMsgDiv">
-        <div class="center-div-horizontal">
+        <div class="center-div">
             <h1>You must be Logged In to</h1><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Signup for an Event</h1>
-            <div class="center">
+            <div class="">
                 <input type="text" id="uname" placeholder="Username"/>
             </div>
-            <div class="center">
-                <input type="password" id="password" placeholder="Password"/>
+            <div class="">
+                <input type="password" id="password" placeholder="Password"/><img id="password-view" src="/static/reveal-static.png" title="Click to show password" />
             </div>
-            <div class="center topspacer">
+            <div class="topspacer">
                 <input class="leftspacer" type="button" id="login" value="Login" onclick="login()" />
             </div>
-            <div id="login-message-div" class="center topspacer">
+            <div id="login-message-div" class="topspacer">
                 <span id="login-message">&nbsp;</span>
             </div>
-            <div class="center topspacer">
+            <div class="topspacer" id="create-account-div">
                 <span id="create-account" onclick="navigate('/newuser');">Create Account</span>
             </div>
-            <div class="topspacer center">
+            <div class="topspacer" id="cancel-div">
                 <span id="cancel" onclick="hideWindow();">Cancel</span>
             </div>
         </div>
