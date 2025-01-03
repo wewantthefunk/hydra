@@ -199,15 +199,12 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     et = decrypt_string(endtime, encrypt)
     l = decrypt_string(location, encrypt)
     io = decrypt_string(invite_only, encrypt)
-    if io == 'true':
-        io = '1'
-    else:
-        io = '0'
     m = decrypt_string(max, encrypt)
     c = decrypt_string(code, encrypt)
     aas = decrypt_string(allow_anonymous_signups, encrypt)
     rsi = decrypt_string(require_signin, encrypt)
     uorc = decrypt_string(update_or_create, encrypt)
+    eid = decrypt_string(id, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
 
@@ -220,11 +217,11 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
         return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
     else:
         if ev.id <= 0:
-            return {'message': 'Event Does Not Exist, Unable to Update', 'id': id, 'result': constants.RESULT_NOT_FOUND}
+            return {'message': 'Event Does Not Exist, Unable to Update', 'id': eid, 'result': constants.RESULT_NOT_FOUND}
         
-        id = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, id, rsi)
+        eid = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, eid, rsi)
 
-        return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
+        return {'message': 'Event Updated', 'id': str(eid), 'result': constants.RESULT_OK}
 
 def get_public_events():
     events = dataaccess.get_public_events()

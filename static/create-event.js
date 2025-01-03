@@ -8,21 +8,48 @@ function createNewEvent() {
     document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
     document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
     document.getElementById('create-event-header').innerHTML = 'Create New Event';
-    document.getElementById('createEventButton').innerHTML = 'Create';
+    document.getElementById('createEventButton').value = 'Create';
     document.getElementById('new-or-update-event').innerHTML = 'new';
     document.getElementById('event-id').innerHTML = '-1';
 };
 
 function updateEvent(event_row) {
     document.getElementById('createEventDiv').style.display = 'block';
-    document.getElementById('invite').value = event_row.children[11].children[0].value;
+    document.getElementById('invite').value = event_row.children[13].children[0].value;
     document.getElementById('eventName').value = event_row.children[0].innerHTML;
+    document.getElementById('startDate').value = event_row.children[5].innerHTML;
+    document.getElementById('startTime').value = event_row.children[6].innerHTML;
+    document.getElementById('endDate').value = event_row.children[7].innerHTML;
+    document.getElementById('endTime').value = event_row.children[8].innerHTML;
+    document.getElementById('location').value = event_row.children[4].innerHTML;
+    document.getElementById('max').value = event_row.children[9].innerHTML;
     document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
     document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
     document.getElementById('create-event-header').innerHTML = 'Update Event';
-    document.getElementById('createEventButton').innerHTML = 'Update';
+    document.getElementById('createEventButton').value = 'Update';
     document.getElementById('new-or-update-event').innerHTML = 'update';
     document.getElementById('event-id').innerHTML = event_row.children[1].innerHTML;
+
+    if (event_row.children[2].innerHTML == '1') {
+        document.getElementById('allow-anonymous-signup').setAttribute('checked', 'checked');
+    }
+
+    if (event_row.children[3].innerHTML == '1') {
+        document.getElementById('require-signin').setAttribute('checked', 'checked');
+    }
+
+
+    if (parseInt(event_row.children[14].innerHTML) >= 0) {
+        document.getElementById('eventType').value = event_row.children[14].innerHTML;
+    }
+
+    document.getElementById('max').focus();
+    document.getElementById('startDate').focus();
+    document.getElementById('endDate').focus();
+    document.getElementById('startTime').focus();
+    document.getElementById('endTime').focus();
+    document.getElementById('location').focus();
+    document.getElementById('eventName').focus();
 };
 
 function closeCreateEvent() {
@@ -147,7 +174,7 @@ async function saveNewEvent() {
         'field11': await encryptWithPublicKey(endTime),
         'field12': await encryptWithPublicKey(aas),
         'field13': await encryptWithPublicKey(document.getElementById('new-or-update-event').innerHTML),
-        'field14': await encryptWithPublicKey(document.getElementById('event-id')),
+        'field14': await encryptWithPublicKey(document.getElementById('event-id').innerHTML),
         'field15': await encryptWithPublicKey(rsi)
     });
 

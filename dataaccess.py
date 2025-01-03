@@ -431,7 +431,7 @@ def update_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.close()
     conn.close()
 
-    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max)
+    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi)
 
 def get_public_events() -> List[Event]:
     conn = sqlite3.connect(constants.DB_LOCATION)

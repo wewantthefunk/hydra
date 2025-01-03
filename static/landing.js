@@ -108,6 +108,10 @@ async function displayEventsTable(events) {
 
         row.appendChild(link);
 
+        const eventType = document.createElement('td');
+        eventType.textContent = event.inviteType;
+        row.appendChild(eventType);
+
         const goto = document.createElement('td');
         const gotoi = document.createElement('img');
         gotoi.src = 'static/start.png';
