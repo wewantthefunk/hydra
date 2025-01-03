@@ -403,6 +403,33 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
 
     return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max)
 
+def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int) -> Event:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()    
+    
+    sql = "UPDATE events SET name = '" + name + "',"
+    sql = sql + "startDate = '" + startdate + "',"
+    sql = sql + "endDate = '" + enddate + "',"
+    sql = sql + "startTime = '" + starttime + "',"
+    sql = sql + "endTime = '" + endtime + "',"
+    sql = sql + "maxAttendees = " + max + ","
+    sql = sql + "location = '" + location + "',"
+    sql = sql + "inviteType = " + invite_only + ","
+    sql = sql + "code = '" + code + "',"
+    sql = sql + "allowAnonymousSignups = " + aas
+    sql = sql + " WHERE id = " + str(id)
+
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max)
+
 def get_public_events() -> List[Event]:
     conn = sqlite3.connect(constants.DB_LOCATION)
 

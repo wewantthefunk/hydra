@@ -191,7 +191,7 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, encrypt: bool = False) -> str:
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, update_or_create: str, encrypt: bool = False) -> str:
     n = decrypt_string(name, encrypt)
     sd = decrypt_string(startdate, encrypt)
     ed = decrypt_string(enddate, encrypt)
@@ -206,15 +206,24 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     m = decrypt_string(max, encrypt)
     c = decrypt_string(code, encrypt)
     aas = decrypt_string(allow_anonymous_signups, encrypt)
+    uorc = decrypt_string(update_or_create, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
 
-    if ev.id > 0:
-        return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
+    if uorc == 'new':
+        if ev.id > 0:
+            return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
 
-    id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas)
+        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas)
 
-    return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
+        return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
+    else:
+        if ev.id == 0:
+            return {'message': 'Event Does Not Exist, Unable to Update', 'id': ev.id, 'result': constants.RESULT_NOT_FOUND}
+        
+        id = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, ev.id)
+
+        return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
 
 def get_public_events():
     events = dataaccess.get_public_events()

@@ -68,7 +68,7 @@ async function displayEventsTable(events) {
         const ed = document.createElement('td');
         const cal = document.createElement('img');
         cal.src = 'static/edit.png';
-        cal.setAttribute("onclick", "edit_event('" + event.id + "');");
+        cal.setAttribute("onclick", "updateEvent(this.parentElement.parentElement);");
         cal.setAttribute('title', "Edit");
         cal.className = 'clickable';
         ed.appendChild(cal);

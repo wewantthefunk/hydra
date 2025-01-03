@@ -238,7 +238,8 @@ def create_event():
             'uname': data.get('field9'),
             'starttime': data.get('field10'),
             'endtime': data.get('field11'),
-            'allowAnonymousSignups': data.get('field12')
+            'allowAnonymousSignups': data.get('field12'),
+            'update': data.get('field13')
         }
 
         session = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
@@ -263,6 +264,7 @@ def create_event():
                                            processed_data['max'],
                                            processed_data['code'],
                                            processed_data['allowAnonymousSignups'],
+                                           processed_data['update'],
                                            processed_data['e'])
 
         return jsonify({'message': r['message']}), r['result']

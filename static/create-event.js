@@ -2,15 +2,27 @@ function copylink() {
     copyToClipboard('invite');
 };
 
-function createNewEvent(id) {
-    if (!isValueValid(id)) {
-        document.getElementById('createEventDiv').style.display = 'block';
-        document.getElementById('invite').value = generateRandomStringNoSymbols(16);
-        document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
-        document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
-        document.getElementById('create-event-header').innerHTML = 'Create New Event';
-        document.getElementById('createEventButton').innerHTML = 'Create';
-    }
+function createNewEvent() {
+    document.getElementById('createEventDiv').style.display = 'block';
+    document.getElementById('invite').value = generateRandomStringNoSymbols(16);
+    document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
+    document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
+    document.getElementById('create-event-header').innerHTML = 'Create New Event';
+    document.getElementById('createEventButton').innerHTML = 'Create';
+    document.getElementById('new-or-update-event').innerHTML = 'new';
+    document.getElementById('event-id').innerHTML = '-1';
+};
+
+function updateEvent(event_row) {
+    document.getElementById('createEventDiv').style.display = 'block';
+    document.getElementById('invite').value = event_row.children[11].children[0].value;
+    document.getElementById('eventName').value = event_row.children[0].innerHTML;
+    document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
+    document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
+    document.getElementById('create-event-header').innerHTML = 'Update Event';
+    document.getElementById('createEventButton').innerHTML = 'Update';
+    document.getElementById('new-or-update-event').innerHTML = 'update';
+    document.getElementById('event-id').innerHTML = event_row.children[1].innerHTML;
 };
 
 function closeCreateEvent() {
@@ -115,7 +127,7 @@ async function saveNewEvent() {
         return;
     }
 
-    const aas = document.getElementById('allow-anonymous-signup').checked ? '1': '0';
+    const aas = document.getElementById('allow-anonymous-signup').checked ? '1' : '0';
 
     startProcessing();
 
@@ -131,12 +143,14 @@ async function saveNewEvent() {
         'field9': await encryptWithPublicKey(sessionStorage.getItem('uname')),
         'field10': await encryptWithPublicKey(startTime),
         'field11': await encryptWithPublicKey(endTime),
-        'field12': await encryptWithPublicKey(aas)
+        'field12': await encryptWithPublicKey(aas),
+        'field13': await encryptWithPublicKey(document.getElementById('new-or-update-event').innerHTML),
+        'field14': await encryptWithPublicKey(document.getElementById('event-id'))
     });
 
     document.getElementById('createNewEventMessage').innerHTML = result['message']
 
-    if (result['message'] == 'Event Created') {
+    if (result['message'] == 'Event Created' || result['message'] == 'Event Updated') {
         setTimeout(() => {
             navigate(window.location.href);
         }, 1000);
