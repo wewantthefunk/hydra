@@ -129,6 +129,8 @@ async function saveNewEvent() {
 
     const aas = document.getElementById('allow-anonymous-signup').checked ? '1' : '0';
 
+    const rsi = document.getElementById('require-signin').checked ? '1' : '0';
+
     startProcessing();
 
     const result = await postJsonToApi('/createevent', {
@@ -145,7 +147,8 @@ async function saveNewEvent() {
         'field11': await encryptWithPublicKey(endTime),
         'field12': await encryptWithPublicKey(aas),
         'field13': await encryptWithPublicKey(document.getElementById('new-or-update-event').innerHTML),
-        'field14': await encryptWithPublicKey(document.getElementById('event-id'))
+        'field14': await encryptWithPublicKey(document.getElementById('event-id')),
+        'field15': await encryptWithPublicKey(rsi)
     });
 
     document.getElementById('createNewEventMessage').innerHTML = result['message']

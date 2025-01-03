@@ -36,6 +36,14 @@ async function displayEventsTable(events) {
         idCell.textContent = event.id;
         row.appendChild(idCell);
 
+        const aaCell = document.createElement('td');
+        aaCell.textContent = event.allowAnonymousAttendees;
+        row.appendChild(aaCell);
+
+        const rsiCell = document.createElement('td');
+        rsiCell.textContent = event.requireSignIn;
+        row.appendChild(rsiCell);
+
         const locationCell = document.createElement('td');
         locationCell.textContent = event.location;
         row.appendChild(locationCell);

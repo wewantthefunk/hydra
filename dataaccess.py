@@ -1,6 +1,6 @@
 import sqlite3
 from typing import List
-import constants
+import constants, utilities
 
 
 class User:
@@ -22,7 +22,7 @@ class Session:
         self.id = id
 
 class Event:
-    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, currentattendees = 0):
+    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, allowanonymoussignups, requiresignin, currentattendees = 0):
         self.id = id
         self.name = name
         self.start_date = startdate
@@ -34,6 +34,8 @@ class Event:
         self.invite_code = invitecode
         self.max_attendees = max
         self.current_attendees = currentattendees
+        self.allow_anonymous_signups = allowanonymoussignups
+        self.require_signin = requiresignin
 
 def get_all_users() -> List[User]:
     result = []
@@ -256,7 +258,7 @@ def create_account(username: str, passphrase: str, email: str, vcode: str):
     # Create a cursor object
     CURSOR = conn.cursor()
 
-    CURSOR.execute("INSERT INTO users (username, passphrase, email, usertype, isVerified, verificationCode, isActive) VALUES ('" + username + "', '" + passphrase + "','" + email + "', 99, 0,'" + vcode + "',1)")
+    CURSOR.execute("INSERT INTO users (username, passphrase, email, usertype, isVerified, verificationCode, isActive, uniqueId) VALUES ('" + username + "', '" + passphrase + "','" + email + "', 99, 0,'" + vcode + "',1,'" + utilities.create_base40_string() + "')")
     conn.commit()
 
     CURSOR.close()
@@ -351,7 +353,7 @@ def unverify_user(id: int) -> bool:
     return True
 
 def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: str) -> Event:
-    result = Event(-1, '', '', '', '', '', '', 0, '', 0)
+    result = Event(-1, '', '', '', '', '', '', 0, '', 0, 0, 0)
 
     conn = sqlite3.connect(constants.DB_LOCATION)
 
@@ -364,7 +366,7 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
     found = False
 
     if len(r) > 0:
-        result = Event(r[0][0], r[0][1], r[0][2], r[0][3], r[0][4], r[0][5], r[0][6], r[0][7], r[0][8], r[0][9])
+        result = Event(r[0][0], r[0][1], r[0][2], r[0][3], r[0][4], r[0][5], r[0][6], r[0][7], r[0][8], r[0][9], r[0][10], r[0][11])
         found = True
     
     if not found:
@@ -375,21 +377,21 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
             CURSOR.execute("SELECT * FROM event2owner WHERE ownerId = " + str(userId) + " AND eventId = " + str(rows[0][0]))
             e = CURSOR.fetchall()
             if len(e) > 0:
-                result = Event(rows[0][0], rows[0][1], rows[0][2], rows[0][3], rows[0][4], rows[0][5], rows[0][6], rows[0][7], rows[0][8], rows[0][9])
+                result = Event(rows[0][0], rows[0][1], rows[0][2], rows[0][3], rows[0][4], rows[0][5], rows[0][6], rows[0][7], rows[0][8], rows[0][9], rows[0][10], rows[0][11])
 
     CURSOR.close()
     conn.close()
 
     return result
 
-def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str) -> Event:
+def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, rsi: str) -> Event:
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
     CURSOR = conn.cursor()    
     
-    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups) VALUES('"
-    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas
+    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups, requireSignIn) VALUES('"
+    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas + "," + rsi
     sql = sql + ")"
     CURSOR.execute(sql)
     inserted_id = CURSOR.lastrowid
@@ -403,7 +405,7 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
 
     return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max)
 
-def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int) -> Event:
+def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int, rsi: str) -> Event:
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
@@ -418,7 +420,8 @@ def update_event(userId: int, name: str, startdate: str, enddate: str, starttime
     sql = sql + "location = '" + location + "',"
     sql = sql + "inviteType = " + invite_only + ","
     sql = sql + "code = '" + code + "',"
-    sql = sql + "allowAnonymousSignups = " + aas
+    sql = sql + "allowAnonymousSignups = " + aas + ","
+    sql = sql + 'requireSignIn = ' + rsi
     sql = sql + " WHERE id = " + str(id)
 
     CURSOR.execute(sql)
@@ -456,6 +459,8 @@ def get_public_events() -> List[Event]:
                      row[constants.EVENT_INVITE_TYPE_COL],
                      row[constants.EVENT_INVITE_CODE_COL],
                      row[constants.EVENT_MAX_ATTENDEES_COL],
+                     row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
+                     row[constants.EVENT_REQUIRE_SIGNUPS_COL],
                      c[0][0]
                      )
         result.append(event)
@@ -509,6 +514,8 @@ def get_my_events(user_id: int) -> List[Event]:
                      row[constants.EVENT_INVITE_TYPE_COL],
                      row[constants.EVENT_INVITE_CODE_COL],
                      row[constants.EVENT_MAX_ATTENDEES_COL],
+                     row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
+                     row[constants.EVENT_REQUIRE_SIGNUPS_COL],
                      c[0][0]
                      )
         result.append(event)

@@ -1,4 +1,4 @@
-import string, random, json, os
+import string, random, json, os, time
 from jdcal import gcal2jd
 from datetime import datetime
 from flask_mail import Message, Mail
@@ -91,3 +91,44 @@ def str_to_bool(s: str):
         return False
     else:
         raise ValueError("Invalid boolean string")
+    
+def create_base40_string():
+    # Get the current time in seconds since Unix epoch (1970-01-01)
+    current_time = int(time.time())
+
+    # Convert the number of milliseconds to base 40 representation
+    base40_chars = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
+    base40_string = ""
+
+    while current_time > 0:
+        # Get the remainder of the division by 40 and use it as an index for base40_chars
+        index = current_time % 40
+        base40_string = base40_chars[index] + base40_string
+
+        # Divide the number by 40 to prepare for the next iteration
+        current_time //= 40
+
+    # Pad the resulting string with leading zeros if necessary to make it 20 characters long
+    base40_string = base40_string.zfill(20)
+
+    result = ""
+
+    for letter in base40_string:
+        if letter == '0':
+            result = result + get_random_letter()
+        else:
+            result = result + letter
+
+    return result
+
+def get_random_letter():
+    # Get all lowercase and uppercase letters in the English alphabet
+    letters = string.ascii_letters
+
+    # Use the random.choice() function to select a random letter from the list
+    random_letter = random.choice(letters)
+
+    return random_letter
+
+if __name__ == '__main__':
+    print(create_base40_string())

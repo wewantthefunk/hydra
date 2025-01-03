@@ -191,7 +191,7 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, update_or_create: str, encrypt: bool = False) -> str:
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, update_or_create: str, id: str, encrypt: bool = False) -> str:
     n = decrypt_string(name, encrypt)
     sd = decrypt_string(startdate, encrypt)
     ed = decrypt_string(enddate, encrypt)
@@ -206,6 +206,7 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     m = decrypt_string(max, encrypt)
     c = decrypt_string(code, encrypt)
     aas = decrypt_string(allow_anonymous_signups, encrypt)
+    rsi = decrypt_string(require_signin, encrypt)
     uorc = decrypt_string(update_or_create, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
@@ -214,14 +215,14 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
         if ev.id > 0:
             return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
 
-        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas)
+        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi)
 
         return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
     else:
-        if ev.id == 0:
-            return {'message': 'Event Does Not Exist, Unable to Update', 'id': ev.id, 'result': constants.RESULT_NOT_FOUND}
+        if ev.id <= 0:
+            return {'message': 'Event Does Not Exist, Unable to Update', 'id': id, 'result': constants.RESULT_NOT_FOUND}
         
-        id = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, ev.id)
+        id = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, id, rsi)
 
         return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
 
@@ -280,7 +281,9 @@ def get_my_events(user_id: int):
         e = e + '"currentAttendees":' + str(event.current_attendees) + ','
         e = e + '"location":"' + event.location + '",'
         e = e + '"inviteType":' + str(event.invite_only) + ','
-        e = e + '"inviteCode":"' + event.invite_code + '"'
+        e = e + '"inviteCode":"' + event.invite_code + '",'
+        e = e + '"allowAnonymousAttendees":' + str(event.allow_anonymous_signups) + ","
+        e = e + '"requireSignIn":' + str(event.require_signin)
         e = e + '}'
 
 
