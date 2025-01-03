@@ -1,5 +1,5 @@
 <div id="createEventDiv">
-        <h1>Create New Event</h1>
+        <h1 id="create-event-header">Create New Event</h1>
         <div class="center-div-horizontal">
                 <div>
                         <input type="text" id="eventName" placeholder="Event Name" class="required" title="Event Name"
@@ -32,6 +32,10 @@
                                 <option value="1">Private</option>
                                 <option value="2">Invite Only</option>
                         </select>
+                </div>
+                <div class="topspacer">
+                        <label for="allow-anonymous-signup">Allow Anonymous Signups</label>
+                        <input type="checkbox" id="allow-anonymous-signup" />
                 </div>
                 <div>
                         <input type="text" id="invite" placeholder="Event Id" class="topspacer readonly"

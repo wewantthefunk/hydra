@@ -382,14 +382,14 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
 
     return result
 
-def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str) -> Event:
+def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str) -> Event:
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
     CURSOR = conn.cursor()    
     
-    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code) VALUES('"
-    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'"
+    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups) VALUES('"
+    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas
     sql = sql + ")"
     CURSOR.execute(sql)
     inserted_id = CURSOR.lastrowid

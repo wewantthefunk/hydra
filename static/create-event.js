@@ -2,11 +2,15 @@ function copylink() {
     copyToClipboard('invite');
 };
 
-function createNewEvent() {
-    document.getElementById('createEventDiv').style.display = 'block';
-    document.getElementById('invite').value = generateRandomStringNoSymbols(16);
-    document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
-    document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
+function createNewEvent(id) {
+    if (!isValueValid(id)) {
+        document.getElementById('createEventDiv').style.display = 'block';
+        document.getElementById('invite').value = generateRandomStringNoSymbols(16);
+        document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
+        document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
+        document.getElementById('create-event-header').innerHTML = 'Create New Event';
+        document.getElementById('createEventButton').innerHTML = 'Create';
+    }
 };
 
 function closeCreateEvent() {
@@ -111,6 +115,8 @@ async function saveNewEvent() {
         return;
     }
 
+    const aas = document.getElementById('allow-anonymous-signup').checked ? '1': '0';
+
     startProcessing();
 
     const result = await postJsonToApi('/createevent', {
@@ -124,7 +130,8 @@ async function saveNewEvent() {
         'field8': await encryptWithPublicKey(document.getElementById('invite').value),
         'field9': await encryptWithPublicKey(sessionStorage.getItem('uname')),
         'field10': await encryptWithPublicKey(startTime),
-        'field11': await encryptWithPublicKey(endTime)
+        'field11': await encryptWithPublicKey(endTime),
+        'field12': await encryptWithPublicKey(aas)
     });
 
     document.getElementById('createNewEventMessage').innerHTML = result['message']

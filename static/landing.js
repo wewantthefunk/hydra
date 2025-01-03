@@ -116,7 +116,7 @@ async function displayEventsTable(events) {
 };
 
 async function delete_event(event_row) {
-    const confirmCode = generateRandomString(6);
+    const confirmCode = generateRandomStringNoSymbols(6);
     document.getElementById("delete-confirm-code").innerHTML = confirmCode;
     document.getElementById("confirm-delete").setAttribute('placeholder', confirmCode);
     document.getElementById('delete-event-name').innerHTML = event_row.childNodes[0].innerHTML;

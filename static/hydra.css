@@ -77,6 +77,10 @@ input[type="button"] {
     padding: 11px;
 }
 
+label {
+    font-family: 'Lato', sans-serif;
+}
+
 .center-div {
     position: fixed;
     top: 50%;

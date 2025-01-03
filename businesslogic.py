@@ -191,7 +191,7 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, encrypt: bool = False) -> str:
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, encrypt: bool = False) -> str:
     n = decrypt_string(name, encrypt)
     sd = decrypt_string(startdate, encrypt)
     ed = decrypt_string(enddate, encrypt)
@@ -205,13 +205,14 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
         io = '0'
     m = decrypt_string(max, encrypt)
     c = decrypt_string(code, encrypt)
+    aas = decrypt_string(allow_anonymous_signups, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
 
     if ev.id > 0:
         return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
 
-    id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c)
+    id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas)
 
     return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
 
