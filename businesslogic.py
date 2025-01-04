@@ -246,7 +246,9 @@ def get_public_events():
         e = e + '"currentAttendees":' + str(event.current_attendees) + ','
         e = e + '"location":"' + event.location + '",'
         e = e + '"inviteType":' + str(event.invite_only) + ','
-        e = e + '"inviteCode":"' + event.invite_code + '"'
+        e = e + '"inviteCode":"' + event.invite_code + '",'
+        e = e + '"allowAnonymousAttendees":' + str(event.allow_anonymous_signups) + ","
+        e = e + '"requireSignIn":' + str(event.require_signin)
         e = e + '}'
 
 
@@ -298,3 +300,36 @@ def delete_event(user_id: int, event_id: int, encrypt: bool = False):
         return {'message': 'Event Deleted', 'result': constants.RESULT_OK}
     
     return {'message': 'Event Not Deleted', 'result': constants.RESULT_INVALID_REQUEST}
+
+def check_attendance(user_id: str, invite: str, encrypt: str):
+    i = decrypt_string(invite, encrypt)
+
+    result = dataaccess.check_attendance(user_id, i)
+
+    if not result:
+        return {'message': 'Already Attending', 'result': constants.RESULT_ALREADY_ATTENDING}
+    
+    return {'message': 'Not Attending', 'result': constants.RESULT_OK}
+
+def get_event(invite: str, encrypt: str):
+    i = decrypt_string(invite, encrypt)
+
+    event = dataaccess.get_event(i)
+
+    e = '{'
+    e = e + '"id":' + str(event.id) + ","
+    e = e + '"name":"' + event.name + '",'
+    e = e + '"startDate":"' + event.start_date + '",'
+    e = e + '"endDate":"' + event.end_date + '",'
+    e = e + '"startTime":"' + event.start_time + '",'
+    e = e + '"endTime":"' + event.end_time + '",'
+    e = e + '"maxAttendees":' + str(event.max_attendees) + ','
+    e = e + '"currentAttendees":' + str(event.current_attendees) + ','
+    e = e + '"location":"' + event.location + '",'
+    e = e + '"inviteType":' + str(event.invite_only) + ','
+    e = e + '"inviteCode":"' + event.invite_code + '",'
+    e = e + '"allowAnonymousAttendees":' + str(event.allow_anonymous_signups) + ","
+    e = e + '"requireSignIn":' + str(event.require_signin)
+    e = e + '}'
+    
+    return {'message': e, 'result': constants.RESULT_OK}

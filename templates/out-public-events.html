@@ -32,6 +32,7 @@
                         <th>End Time</th>
                         <th>Max Attendees</th>
                         <th>Spots Left</th>
+                        <th>Allow Anonymous Attendees</th>
                         <th>Attend</th>
                     </tr>
                 </thead>
@@ -46,16 +47,18 @@
     </div>
 
     <div id="loggedOutMsgDiv">
-        <div class="center-div">
-            <h1>You must be Logged In to</h1><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Signup for an Event</h1>
-            <div class="">
+        <div class="center-div-horizontal">
+            <h1>You must be Logged In to Signup for this Event</h1>
+            <div class="topspacer" id="event-name">        
+            </div>
+            <div class="topspacer">
                 <input type="text" id="uname" placeholder="Username"/>
             </div>
             <div class="">
                 <input type="password" id="password" placeholder="Password"/><img id="password-view" src="/static/reveal-static.png" title="Click to show password" />
             </div>
             <div class="topspacer">
-                <input class="leftspacer" type="button" id="login" value="Login" onclick="login()" />
+                <input type="button" id="login" value="Login" onclick="login()" />
             </div>
             <div id="login-message-div" class="topspacer">
                 <span id="login-message">&nbsp;</span>
@@ -65,6 +68,22 @@
             </div>
             <div class="topspacer" id="cancel-div">
                 <span id="cancel" onclick="hideWindow();">Cancel</span>
+            </div>
+        </div>
+    </div>
+    <div id="anonymousSignupDiv">
+        <div class="center-div-horizontal">
+            <h1>Attend Event</h1>
+            <div class="topspacer" id="a-event-name"></div>
+            <div class="hidden" id="a-invite-code"></div>
+            <div class="topspacer" id="a-email">
+                <input type="text" placeholder="Email" id="a-email" />
+            </div>
+            <div class="topspacer">
+                <input type="button" id="a-attend" value="Attend" onclick="signupAnonymous()" />
+            </div>
+            <div class="topspacer" id="a-cancel-div">
+                <span id="a-cancel" onclick="hideWindow();">Cancel</span>
             </div>
         </div>
     </div>

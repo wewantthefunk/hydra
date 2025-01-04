@@ -403,7 +403,7 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.close()
     conn.close()
 
-    return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max)
+    return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi)
 
 def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int, rsi: str) -> Event:
     conn = sqlite3.connect(constants.DB_LOCATION)
@@ -525,6 +525,43 @@ def get_my_events(user_id: int) -> List[Event]:
 
     return result
 
+def get_event(invite: str) -> Event:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    # Retrieve all users
+    CURSOR.execute("SELECT * FROM events WHERE code = '" + invite + "'")
+    rows = CURSOR.fetchall()
+
+    result = None
+
+    for row in rows:
+        CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
+        c = CURSOR.fetchall()
+
+        event = Event(row[constants.EVENT_ID_COL],
+                     row[constants.EVENT_NAME_COL],
+                     row[constants.EVENT_START_DATE_COL],
+                     row[constants.EVENT_END_DATE_COL],
+                     row[constants.EVENT_START_TIME_COL],
+                     row[constants.EVENT_END_TIME_COL],
+                     row[constants.EVENT_LOCATION_COL],
+                     row[constants.EVENT_INVITE_TYPE_COL],
+                     row[constants.EVENT_INVITE_CODE_COL],
+                     row[constants.EVENT_MAX_ATTENDEES_COL],
+                     row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
+                     row[constants.EVENT_REQUIRE_SIGNUPS_COL],
+                     c[0][0]
+                     )
+        result = event
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
 def delete_event(user_id: int, event_id: int):
     conn = sqlite3.connect(constants.DB_LOCATION)
 
@@ -541,6 +578,44 @@ def delete_event(user_id: int, event_id: int):
     CURSOR.execute(sql)
 
     conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return True
+
+def check_attendance(userid: int, invite: str):
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()    
+    
+    sql = "SELECT * FROM events WHERE code = '" + invite + "'"
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) < 1:
+        CURSOR.close()
+        conn.close()
+        return False
+
+    event_id = str(c[0][constants.EVENT_ID_COL])
+
+    sql = "SELECT * FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) > 0:
+        CURSOR.close()
+        conn.close()
+        return False
+    
+    '''sql = "INSERT INTO attendees (eventId, userId) VALUES(" + event_id + "," + str(userid) + ")"
+    CURSOR.execute(sql)
+
+    conn.commit()'''
 
     CURSOR.close()
     conn.close()

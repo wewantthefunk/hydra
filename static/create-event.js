@@ -5,12 +5,28 @@ function copylink() {
 function createNewEvent() {
     document.getElementById('createEventDiv').style.display = 'block';
     document.getElementById('invite').value = generateRandomStringNoSymbols(16);
+    document.getElementById('eventName').value = "";
+    document.getElementById('startDate').value = "";
+    document.getElementById('startTime').value = "";
+    document.getElementById('endDate').value = "";
+    document.getElementById('endTime').value = "";
+    document.getElementById('location').value = "";
+    document.getElementById('max').value = "";
     document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
     document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
     document.getElementById('create-event-header').innerHTML = 'Create New Event';
     document.getElementById('createEventButton').value = 'Create';
     document.getElementById('new-or-update-event').innerHTML = 'new';
     document.getElementById('event-id').innerHTML = '-1';
+    document.getElementById('eventType').value = '0';
+
+    document.getElementById('max').focus();
+    document.getElementById('startDate').focus();
+    document.getElementById('endDate').focus();
+    document.getElementById('startTime').focus();
+    document.getElementById('endTime').focus();
+    document.getElementById('location').focus();
+    document.getElementById('eventName').focus();
 };
 
 function updateEvent(event_row) {

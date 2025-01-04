@@ -63,10 +63,14 @@ function displayEventsTable(events) {
         current.textContent = String(parseInt(event.maxAttendees) - parseInt(event.currentAttendees));
         row.appendChild(current);
 
+        const allowAnonymous = document.createElement('td');
+        allowAnonymous.textContent = event.allowAnonymousAttendees;
+        row.appendChild(allowAnonymous);
+
         const attend = document.createElement('td');
         const cal = document.createElement('img');
         cal.src = 'static/calendar.png';
-        cal.setAttribute("onclick", "attend('" + event.inviteCode + "');");
+        cal.setAttribute("onclick", "attend('" + event.inviteCode + "','" + event.name + "'," + event.allowAnonymousAttendees + ");");
         cal.setAttribute('title', "Attend");
         cal.className = 'clickable';
         attend.appendChild(cal);
@@ -77,13 +81,29 @@ function displayEventsTable(events) {
     });
 };
 
-async function attend(inviteCode) {
+async function attend(inviteCode, name, allowAnonymous) {
+    sessionStorage.setItem('destination', null);
+    if (allowAnonymous < 1) {
+        attend_login(inviteCode, name);
+        return;
+    }
+
+    document.getElementById('a-event-name').innerHTML = name;
+    document.getElementById('a-invite-code').innerHTML = inviteCode;
+    document.getElementById('anonymousSignupDiv').style.display = 'block';
+};
+
+function signupAnonymous() {
+
+};
+
+function attend_login(inviteCode, name) {
     startProcessing();
     dest = "/attend/" + inviteCode;
     const token = sessionStorage.getItem('token');
     if (!isValueValid(token)) {
         stopProcessing();
-
+        document.getElementById('event-name').innerHTML = name;
         document.getElementById("loggedOutMsgDiv").style.display = 'block';
 
         sessionStorage.setItem('destination', dest);
@@ -100,6 +120,7 @@ function goback() {
 
 function hideWindow() {
     hide(document.getElementById('loggedOutMsgDiv'));
+    hide(document.getElementById('anonymousSignupDiv'));
 };
 
 async function login() {

@@ -27,7 +27,7 @@
                         <input type="text" id="max" placeholder="Max Attendees" class="required" title="Max Attendees"
                                 oninput="validateNumericInput(this);" onblur="checkRequired(this);" />
                 </div>
-                <div>
+                <div class="hidden">
                         <select id="eventType" class="">
                                 <option value="-1" selected>Choose Event Type</option>
                                 <option value="0">Public</option>
@@ -35,11 +35,11 @@
                                 <option value="2">Invite Only</option>
                         </select>
                 </div>
-                <div class="topspacer">
+                <div class="hidden">
                         <label for="allow-anonymous-signup">Allow Anonymous Signups</label>
                         <input type="checkbox" id="allow-anonymous-signup" />
                 </div>
-                <div class="topspacer">
+                <div class="hidden">
                         <label for="require-signin">Require Sign In</label>
                         <input type="checkbox" id="require-signin" />
                 </div>

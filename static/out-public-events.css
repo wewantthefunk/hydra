@@ -14,7 +14,7 @@
     margin: 5px;
 }
 
-#goback, #cancel {
+#goback, #cancel, #a-cancel {
     font-size: small;
     text-decoration: underline;
     cursor: pointer;
@@ -46,7 +46,10 @@
     border-left: 1px solid #333;
 }
 
-#event-list tr>td:nth-child(2), tr>th:nth-child(2) {
+#event-list tr>td:nth-child(2), 
+            tr>th:nth-child(2),
+            tr>td:nth-child(10), 
+            tr>th:nth-child(10) {
     display:none;
 }
 
@@ -63,7 +66,7 @@
     height: 30px;
 }
 
-#loggedOutMsgDiv {
+#loggedOutMsgDiv, #anonymousSignupDiv {
     background-color: aliceblue;
     height:30%;
     width:30%;
@@ -95,17 +98,10 @@
     cursor:pointer;
 }
 
-#cancel {
-    margin-left: 35px;
-}
-
 #login-message-div {
     width: 100%;
-    margin-left: 25px;
 }
-#login-message {
-    margin-left:-30px;
-}
-#create-account-div, #cancel-div {
-    margin-left:47px;
+
+#a-event-name, #event-name {
+    font-family: 'Lato', sans-serif;
 }

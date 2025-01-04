@@ -50,6 +50,59 @@ def getpublicevents():
 def attend(invite):
     return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite)
 
+@app.route('/checkattendance', methods=['POST'])
+def check_attendance():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'token': data.get('field1'),
+            'invite': data.get('field2'),
+            'username': data.get('field3'),
+            'e': data.get('e')
+        }
+
+        rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+        if not rt[0]:
+            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+        
+        result = businesslogic.check_attendance(rt[1]['userId'], processed_data['invite'], processed_data['e'])
+
+        '''if result['result'] == constants.RESULT_OK:
+            r = businesslogic.attend_event(rt[1]['userId'], processed_data['invite'], processed_data['e'])
+
+            return jsonify({'message': result['message']}), constants.RESULT_OK'''
+        
+        return jsonify({'message': result['message']}), result['result']
+    
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+
+@app.route('/getevent', methods=['POST'])
+def get_event():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'token': data.get('field1'),
+            'username': data.get('field2'),
+            'invite': data.get('field3'),
+            'e': data.get('e')
+        }
+
+        rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+        if not rt[0]:
+            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+        
+        result = businesslogic.get_event(processed_data['invite'], processed_data['e'])
+
+        return jsonify({'message': result['message']}), result['result']
+
+    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+
 @app.route('/myevents', methods=['POST'])
 def my_events():
     if request.is_json:
