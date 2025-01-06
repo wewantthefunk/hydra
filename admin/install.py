@@ -146,6 +146,12 @@ def create_sql(passphrase, email, adminName, vcode):
     if 'requireSignIn' not in columns:
         cursor.execute("ALTER TABLE events ADD COLUMN requireSignIn INTEGER")
 
+    if 'paymentType' not in columns:
+        cursor.execute("ALTER TABLE events ADD COLUMN paymentType INTEGER")
+
+    if 'cost' not in columns:
+        cursor.execute("ALTER TABLE events ADD COLUMN cost REAL")
+
     cursor.execute("PRAGMA table_info(users)")
     columns = [column[1] for column in cursor.fetchall()]
 

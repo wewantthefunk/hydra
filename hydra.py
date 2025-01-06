@@ -294,7 +294,9 @@ def create_event():
             'allowAnonymousSignups': data.get('field12'),
             'update': data.get('field13'),
             'id': data.get('field14'),
-            'requireSignIn': data.get('field15')
+            'requireSignIn': data.get('field15'),
+            'paymentType': data.get('field16'),
+            'cost': data.get('field17'),
         }
 
         session = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
@@ -320,8 +322,10 @@ def create_event():
                                            processed_data['code'],
                                            processed_data['allowAnonymousSignups'],
                                            processed_data['requireSignIn'],
+                                           processed_data['paymentType'],
+                                           processed_data['cost'],
                                            processed_data['update'],
-                                           processed_data['id'],
+                                           processed_data['id'],                                           
                                            processed_data['e'])
 
         return jsonify({'message': r['message']}), r['result']
