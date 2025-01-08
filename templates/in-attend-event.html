@@ -18,6 +18,11 @@
     <div id="maindiv">
         <span id="invite_code">{{ invite_code }}</span>
         <h1>Attend Event</h1>
+        <div id="already-attending-div" class="hidden">
+            <div>
+                Already Attending
+            </div>
+        </div>
         <div id="event-info-div">
             <input type="button" id="attend" value="Attend" onclick="attend();"/>
             <input type="button" id="skip" value="Skip" onclick="unattend();" class="hidden"/>

@@ -14,6 +14,7 @@ async function finishedLoad() {
 
     if (r['message'] == 'Already Attending') {
         document.getElementById('attend').style.display = 'none';
+        show(document.getElementById('already-attending-div'));
     }
 
     const result = await postJsonToApi('/getevent', {

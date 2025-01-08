@@ -1,3 +1,7 @@
 #invite_code {
     display: none;
 }
+
+#already-attending-div {
+    font-family: 'Lato', sans-serif;
+}
