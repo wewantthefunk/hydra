@@ -275,12 +275,12 @@ function calcsizes() {
     const popupmsg = document.getElementById('popup-msg-div');
 
     popupmsg.style.top = '52px';
-    popupmsg.style.left = ((sizes['width'] /2) - 250) + 'px';
+    popupmsg.style.left = ((sizes['width'] / 2) - 250) + 'px';
 
     const popuperrmsg = document.getElementById('popup-error-msg-div');
 
     popuperrmsg.style.top = '52px';
-    popuperrmsg.style.left = ((sizes['width'] /2) - 250) + 'px';
+    popuperrmsg.style.left = ((sizes['width'] / 2) - 250) + 'px';
 };
 
 function isUrlHttps(url) {
@@ -391,8 +391,8 @@ function togglePasswordReveal(toggleButton, id) {
 };
 
 function showMsg(text) {
-    const m = 
-    document.getElementById('popup-msg').innerHTML = text;
+    const m =
+        document.getElementById('popup-msg').innerHTML = text;
     document.getElementById('popup-msg-div').style.display = 'block';
     setTimeout(() => {
         document.getElementById('popup-msg-div').style.display = 'none';
@@ -410,16 +410,19 @@ function showErrMsg(text) {
 
 function copyToClipboard(textBoxId) {
     // Get the text field
-    var copyText = document.getElementById(textBoxId);
+    var copyText = document.getElementById(textBoxId).value;
 
-    // Select the text field
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); // For mobile devices
-
-    // Copy the text inside the text field
-    document.execCommand("copy");
-
-    showMsg("Copied to Clipboard!");
+    if (isValueValid(navigator.clipboard)) {
+        navigator.clipboard.writeText(copyText)
+            .then(() => {
+                showMsg("Copied to Clipboard!");
+            })
+            .catch(() => {
+                showErrMsg("Failed to Copy to Clipboard");
+            });
+    } else {
+        showErrMsg("Clipboard not Available");
+    }
 };
 
 function validateNumericInput(inputElement) {

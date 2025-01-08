@@ -74,12 +74,14 @@ function displayEventsTable(events) {
         code.setAttribute('readonly', 'readonly');
         code.setAttribute('value', event.inviteCode);
         code.setAttribute('id', 'i-' + event.inviteCode);
-        code.classList.add('hidden');
+        code.classList.add('readonly');
+        code.style.backgroundColor = 'rgb(170, 170, 170)';
         const copy = document.createElement('img');
         copy.src = 'static/copy.png';
         copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "');");
         copy.setAttribute('title', "Copy Event Link");
         copy.className = 'clickable';
+        copy.style.position = "fixed";
         link.appendChild(code);
         link.appendChild(copy);
 
