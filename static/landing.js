@@ -73,6 +73,14 @@ async function displayEventsTable(events) {
         current.textContent = String(spotsLeft);
         row.appendChild(current);
 
+        const cost = document.createElement('td');
+        cost.textContent = event.cost;
+        row.appendChild(cost);
+
+        const sku = document.createElement('td');
+        sku.textContent = event.sku;
+        row.appendChild(sku);
+
         const ed = document.createElement('td');
         const cal = document.createElement('img');
         cal.src = 'static/edit.png';
@@ -110,7 +118,11 @@ async function displayEventsTable(events) {
 
         const eventType = document.createElement('td');
         eventType.textContent = event.inviteType;
-        row.appendChild(eventType);
+        row.appendChild(eventType);        
+
+        const paymentType = document.createElement('td');
+        paymentType.textContent = event.paymentType;
+        row.appendChild(paymentType);
 
         const goto = document.createElement('td');
         const gotoi = document.createElement('img');

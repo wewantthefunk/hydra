@@ -12,6 +12,8 @@ function createNewEvent() {
     document.getElementById('endTime').value = "";
     document.getElementById('location').value = "";
     document.getElementById('max').value = "";
+    document.getElementById('sku').value = "";
+    document.getElementById('cost').value = "";
     document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
     document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
     document.getElementById('create-event-header').innerHTML = 'Create New Event';
@@ -19,6 +21,7 @@ function createNewEvent() {
     document.getElementById('new-or-update-event').innerHTML = 'new';
     document.getElementById('event-id').innerHTML = '-1';
     document.getElementById('eventType').value = '0';
+    document.getElementById('paymentType').value = '0';
 
     document.getElementById('max').focus();
     document.getElementById('startDate').focus();
@@ -31,7 +34,7 @@ function createNewEvent() {
 
 function updateEvent(event_row) {
     document.getElementById('createEventDiv').style.display = 'block';
-    document.getElementById('invite').value = event_row.children[13].children[0].value;
+    document.getElementById('invite').value = event_row.children[15].children[0].value;
     document.getElementById('eventName').value = event_row.children[0].innerHTML;
     document.getElementById('startDate').value = event_row.children[5].innerHTML;
     document.getElementById('startTime').value = event_row.children[6].innerHTML;
@@ -39,6 +42,8 @@ function updateEvent(event_row) {
     document.getElementById('endTime').value = event_row.children[8].innerHTML;
     document.getElementById('location').value = event_row.children[4].innerHTML;
     document.getElementById('max').value = event_row.children[9].innerHTML;
+    document.getElementById('cost').value = event_row.children[11].innerHTML;
+    document.getElementById('sku').value = event_row.children[12].innerHTML;
     document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
     document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
     document.getElementById('create-event-header').innerHTML = 'Update Event';
@@ -55,8 +60,12 @@ function updateEvent(event_row) {
     }
 
 
-    if (parseInt(event_row.children[14].innerHTML) >= 0) {
-        document.getElementById('eventType').value = event_row.children[14].innerHTML;
+    if (parseInt(event_row.children[16].innerHTML) >= 0) {
+        document.getElementById('eventType').value = event_row.children[16].innerHTML;
+    }
+
+    if (parseInt(event_row.children[17].innerHTML) >= 0) {
+        document.getElementById('paymentType').value = event_row.children[17].innerHTML;
     }
 
     document.getElementById('max').focus();
@@ -65,6 +74,8 @@ function updateEvent(event_row) {
     document.getElementById('startTime').focus();
     document.getElementById('endTime').focus();
     document.getElementById('location').focus();
+    document.getElementById('sku').focus();
+    document.getElementById('cost').focus();
     document.getElementById('eventName').focus();
 };
 
@@ -82,6 +93,8 @@ async function saveNewEvent() {
     const endTime = document.getElementById('endTime').value.trim();
     const location = document.getElementById('location').value.trim();
     const max = document.getElementById('max').value.trim();
+    const sku = document.getElementById('sku').value.trim();
+    const cost = document.getElementById('cost').value.trim();
 
     if (eventName == '') {
         document.getElementById('eventName').focus();
@@ -121,6 +134,18 @@ async function saveNewEvent() {
 
     if (max == '') {
         document.getElementById('max').focus();
+        document.getElementById('createNewEventMessage').innerHTML = "Fill Out All Required Fields";
+        return;
+    }
+
+    if (sku == '') {
+        document.getElementById('sku').focus();
+        document.getElementById('createNewEventMessage').innerHTML = "Fill Out All Required Fields";
+        return;
+    }
+
+    if (cost == '') {
+        document.getElementById('cost').focus();
         document.getElementById('createNewEventMessage').innerHTML = "Fill Out All Required Fields";
         return;
     }
@@ -170,6 +195,14 @@ async function saveNewEvent() {
         return;
     }
 
+    const paymentType = document.getElementById('paymentType').value;
+
+    if (parseInt(paymentType) < 0) {
+        document.getElementById('paymentType').focus();
+        document.getElementById('createNewEventMessage').innerHTML = "Select Payment Type";
+        return;
+    }
+
     const aas = document.getElementById('allow-anonymous-signup').checked ? '1' : '0';
 
     const rsi = document.getElementById('require-signin').checked ? '1' : '0';
@@ -191,7 +224,10 @@ async function saveNewEvent() {
         'field12': await encryptWithPublicKey(aas),
         'field13': await encryptWithPublicKey(document.getElementById('new-or-update-event').innerHTML),
         'field14': await encryptWithPublicKey(document.getElementById('event-id').innerHTML),
-        'field15': await encryptWithPublicKey(rsi)
+        'field15': await encryptWithPublicKey(rsi),
+        'field16': await encryptWithPublicKey(paymentType),
+        'field17': await encryptWithPublicKey(cost),
+        'field18': await encryptWithPublicKey(sku)
     });
 
     document.getElementById('createNewEventMessage').innerHTML = result['message']

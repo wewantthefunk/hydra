@@ -298,3 +298,24 @@ label {
 #popup-error-msg {
     background-color: #C70039;
 }
+
+.field-hint {
+    position:fixed;
+    margin-top:5px;
+    margin-left: 5px;
+    color:#999;
+    font-family: 'Lato', sans-serif;
+    font-style: italic;
+    display:none;
+}
+
+.pre-field-hint {
+    position:fixed;
+    margin-top:5px;
+    margin-left: -82px;
+    margin-right: 5px;
+    color:#999;
+    font-family: 'Lato', sans-serif;
+    font-style: italic;
+    display:none;
+}

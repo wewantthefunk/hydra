@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, redirect, render_template, request, jsonify
 from flask_mail import Mail
 import utilities, constants, businesslogic
 
@@ -49,6 +49,33 @@ def getpublicevents():
 @app.route('/attend/<invite>')
 def attend(invite):
     return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite)
+
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    if not request.is_json:
+        return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+          
+    data = request.get_json()
+
+    # Process the JSON data here as needed
+    processed_data = {
+        'token': data.get('field1'),
+        'sku': data.get('field2'),
+        'username': data.get('field3'),
+        'quantity': data.get('field4'),
+        'e': data.get('e')
+    }
+
+    rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+    if not rt[0]:
+        return jsonify({'message': rt[1]['message']}), rt[1]['result']
+
+    full_url = request.url
+
+    url = businesslogic.checkout(full_url, processed_data['sku'], processed_data['quantity'])
+
+    return redirect(url, code=303)
 
 @app.route('/checkattendance', methods=['POST'])
 def check_attendance():
@@ -297,6 +324,7 @@ def create_event():
             'requireSignIn': data.get('field15'),
             'paymentType': data.get('field16'),
             'cost': data.get('field17'),
+            'sku': data.get('field18')
         }
 
         session = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
@@ -324,6 +352,7 @@ def create_event():
                                            processed_data['requireSignIn'],
                                            processed_data['paymentType'],
                                            processed_data['cost'],
+                                           processed_data['sku'],
                                            processed_data['update'],
                                            processed_data['id'],                                           
                                            processed_data['e'])

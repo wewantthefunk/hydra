@@ -1,6 +1,7 @@
 import dataaccess, constants, crypto_asymmetric, crypto_symmetric, utilities
 import base64
 from datetime import datetime
+import stripe
 
 def login(username: str, password: str, temp_password: str, encrypt: bool):
     tempPassword = decrypt_string(temp_password, encrypt)
@@ -191,7 +192,7 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, update_or_create: str, id: str, encrypt: bool = False) -> str:
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, sku: str, update_or_create: str, id: str, encrypt: bool = False) -> str:
     n = decrypt_string(name, encrypt)
     sd = decrypt_string(startdate, encrypt)
     ed = decrypt_string(enddate, encrypt)
@@ -207,6 +208,7 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     eid = decrypt_string(id, encrypt)
     pt = decrypt_string(payment_type, encrypt)
     co = decrypt_string(cost, encrypt)
+    s = decrypt_string(sku, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
 
@@ -214,14 +216,14 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
         if ev.id > 0:
             return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
 
-        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, co)
+        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, co, s)
 
         return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
     else:
         if ev.id <= 0:
             return {'message': 'Event Does Not Exist, Unable to Update', 'id': eid, 'result': constants.RESULT_NOT_FOUND}
         
-        eid = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, eid, rsi, pt, co)
+        eid = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, eid, rsi, pt, co, s)
 
         return {'message': 'Event Updated', 'id': str(eid), 'result': constants.RESULT_OK}
 
@@ -250,7 +252,10 @@ def get_public_events():
         e = e + '"inviteType":' + str(event.invite_only) + ','
         e = e + '"inviteCode":"' + event.invite_code + '",'
         e = e + '"allowAnonymousAttendees":' + str(event.allow_anonymous_signups) + ","
-        e = e + '"requireSignIn":' + str(event.require_signin)
+        e = e + '"requireSignIn":' + str(event.require_signin) + ","
+        e = e + '"cost":' + str(event.cost) + ","
+        e = e + '"paymentType":' + str(event.payment_required) + ","
+        e = e + '"sku":"' + event.sku + '"'
         e = e + '}'
 
 
@@ -284,7 +289,10 @@ def get_my_events(user_id: int):
         e = e + '"inviteType":' + str(event.invite_only) + ','
         e = e + '"inviteCode":"' + event.invite_code + '",'
         e = e + '"allowAnonymousAttendees":' + str(event.allow_anonymous_signups) + ","
-        e = e + '"requireSignIn":' + str(event.require_signin)
+        e = e + '"requireSignIn":' + str(event.require_signin) + ","
+        e = e + '"cost":' + str(event.cost) + ","
+        e = e + '"paymentType":' + str(event.payment_required) + ","
+        e = e + '"sku":"' + event.sku + '"'
         e = e + '}'
 
 
@@ -331,7 +339,44 @@ def get_event(invite: str, encrypt: str):
     e = e + '"inviteType":' + str(event.invite_only) + ','
     e = e + '"inviteCode":"' + event.invite_code + '",'
     e = e + '"allowAnonymousAttendees":' + str(event.allow_anonymous_signups) + ","
-    e = e + '"requireSignIn":' + str(event.require_signin)
+    e = e + '"requireSignIn":' + str(event.require_signin) + ","
+    e = e + '"cost":' + str(event.cost) + ","
+    e = e + '"paymentType":' + str(event.payment_required) + ","
+    e = e + '"sku":"' + event.sku + '"'
     e = e + '}'
     
     return {'message': e, 'result': constants.RESULT_OK}
+def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
+    s = decrypt_string(sku, encrypt)
+    q = decrypt_string(quantity, encrypt)
+
+    try: 
+        price_sku = 0.0
+
+        stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
+
+        for price in stripe_api_key['prices']:
+            if price['sku'] == s:
+                price_sku = price['price']
+
+        stripe.api_key = stripe_api_key['stripe-test']
+
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': price_sku,
+                    'quantity': int(q),
+                },
+            ],
+            mode='payment',
+            success_url=full_url + '/success.html',
+            cancel_url=full_url + '/cancel.html',
+            automatic_tax={'enabled': True},
+        )
+    except Exception as e:
+        return str(e)
+    
+    return checkout_session.url
+
+    

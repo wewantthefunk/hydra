@@ -64,6 +64,18 @@ function hide(o) {
     }
 };
 
+function show(o) {
+    if (o != null && o != 'undefined' && o != 'null') {
+        o.style.display = 'block';
+    }
+};
+
+function show_span(o) {
+    if (o != null && o != 'undefined' && o != 'null') {
+        o.style.display = 'inline';
+    }
+};
+
 function validateEmail(email) {
     const regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
     return regex.test(email);

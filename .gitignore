@@ -3,6 +3,7 @@ private/smtp.pass
 private/mail.json
 private/port.json
 private/url.json
+private/stripe-api-key.json
 data/user_db.db
 static/crypto_key.js
 hydra-env/

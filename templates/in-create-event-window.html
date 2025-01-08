@@ -5,27 +5,59 @@
         <div class="center-div-horizontal">
                 <div>
                         <input type="text" id="eventName" placeholder="Event Name" class="required" title="Event Name"
-                                onblur="checkRequired(this);" />
+                                onblur="checkRequired(this);" 
+                                onmouseenter="show_span(document.getElementById('name-hint'));" onmouseleave="hide(document.getElementById('name-hint'));"/>
+                        <span id="name-hint" class="field-hint">Event Name</span>
                 </div>
                 <div>
+                        <span id="start-date-hint" class="pre-field-hint">Start Date</span>
                         <input type="date" id="startDate" placeholder="Start Date" class="required" title="Start Date"
-                                onblur="checkRequired(this);" />
+                                onblur="checkRequired(this);" 
+                                onmouseenter="show_span(document.getElementById('start-date-hint'));" onmouseleave="hide(document.getElementById('start-date-hint'));"/>
                         <input type="date" id="endDate" placeholder="End Date" class="required" title="End Date"
-                                onblur="checkRequired(this);" />
+                                onblur="checkRequired(this);" 
+                                onmouseenter="show_span(document.getElementById('end-date-hint'));" onmouseleave="hide(document.getElementById('end-date-hint'));"/>
+                        <span id="end-date-hint" class="field-hint">End Date</span>
                 </div>
                 <div>
+                        <span id="start-time-hint" class="pre-field-hint">Start Time</span>
                         <input type="time" id="startTime" placeholder="Start Time" class="required" title="Start Time"
-                                oninput="validateTimeInput(this);" onblur="checkRequired(this);" />
+                                oninput="validateTimeInput(this);" onblur="checkRequired(this);" 
+                                onmouseenter="show_span(document.getElementById('start-time-hint'));" onmouseleave="hide(document.getElementById('start-time-hint'));"/>
                         <input type="time" id="endTime" placeholder="End Time" class="required" title="End Time"
-                                oninput="validateTimeInput(this);" onblur="checkRequired(this);" />
+                                oninput="validateTimeInput(this);" onblur="checkRequired(this);" 
+                                onmouseenter="show_span(document.getElementById('end-time-hint'));" onmouseleave="hide(document.getElementById('end-time-hint'));"/>
+                        <span id="end-time-hint" class="field-hint">End Time</span>
                 </div>
                 <div>
                         <input type="text" id="location" placeholder="Location" class="required" title="Location"
-                                onblur="checkRequired(this);" />
+                                onblur="checkRequired(this);"
+                                onmouseenter="show_span(document.getElementById('loc-hint'));" onmouseleave="hide(document.getElementById('loc-hint'));" />
+                        <span id="loc-hint" class="field-hint">Location</span>
                 </div>
                 <div>
                         <input type="text" id="max" placeholder="Max Attendees" class="required" title="Max Attendees"
-                                oninput="validateNumericInput(this);" onblur="checkRequired(this);" />
+                                oninput="validateNumericInput(this);" onblur="checkRequired(this);" 
+                                onmouseenter="show_span(document.getElementById('max-hint'));" onmouseleave="hide(document.getElementById('max-hint'));"/>
+                        <span id="max-hint" class="field-hint">Max Attendees</span>
+               </div>
+                <div>
+                        <input type="text" id="sku" placeholder="SKU" class="required" title="SKU"
+                                onblur="checkRequired(this);"
+                                onmouseenter="show_span(document.getElementById('sku-hint'));" onmouseleave="hide(document.getElementById('sku-hint'));" />
+                        <span id="sku-hint" class="field-hint">SKU</span>
+                </div>
+                <div>
+                        <input type="text" id="cost" placeholder="Cost" class="required" title="Cost"
+                                oninput="validateNumericInput(this);" onblur="checkRequired(this);"
+                                onmouseenter="show_span(document.getElementById('cost-hint'));" onmouseleave="hide(document.getElementById('cost-hint'));" />
+                        <span id="cost-hint" class="field-hint">Cost</span>
+                </div>
+                <div class="hidden">
+                        <select id="paymentType" class="">
+                                <option value="-1" selected>Choose Payment Type</option>
+                                <option value="0">Stripe</option>
+                        </select>
                 </div>
                 <div class="hidden">
                         <select id="eventType" class="">
@@ -44,10 +76,12 @@
                         <input type="checkbox" id="require-signin" />
                 </div>
                 <div>
+                        <span id="invite-hint" class="pre-field-hint">Invite</span>
                         <input type="text" id="invite" placeholder="Event Id" class="topspacer readonly"
-                                title="Event ID" readonly value="12345" />
+                                title="Event ID" readonly value="12345" 
+                                onmouseenter="show_span(document.getElementById('invite-hint'));" onmouseleave="hide(document.getElementById('invite-hint'));"/>
                         <img src="/static/copy.png" id="copy-value" title="Copy Invite Link" class="topspacer"
-                                onclick="copylink();" />
+                                onclick="copylink();" />                        
                 </div>
                 <br />
                 <div>

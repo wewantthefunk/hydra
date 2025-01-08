@@ -22,7 +22,7 @@ class Session:
         self.id = id
 
 class Event:
-    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, allowanonymoussignups, requiresignin, cost = 0.0, paymentRequired = 0, currentattendees = 0):
+    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, allowanonymoussignups, requiresignin, sku, cost = 0.0, paymentRequired = 0, currentattendees = 0):
         self.id = id
         self.name = name
         self.start_date = startdate
@@ -38,6 +38,7 @@ class Event:
         self.require_signin = requiresignin
         self.payment_required = paymentRequired
         self.cost = cost
+        self.sku = sku
 
 def get_all_users() -> List[User]:
     result = []
@@ -413,14 +414,14 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
 
     return result
 
-def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, rsi: str, pt: str, co: str) -> Event:
+def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, rsi: str, pt: str, co: str, sku: str) -> Event:
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
     CURSOR = conn.cursor()    
     
-    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups, requireSignIn, paymentType, cost) VALUES('"
-    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas + "," + rsi + "," + pt + "," + co
+    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups, requireSignIn, paymentType, cost, sku) VALUES('"
+    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas + "," + rsi + "," + pt + "," + co + ",'" + sku + "'"
     sql = sql + ")"
     CURSOR.execute(sql)
     inserted_id = CURSOR.lastrowid
@@ -434,7 +435,7 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
 
     return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, co, pt, 0)
 
-def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int, rsi: str, pt: str, co: str) -> Event:
+def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int, rsi: str, pt: str, co: str, sku: str) -> Event:
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
@@ -452,7 +453,8 @@ def update_event(userId: int, name: str, startdate: str, enddate: str, starttime
     sql = sql + "allowAnonymousSignups = " + aas + ","
     sql = sql + 'requireSignIn = ' + rsi + ","
     sql = sql + 'paymentType = ' + pt + ","
-    sql = sql + 'cost = ' + co
+    sql = sql + 'cost = ' + co + ","
+    sql = sql + "sku = '" + sku + "'"
     sql = sql + " WHERE id = " + str(id)
 
     CURSOR.execute(sql)
@@ -462,7 +464,7 @@ def update_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.close()
     conn.close()
 
-    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi)
+    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, co, pt)
 
 def get_public_events() -> List[Event]:
     conn = sqlite3.connect(constants.DB_LOCATION)
@@ -492,6 +494,7 @@ def get_public_events() -> List[Event]:
                      row[constants.EVENT_MAX_ATTENDEES_COL],
                      row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
                      row[constants.EVENT_REQUIRE_SIGNUPS_COL],
+                     row[constants.EVENT_SKU_COL],
                      row[constants.EVENT_PAYMENT_COST_COL],
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
@@ -549,6 +552,7 @@ def get_my_events(user_id: int) -> List[Event]:
                      row[constants.EVENT_MAX_ATTENDEES_COL],
                      row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
                      row[constants.EVENT_REQUIRE_SIGNUPS_COL],
+                     row[constants.EVENT_SKU_COL],
                      row[constants.EVENT_PAYMENT_COST_COL],
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
@@ -588,6 +592,7 @@ def get_event(invite: str) -> Event:
                      row[constants.EVENT_MAX_ATTENDEES_COL],
                      row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
                      row[constants.EVENT_REQUIRE_SIGNUPS_COL],
+                     row[constants.EVENT_SKU_COL],
                      row[constants.EVENT_PAYMENT_COST_COL],
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
@@ -606,6 +611,7 @@ def delete_event(user_id: int, event_id: int):
     CURSOR = conn.cursor()    
 
     sql = "SELECT * FROM event2owner WHERE ownerId = " + str(user_id)
+    CURSOR.execute(sql)
     rows = CURSOR.fetchall()
 
     if len(rows) < 1:
