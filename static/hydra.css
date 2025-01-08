@@ -162,6 +162,7 @@ label {
     position: absolute;
     left: 275px;
     top: 5px;
+    display:none;
 }
 
 #userMenu {

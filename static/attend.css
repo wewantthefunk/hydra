@@ -2,6 +2,26 @@
     display: none;
 }
 
-#already-attending-div {
+#already-attending-div, #attend-event-msg-div {
     font-family: 'Lato', sans-serif;
+}
+
+#attend-event-msg-div {
+    margin-top:10px;
+    margin-left: 10px;
+}
+
+#attend-event-info-div {
+    margin-top: 20px;
+    margin-left: 20px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    font-family: 'Lato', sans-serif;
+}
+
+.label {
+    text-align: right;
+    color: #333;
 }

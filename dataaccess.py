@@ -653,7 +653,7 @@ def check_attendance(userid: int, invite: str):
 
     sql = "SELECT * FROM event2owner WHERE eventId = " + event_id + " AND ownerId = " + str(userid)
     CURSOR.execute(sql)
-    CURSOR.fetchall()
+    c = CURSOR.fetchall()
 
     if len(c) > 0:
         CURSOR.close()

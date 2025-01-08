@@ -357,7 +357,7 @@ def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
 
         for price in stripe_api_key['prices']:
             if price['sku'] == s:
-                price_sku = price['price']
+                price_sku = price['price_id']
 
         stripe.api_key = stripe_api_key['stripe-test']
 

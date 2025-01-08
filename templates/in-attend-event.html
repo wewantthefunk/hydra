@@ -27,6 +27,67 @@
             <input type="button" id="attend" value="Attend" onclick="attend();"/>
             <input type="button" id="skip" value="Skip" onclick="unattend();" class="hidden"/>
         </div>
+        <div id="attend-event-msg-div">
+            <span id="attend-event-msg">&nbsp;</span>
+        </div>
+        <div id="attend-event-info-div">
+            <table>
+                <body>
+                    <tr>
+                        <td class="label">
+                            <span>Event:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-name"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>Start:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-start-date"></span>
+                            &nbsp;
+                            <span id="attend-event-start-time"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>End:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-end-date"></span>
+                            &nbsp;
+                            <span id="attend-event-end-time"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>Location:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-location"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>Cost:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-cost"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>SKU:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-sku"></span>
+                        </td>
+                    </tr>
+                </body>
+            </table>
+        </div>
     </div>
 
     {% include 'in-menus.html' %}

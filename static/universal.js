@@ -324,10 +324,6 @@ async function universalFinishedLoad() {
         return;
     }
 
-    if (parseInt(LEVEL) > 1) {
-        document.getElementById("createEvent").style.display = 'none';
-    }
-
     if (parseInt(LEVEL) <= USER_LEVEL_ADMIN) {
         const a = document.getElementById('admin');
         if (a != null && a != 'undefined') {
@@ -339,6 +335,11 @@ async function universalFinishedLoad() {
         const a = document.getElementById('createEvent');
         if (a != null && a != 'undefined') {
             a.style.display = 'none';
+        }
+    } else {
+        const a = document.getElementById('createEvent');
+        if (a != null && a != 'undefined') {
+            a.style.display = 'block';
         }
     }
 

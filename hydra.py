@@ -50,7 +50,11 @@ def getpublicevents():
 def attend(invite):
     return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite)
 
-@app.route('/create-checkout-session', methods=['POST'])
+@app.route('/create-checkout-session/success.html')
+def create_checkout_session_success():
+    return render_template('in-checkout-success.html', app_name=constants.APP_NAME)
+
+@app.route('/create-checkout-session', methods=['POST', 'GET'])
 def create_checkout_session():
     if not request.is_json:
         return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
@@ -73,9 +77,11 @@ def create_checkout_session():
 
     full_url = request.url
 
-    url = businesslogic.checkout(full_url, processed_data['sku'], processed_data['quantity'])
+    url = businesslogic.checkout(full_url, processed_data['sku'], processed_data['quantity'], processed_data['e'])
 
-    return redirect(url, code=303)
+    return jsonify({'message': url}), constants.RESULT_OK
+
+    #return redirect(url, code=303)
 
 @app.route('/checkattendance', methods=['POST'])
 def check_attendance():

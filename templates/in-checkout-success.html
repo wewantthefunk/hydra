@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ app_name }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/checkout-success.css">
+    <link rel="stylesheet" type="text/css" href="/static/hydra.css">
+    <link rel="stylesheet" type="text/css" href="/static/hydra-in.css">
+    <script type="text/javascript" src="/static/crypto_key.js"></script>
+    <script type="text/javascript" src="/static/crypto.js"></script>
+    <script type="text/javascript" src="/static/universal.js"></script>
+    <script type="text/javascript" src="/static/checkout-success.js"></script>
+</head>
+
+<body onload="finishedLoad();">
+    <div id="maindiv">
+        <h1>Checkout Success!</h1>
+        <div>
+            <div id="attend-event-info-div">
+                <table>
+
+                    <body>
+                        <tr>
+                            <td class="label">
+                                <span>Event:</span>
+                            </td>
+                            <td>
+                                <span id="attend-event-name"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">
+                                <span>Start:</span>
+                            </td>
+                            <td>
+                                <span id="attend-event-start-date"></span>
+                                &nbsp;
+                                <span id="attend-event-start-time"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">
+                                <span>End:</span>
+                            </td>
+                            <td>
+                                <span id="attend-event-end-date"></span>
+                                &nbsp;
+                                <span id="attend-event-end-time"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">
+                                <span>Location:</span>
+                            </td>
+                            <td>
+                                <span id="attend-event-location"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">
+                                <span>Cost:</span>
+                            </td>
+                            <td>
+                                <span id="attend-event-cost"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">
+                                <span>SKU:</span>
+                            </td>
+                            <td>
+                                <span id="attend-event-sku"></span>
+                            </td>
+                        </tr>
+                    </body>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'in-menus.html' %}
+
+    {% include 'in-create-event-window.html' %}
+
+    {% include 'all-processing.html' %}
+
+</body>
