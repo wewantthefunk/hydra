@@ -523,48 +523,46 @@ def get_my_events(user_id: int) -> List[Event]:
     CURSOR.execute("SELECT * FROM event2owner WHERE ownerId = " + str(user_id))
     o_rows = CURSOR.fetchall()
 
-    if len(o_rows) < 1:
-        return result
-    
-    ids = ''
-    first = True
+    if len(o_rows) > 0:  
+        ids = ''
+        first = True
 
-    for o_row in o_rows:
-        if not first:
-            ids = ids + ','
+        for o_row in o_rows:
+            if not first:
+                ids = ids + ','
 
-        ids = ids + str(o_row[constants.EVENT_OWNER_ID_COL])
+            ids = ids + str(o_row[constants.EVENT_OWNER_ID_COL])
 
-        first = False
+            first = False
 
-    # Retrieve all users
-    CURSOR.execute("SELECT * FROM events WHERE id in (" + ids + ")")
+        # Retrieve all users
+        CURSOR.execute("SELECT * FROM events WHERE id in (" + ids + ")")
 
-    rows = CURSOR.fetchall()
+        rows = CURSOR.fetchall()
 
-    for row in rows:
-        CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
-        c = CURSOR.fetchall()
+        for row in rows:
+            CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
+            c = CURSOR.fetchall()
 
-        event = Event(row[constants.EVENT_ID_COL],
-                     row[constants.EVENT_NAME_COL],
-                     row[constants.EVENT_START_DATE_COL],
-                     row[constants.EVENT_END_DATE_COL],
-                     row[constants.EVENT_START_TIME_COL],
-                     row[constants.EVENT_END_TIME_COL],
-                     row[constants.EVENT_LOCATION_COL],
-                     row[constants.EVENT_INVITE_TYPE_COL],
-                     row[constants.EVENT_INVITE_CODE_COL],
-                     row[constants.EVENT_MAX_ATTENDEES_COL],
-                     row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
-                     row[constants.EVENT_REQUIRE_SIGNUPS_COL],
-                     row[constants.EVENT_SKU_COL],
-                     constants.EVENT_OWNER,
-                     row[constants.EVENT_PAYMENT_COST_COL],
-                     row[constants.EVENT_PAYMENT_TYPE_COL],
-                     c[0][0]
-                     )
-        result.append(event)
+            event = Event(row[constants.EVENT_ID_COL],
+                        row[constants.EVENT_NAME_COL],
+                        row[constants.EVENT_START_DATE_COL],
+                        row[constants.EVENT_END_DATE_COL],
+                        row[constants.EVENT_START_TIME_COL],
+                        row[constants.EVENT_END_TIME_COL],
+                        row[constants.EVENT_LOCATION_COL],
+                        row[constants.EVENT_INVITE_TYPE_COL],
+                        row[constants.EVENT_INVITE_CODE_COL],
+                        row[constants.EVENT_MAX_ATTENDEES_COL],
+                        row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
+                        row[constants.EVENT_REQUIRE_SIGNUPS_COL],
+                        row[constants.EVENT_SKU_COL],
+                        constants.EVENT_OWNER,
+                        row[constants.EVENT_PAYMENT_COST_COL],
+                        row[constants.EVENT_PAYMENT_TYPE_COL],
+                        c[0][0]
+                        )
+            result.append(event)
 
     CURSOR.execute("SELECT * FROM attendees WHERE userId = " + str(user_id))
     o_rows = CURSOR.fetchall()
