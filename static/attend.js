@@ -57,5 +57,6 @@ async function attend() {
         'e': IS_HTTPS
     }, 'Invalid');
 
-    navigate(result.message);
+    sessionStorage.setItem('sessionId', result.sessionId);
+    navigate(result.url);
 };

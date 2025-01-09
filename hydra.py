@@ -54,7 +54,56 @@ def attend(invite):
 def create_checkout_session_success():
     return render_template('in-checkout-success.html', app_name=constants.APP_NAME)
 
-@app.route('/create-checkout-session', methods=['POST', 'GET'])
+@app.route('/get-payment-info', methods=['POST'])
+def get_payment_info():
+    if not request.is_json:
+        return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    
+    data = request.get_json()
+
+    # Process the JSON data here as needed
+    processed_data = {
+        'token': data.get('field1'),
+        'sessionid': data.get('field2'),
+        'username': data.get('field3'),
+        'e': data.get('e')
+    }
+
+    rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+    if not rt[0]:
+        return jsonify({'message': rt[1]['message']}), rt[1]['result']
+    
+    result = businesslogic.get_payment_info(processed_data['sessionid'], processed_data['e'])
+
+    return jsonify({'message':result['receipt'], 'result': result['result'], 'receipt_url': result['receipt_url'], 'receipt_id': result['receipt_id']}), result['result']
+
+@app.route('/mark-attended', methods=['POST'])
+def mark_attended():
+    if not request.is_json:
+        return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+          
+    data = request.get_json()
+
+    # Process the JSON data here as needed
+    processed_data = {
+        'token': data.get('field1'),
+        'invite': data.get('field2'),
+        'username': data.get('field3'),
+        'receipt_id': data.get('field4'),
+        'e': data.get('e')
+    }
+
+    rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+    if not rt[0]:
+        return jsonify({'message': rt[1]['message']}), rt[1]['result']
+    
+    result = businesslogic.mark_attended(processed_data['invite'], rt[1]['userId'], processed_data['receipt_id'], processed_data['e'])
+
+    return jsonify({'message': result['message'], 'badge_number': result['badge_number']}), result['result']
+
+@app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     if not request.is_json:
         return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
@@ -77,11 +126,9 @@ def create_checkout_session():
 
     full_url = request.url
 
-    url = businesslogic.checkout(full_url, processed_data['sku'], processed_data['quantity'], processed_data['e'])
+    result = businesslogic.checkout(full_url, processed_data['sku'], processed_data['quantity'], processed_data['e'])
 
-    return jsonify({'message': url}), constants.RESULT_OK
-
-    #return redirect(url, code=303)
+    return jsonify({'url': result['url'], 'message': result['message'], 'sessionId': result['sessionId'], 'result': result['result']}), result['result']
 
 @app.route('/checkattendance', methods=['POST'])
 def check_attendance():
@@ -102,12 +149,7 @@ def check_attendance():
             return jsonify({'message': rt[1]['message']}), rt[1]['result']
         
         result = businesslogic.check_attendance(rt[1]['userId'], processed_data['invite'], processed_data['e'])
-
-        '''if result['result'] == constants.RESULT_OK:
-            r = businesslogic.attend_event(rt[1]['userId'], processed_data['invite'], processed_data['e'])
-
-            return jsonify({'message': result['message']}), constants.RESULT_OK'''
-        
+       
         return jsonify({'message': result['message']}), result['result']
     
     return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST

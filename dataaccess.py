@@ -22,7 +22,7 @@ class Session:
         self.id = id
 
 class Event:
-    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, allowanonymoussignups, requiresignin, sku, cost = 0.0, paymentRequired = 0, currentattendees = 0):
+    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, allowanonymoussignups, requiresignin, sku, relationship, cost = 0.0, paymentRequired = 0, currentattendees = 0):
         self.id = id
         self.name = name
         self.start_date = startdate
@@ -39,6 +39,7 @@ class Event:
         self.payment_required = paymentRequired
         self.cost = cost
         self.sku = sku
+        self.relationship = relationship
 
 def get_all_users() -> List[User]:
     result = []
@@ -356,7 +357,7 @@ def unverify_user(id: int) -> bool:
     return True
 
 def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: str) -> Event:
-    result = Event(-1, '', '', '', '', '', '', 0, '', 0, 0, 0, 0, 0)
+    result = Event(-1, '', '', '', '', '', '', 0, '', 0, 0, 0, '', 0, 0)
 
     conn = sqlite3.connect(constants.DB_LOCATION)
 
@@ -381,6 +382,8 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
                        r[0][constants.EVENT_MAX_ATTENDEES_COL], 
                        r[0][constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL], 
                        r[0][constants.EVENT_REQUIRE_SIGNUPS_COL],
+                       r[0][constants.EVENT_SKU_COL],
+                       constants.EVENT_OWNER,
                        r[0][constants.EVENT_PAYMENT_COST_COL],
                        r[0][constants.EVENT_PAYMENT_TYPE_COL],
                        0)
@@ -406,6 +409,8 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
                        r[0][constants.EVENT_MAX_ATTENDEES_COL], 
                        r[0][constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL], 
                        r[0][constants.EVENT_REQUIRE_SIGNUPS_COL],
+                       r[0][constants.EVENT_SKU_COL],
+                       constants.EVENT_OWNER,
                        r[0][constants.EVENT_PAYMENT_COST_COL],
                        r[0][constants.EVENT_PAYMENT_TYPE_COL])
 
@@ -433,7 +438,7 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.close()
     conn.close()
 
-    return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, co, pt, 0)
+    return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, constants.EVENT_OWNER, co, pt, 0)
 
 def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int, rsi: str, pt: str, co: str, sku: str) -> Event:
     conn = sqlite3.connect(constants.DB_LOCATION)
@@ -464,7 +469,7 @@ def update_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.close()
     conn.close()
 
-    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, co, pt)
+    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, constants.EVENT_OWNER, co, pt)
 
 def get_public_events() -> List[Event]:
     conn = sqlite3.connect(constants.DB_LOCATION)
@@ -495,6 +500,7 @@ def get_public_events() -> List[Event]:
                      row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
                      row[constants.EVENT_REQUIRE_SIGNUPS_COL],
                      row[constants.EVENT_SKU_COL],
+                     constants.EVENT_PUBLIC,
                      row[constants.EVENT_PAYMENT_COST_COL],
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
@@ -507,6 +513,8 @@ def get_public_events() -> List[Event]:
     return result
 
 def get_my_events(user_id: int) -> List[Event]:
+    result = []
+
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
@@ -516,7 +524,7 @@ def get_my_events(user_id: int) -> List[Event]:
     o_rows = CURSOR.fetchall()
 
     if len(o_rows) < 1:
-        return []
+        return result
     
     ids = ''
     first = True
@@ -533,8 +541,6 @@ def get_my_events(user_id: int) -> List[Event]:
     CURSOR.execute("SELECT * FROM events WHERE id in (" + ids + ")")
 
     rows = CURSOR.fetchall()
-
-    result = []
 
     for row in rows:
         CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
@@ -553,6 +559,52 @@ def get_my_events(user_id: int) -> List[Event]:
                      row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
                      row[constants.EVENT_REQUIRE_SIGNUPS_COL],
                      row[constants.EVENT_SKU_COL],
+                     constants.EVENT_OWNER,
+                     row[constants.EVENT_PAYMENT_COST_COL],
+                     row[constants.EVENT_PAYMENT_TYPE_COL],
+                     c[0][0]
+                     )
+        result.append(event)
+
+    CURSOR.execute("SELECT * FROM attendees WHERE userId = " + str(user_id))
+    o_rows = CURSOR.fetchall()
+
+    if len(o_rows) < 1:
+        return result
+    
+    ids = ''
+    first = True
+
+    for o_row in o_rows:
+        if not first:
+            ids = ids + ','
+
+        ids = ids + str(o_row[constants.EVENT_OWNER_ID_COL])
+
+        first = False
+
+    CURSOR.execute("SELECT * FROM events WHERE id in (" + ids + ")")
+
+    rows = CURSOR.fetchall()
+
+    for row in rows:
+        CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
+        c = CURSOR.fetchall()
+
+        event = Event(row[constants.EVENT_ID_COL],
+                     row[constants.EVENT_NAME_COL],
+                     row[constants.EVENT_START_DATE_COL],
+                     row[constants.EVENT_END_DATE_COL],
+                     row[constants.EVENT_START_TIME_COL],
+                     row[constants.EVENT_END_TIME_COL],
+                     row[constants.EVENT_LOCATION_COL],
+                     row[constants.EVENT_INVITE_TYPE_COL],
+                     row[constants.EVENT_INVITE_CODE_COL],
+                     row[constants.EVENT_MAX_ATTENDEES_COL],
+                     row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
+                     row[constants.EVENT_REQUIRE_SIGNUPS_COL],
+                     row[constants.EVENT_SKU_COL],
+                     constants.EVENT_ATTENDEE,
                      row[constants.EVENT_PAYMENT_COST_COL],
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
@@ -593,6 +645,7 @@ def get_event(invite: str) -> Event:
                      row[constants.EVENT_ALLOW_ANONYMOUS_SIGNUPS_COL],
                      row[constants.EVENT_REQUIRE_SIGNUPS_COL],
                      row[constants.EVENT_SKU_COL],
+                     constants.EVENT_OWNER,
                      row[constants.EVENT_PAYMENT_COST_COL],
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
@@ -669,13 +722,48 @@ def check_attendance(userid: int, invite: str):
         CURSOR.close()
         conn.close()
         return False
-    
-    '''sql = "INSERT INTO attendees (eventId, userId) VALUES(" + event_id + "," + str(userid) + ")"
-    CURSOR.execute(sql)
-
-    conn.commit()'''
 
     CURSOR.close()
     conn.close()
 
     return True
+
+def mark_attended(userid: int, invite: str, receipt_id: str):
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()  
+
+    sql = "SELECT * FROM events WHERE code = '" + invite + "'"
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) < 1:
+        CURSOR.close()
+        conn.close()
+        return [False, '']
+
+    event_id = str(c[0][constants.EVENT_ID_COL])
+
+    sql = "SELECT * FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) > 0:
+        CURSOR.close()
+        conn.close()
+        return [True, c[0][3]]
+    
+    badge_number = utilities.generate_random_string(10, False)
+    
+    sql = "INSERT INTO attendees (eventId, userId, badgeNumber, receiptId) VALUES(" + event_id + "," + str(userid) + ",'" + badge_number + "','" + receipt_id + "')"
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return [True, badge_number]

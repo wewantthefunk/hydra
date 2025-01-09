@@ -172,7 +172,11 @@ def create_sql(passphrase, email, adminName, vcode):
 
     if 'badgeNumber' not in columns:
         # Add new column 'code' to the 'events' table if it doesn't exist
-        cursor.execute("ALTER TABLE attendees ADD COLUMN badgeNumber INTEGER")
+        cursor.execute("ALTER TABLE attendees ADD COLUMN badgeNumber TEXT")
+
+    if 'receiptId' not in columns:
+        # Add new column 'code' to the 'events' table if it doesn't exist
+        cursor.execute("ALTER TABLE attendees ADD COLUMN receiptId TEXT")
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS event2owner

@@ -11,13 +11,12 @@
     <script type="text/javascript" src="/static/crypto_key.js"></script>
     <script type="text/javascript" src="/static/crypto.js"></script>
     <script type="text/javascript" src="/static/universal.js"></script>
-    <script type="text/javascript" src="/static/checkout-success.js"></script>
-    <script type="text/javascript" src="/static/JsBarcode.all.min.js"></script>
+    <script type="text/javascript" src="/static/checkout-cancel.js"></script>
 </head>
 
 <body onload="finishedLoad();">
     <div id="maindiv">
-        <h1>Checkout Success!</h1>
+        <h1>Checkout Canceled!</h1>
         <div>
             <div id="attend-event-info-div">
                 <table>
@@ -75,35 +74,9 @@
                                 <span id="attend-event-sku"></span>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="label">
-                                <span>Receipt #:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-receipt-num"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>Badge #:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-badge-num"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>
-                                <img id="barcode" src=""/>
-                            </td>
-                        </tr>
                     </body>
                 </table>
             </div>
-        </div>
-        <div>&nbsp;</div>
-        <div id="receipt-div">
-            <input type="button" value="View Receipt" onclick="showReceipt();">
         </div>
     </div>
     {% include 'in-menus.html' %}

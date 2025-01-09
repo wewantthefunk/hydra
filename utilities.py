@@ -29,7 +29,7 @@ def send_email(recipients = [], subject = str, body = str, mail = Mail):
     mail.send(msg)
     return "Email sent!"
 
-def generate_random_string(length):
+def generate_random_string(length, use_special: bool = True):
     # Define the characters to choose from for each category
     uppercase_letters = string.ascii_uppercase
     lowercase_letters = string.ascii_lowercase
@@ -37,7 +37,10 @@ def generate_random_string(length):
     special_symbols = "^&$%#@!"
 
     # Combine all characters into one string
-    all_characters = uppercase_letters + lowercase_letters + numbers + special_symbols
+    all_characters = uppercase_letters + lowercase_letters + numbers 
+    
+    if use_special:
+        all_characters = all_characters + special_symbols
 
     # Generate the random string using list comprehension and random.choice()
     random_string = ''.join(random.choice(all_characters) for _ in range(length))

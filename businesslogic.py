@@ -255,7 +255,8 @@ def get_public_events():
         e = e + '"requireSignIn":' + str(event.require_signin) + ","
         e = e + '"cost":' + str(event.cost) + ","
         e = e + '"paymentType":' + str(event.payment_required) + ","
-        e = e + '"sku":"' + event.sku + '"'
+        e = e + '"sku":"' + event.sku + '",'
+        e = e + '"relationship":' + str(event.relationship)
         e = e + '}'
 
 
@@ -292,7 +293,8 @@ def get_my_events(user_id: int):
         e = e + '"requireSignIn":' + str(event.require_signin) + ","
         e = e + '"cost":' + str(event.cost) + ","
         e = e + '"paymentType":' + str(event.payment_required) + ","
-        e = e + '"sku":"' + event.sku + '"'
+        e = e + '"sku":"' + event.sku + '",'
+        e = e + '"relationship":' + str(event.relationship)
         e = e + '}'
 
 
@@ -342,22 +344,24 @@ def get_event(invite: str, encrypt: str):
     e = e + '"requireSignIn":' + str(event.require_signin) + ","
     e = e + '"cost":' + str(event.cost) + ","
     e = e + '"paymentType":' + str(event.payment_required) + ","
-    e = e + '"sku":"' + event.sku + '"'
+    e = e + '"sku":"' + event.sku + '",'
+    e = e + '"relationship":' + str(event.relationship)
     e = e + '}'
     
     return {'message': e, 'result': constants.RESULT_OK}
+
 def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
     s = decrypt_string(sku, encrypt)
     q = decrypt_string(quantity, encrypt)
 
     try: 
-        price_sku = 0.0
+        price_id = 'ID'
 
         stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
 
         for price in stripe_api_key['prices']:
             if price['sku'] == s:
-                price_sku = price['price_id']
+                price_id = price['price_id']
 
         stripe.api_key = stripe_api_key['stripe-test']
 
@@ -365,8 +369,8 @@ def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
             line_items=[
                 {
                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': price_sku,
-                    'quantity': int(q),
+                    'price': price_id,
+                    'quantity': int(q)
                 },
             ],
             mode='payment',
@@ -375,8 +379,32 @@ def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
             automatic_tax={'enabled': True},
         )
     except Exception as e:
-        return str(e)
+        return {'message':str(e), 'url': 'none.html', 'sessionId': 'none', 'result': constants.RESULT_INVALID_REQUEST}
     
-    return checkout_session.url
+    return {"url":checkout_session.url, "sessionId": checkout_session.id, "message": 'checkout session started', 'result': constants.RESULT_OK}
 
+def get_payment_info(sesssion_id: str, encrypt: str):
+    sid = decrypt_string(sesssion_id, encrypt)
+    stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
+
+    stripe.api_key = stripe_api_key['stripe-test']
+
+    session = stripe.checkout.Session.retrieve(
+            sid,
+            expand=[],
+        )
+
+    charge = stripe.Charge.retrieve(stripe.PaymentIntent.retrieve(session['payment_intent'])['latest_charge'])
+
+    return {"receipt": charge['receipt_number'], "receipt_url": charge['receipt_url'], 'receipt_id': charge['id'], "result": constants.RESULT_OK}
+
+def mark_attended(invite: str, userid: str, receipt_id: str, encrypt: str):
+    i = decrypt_string(invite, encrypt)
+    rid = decrypt_string(receipt_id, encrypt)
+
+    result = dataaccess.mark_attended(userid, i, rid)
+
+    if not result[0]:
+        return {'message': 'Unable to Attend', 'result': constants.RESULT_INVALID_REQUEST}
     
+    return {'message': 'Attending', 'badge_number': result[1], 'result': constants.RESULT_OK}
