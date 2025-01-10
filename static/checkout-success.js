@@ -48,7 +48,7 @@ async function finishedLoad() {
         lineColor: "#ffffff",
         margin: 20,
         marginLeft: 20
-      });
+    });
 
     stopProcessing();
 };
