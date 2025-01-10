@@ -304,7 +304,6 @@ async function universalFinishedLoad() {
 
     const result = await postJsonToApi("/check", { 'field1': tp, 'field2': u });
 
-    debugger;
     if (result['message'] != 'success') {
         navigate('/');
         return;

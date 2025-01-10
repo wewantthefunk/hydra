@@ -24,7 +24,6 @@ async function verify() {
             const lresult = await postJsonToApi("/login", {"field1":em,"field2": p, "field3": tp}, "Invalid Username and Password");
 
             if (lresult['message'] == SUCCESS_LOGIN_MSG) {
-                debugger;
                 const token = await decryptString(lresult['token'], tempPassword);
                 sessionStorage.setItem('uname', lresult['uname']);
                 sessionStorage.setItem('token', token);
