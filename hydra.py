@@ -341,7 +341,7 @@ def createaccount():
         if result['result'] == constants.RESULT_OK:
             send_verification_email(result['email'], result['vcode'])
 
-            return jsonify({'message': 'Account Creation Successful! You must verify your account before you can login!'}), constants.RESULT_OK
+            return jsonify({'message': "Account Creation Successful! You must verify your account before you can login. An email has been sent with your verification code. Click the 'Verify Account' link below and enter the code in the email."}), constants.RESULT_OK
         
         return jsonify({"message": result['message']}), result['result']
     
