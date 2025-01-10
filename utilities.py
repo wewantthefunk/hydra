@@ -82,12 +82,10 @@ def load_mail_server_info():
         return mailInfo
     
 def use_encrypt(v: str) -> bool:
-    if v == '1':
-        return True
-    
-    return False
+    return str_to_bool(v)
 
-def str_to_bool(s: str):
+def str_to_bool(s1: str):
+    s = str(s1)
     if s.lower().strip() == "true" or s.lower().strip() == '1':
         return True
     elif s.lower().strip() == "false" or s.lower().strip() == '0':

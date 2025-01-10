@@ -26,7 +26,7 @@ async function verify() {
             if (lresult['message'] == SUCCESS_LOGIN_MSG) {
                 debugger;
                 const token = await decryptString(lresult['token'], tempPassword);
-                sessionStorage.setItem('uname', email);
+                sessionStorage.setItem('uname', lresult['uname']);
                 sessionStorage.setItem('token', token);
                 sessionStorage.setItem('level', lresult['level']);
                 navigate('/home');

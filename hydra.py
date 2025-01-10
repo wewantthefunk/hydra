@@ -411,7 +411,8 @@ def create_event():
 
 def send_verification_email(email: str, code: str):
     hostJson = utilities.load_json_file('private/url.json')
-    url = hostJson['url']
+    domain = hostJson['domain']
+    use_port = hostJson['use_port']
 
     portJson = utilities.load_json_file('private/port.json')
     port=portJson['port']
@@ -426,7 +427,12 @@ def send_verification_email(email: str, code: str):
         app.config['MAIL_USE_TLS'] = True
         constants.MAIL = Mail(app)
 
-    utilities.send_email([email], 'Hydra Event Server Verification', 'Your Verification Code Is:\n\n  ' + code + '\n\nFollow the link to http://' + url + ":" + str(port) + '/verify and enter the information to verify your account.\n\nThank you,\n\nThe Hydra Event Manager Team', constants.MAIL)
+    link = domain
+
+    if utilities.str_to_bool(use_port):
+        link = link + ":" + str(port)
+
+    utilities.send_email([email], 'Hydra Event Server Verification', 'Your Verification Code Is:\n\n  ' + code + '\n\nFollow the link to http://' + link + '/verify and enter the information to verify your account.\n\nThank you,\n\nThe Hydra Event Manager Team', constants.MAIL)
 
 if __name__ == '__main__':  
     utilities.load_private_key()

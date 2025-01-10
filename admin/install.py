@@ -226,13 +226,24 @@ def execute(is_test_mode: bool):
 
     if not file_exists('private/url.json'):
         url = "0.0.0.0"
+        use_port = '1'
 
         url1 = input("Enter the URL for the Hydra server (default " + url + "): ")
 
         if url1 != '':
             url = url1
 
-        write_to_file('private/url.json', '{\n  "url":"' + url + '"\n}')
+        domain_name = input("Enter the Domain Name for the Hydra Server: ")
+
+        use_port1 = input("Should the port be referenced when communicating with users? (1 == yes, 0 == no, default 1): ")
+
+        if use_port1 != '':
+            if use_port1 != '1':
+                use_port1 = '0'
+            
+            use_port = use_port1
+
+        write_to_file('private/url.json', '{\n  "url":"' + url + '",\n  "domain":"' + domain_name + '",\n  "use_port":"' + use_port + '"\n}') 
 
         print("---------------------------")
 
