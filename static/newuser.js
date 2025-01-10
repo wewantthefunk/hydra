@@ -7,26 +7,31 @@ async function createAccount() {
 
     if (username == '' || email == '' || password == '' || cpassword == '') {
         document.getElementById('message').innerHTML = "All Fields Must Be Filled Out!"
+        stopProcessing();
         return;
     }
 
     if (!validateEmail(email)) {
         document.getElementById('message').innerHTML = "Email must follow the pattern of 'name@domain.ext'";
+        stopProcessing();
         return;
     }
 
     if (username.length < 8 || username.length > 16) {
-        document.getElementById('message').innerHTML = "Username must be between 8 and 16 characters";
+        document.getElementById('message').innerHTML = "Username must be between 8 and 16 characters";stopProcessing();
+        stopProcessing();
         return;
     }
 
     if (password != cpassword) {
         document.getElementById('message').innerHTML = "Passwords MUST match";
+        stopProcessing();
         return;
     }
 
     if (!checkPasswordStrength(password)) {
         document.getElementById('message').innerHTML = "Password is not strong enough";
+        stopProcessing();
         return;
     }
 

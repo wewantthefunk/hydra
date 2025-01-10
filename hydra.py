@@ -6,35 +6,35 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('out-index.html', app_name=constants.APP_NAME)
+    return render_template('out-index.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route("/home")
 def landing():
-    return render_template('in-landing.html', app_name=constants.APP_NAME)
+    return render_template('in-landing.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route("/newuser")
 def newuser():
-    return render_template('out-newuser.html', app_name=constants.APP_NAME)
+    return render_template('out-newuser.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route('/outpublicevents')
 def outpublicevents():
-    return render_template('out-public-events.html', app_name=constants.APP_NAME)
+    return render_template('out-public-events.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route("/verify")
 def verify():
-    return render_template("out-verify.html", app_name=constants.APP_NAME)
+    return render_template("out-verify.html", app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route("/account")
 def account():
-    return render_template("in-account.html", app_name=constants.APP_NAME)
+    return render_template("in-account.html", app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route("/admin")
 def admin():
-    return render_template("in-admin.html", app_name=constants.APP_NAME)
+    return render_template("in-admin.html", app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route("/publicevents")
 def publicevents():
-    return render_template('in-public-events.html', app_name=constants.APP_NAME)
+    return render_template('in-public-events.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
 @app.route('/getusers', methods=['POST'])
 def getusers():
@@ -341,7 +341,7 @@ def createaccount():
         if result['result'] == constants.RESULT_OK:
             send_verification_email(result['email'], result['vcode'])
 
-            return jsonify({'message': 'Account Creation Successful! You must verify your account before you can login!'}), constants.RESULT_OK
+            return jsonify({'message': "Account Creation Successful! You must verify your account before you can login. An email has been sent with your verification code. Click the 'Verify Account' link below and enter the code in the email."}), constants.RESULT_OK
         
         return jsonify({"message": result['message']}), result['result']
     

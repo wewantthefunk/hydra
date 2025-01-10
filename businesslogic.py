@@ -132,8 +132,6 @@ def check_token(token: str, username: str, encrypt: bool):
 
     if len(rows) < 1:
         return {'message': 'Invalid Token', 'result': constants.RESULT_FORBIDDEN}
-    
-    rows = dataaccess.get_user(rows[0].username)
 
     return {'message': 'success', 'userId': rows[0].id, 'result': constants.RESULT_OK}
 
