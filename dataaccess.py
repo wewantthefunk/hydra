@@ -242,7 +242,7 @@ def get_session_by_username_token_and_issued(jdate: int, uname: str, token: str)
     result = []
 
     for row in rows:
-        rs = get_user(row[constants.SESSION_USER_NAME_COL])
+        rs = get_user(uname)
         if len(rs) > 0:
             session = Session(row[constants.SESSION_USER_NAME_COL], 
                         row[constants.SESSION_TOKEN_COL], 
