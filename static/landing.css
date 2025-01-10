@@ -5,7 +5,9 @@
 }
 
 #event-list,
-#attendee-list {
+#attendee-list,
+#event-org-header,
+#event-attend-header {
     /* Apply borders to the bottom of each row and the right of each cell */
     border-collapse: collapse;
     width: 100%;

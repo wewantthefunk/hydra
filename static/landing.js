@@ -10,13 +10,13 @@ async function finishedLoad() {
 
     const result = await postJsonToApi('/myevents', { 'field1': t, 'field2': u, 'e': IS_HTTPS });
 
-    displayEventsTable(JSON.parse(result.message)['events'], 'event-list', 'event-list-body', 0);
+    displayEventsTable(JSON.parse(result.message)['events'], 'event-list', 'event-list-body', 0, 'event-org-header');
 
     displayAttendeeTable(JSON.parse(result.message)['events'], 'attendee-list', 'attendee-list-body', 2);
     stopProcessing();
 };
 
-async function displayEventsTable(events, table, tbody, level) {
+async function displayEventsTable(events, table, tbody, level, header) {
     // Get the table body element where we'll append the rows
     const tableBody = document.getElementById(tbody);
 
@@ -146,6 +146,7 @@ async function displayEventsTable(events, table, tbody, level) {
 
     if (rows > 0) {
         document.getElementById(table).style.display = 'block';
+        document.getElementById(header).style.display = 'block';
     }
 };
 
