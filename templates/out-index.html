@@ -15,11 +15,17 @@
     <div id="main">
         <h1>{{ app_name }}</h1>
         <div>
-            <input type="text" id="uname" placeholder="User Name or Email"/>
+            <input type="text" id="uname" placeholder="User Name or Email"
+            onmouseenter="show_span(document.getElementById('name-hint'));" onmouseleave="hide(document.getElementById('name-hint'));" />
+            <span id="name-hint">User Name or Email</span>
         </div>
         <div>
-            <input type="password" id="pwd" placeholder="Password" /><img id="password-view" src="static/reveal-static.png" title="Click to show password" /> 
-        </div><div>
+            <input type="password" id="pwd" placeholder="Password" 
+                onmouseenter="show_span(document.getElementById('pass-hint'));" onmouseleave="hide(document.getElementById('pass-hint'));" />
+            <img id="password-view" src="static/reveal-static.png" title="Click to show password" /> 
+            <span id="pass-hint">Password</span>
+        </div>
+        <div>
             <input type="button" id="login" value="Login" onclick="login()"/>
         </div>
         <div>

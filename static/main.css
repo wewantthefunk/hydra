@@ -16,3 +16,20 @@
     cursor: pointer;
     font-size: small;
 }
+
+#name-hint,
+#pass-hint {
+    position: fixed;
+    margin-top: 5px;
+    font-style: italic;
+    color: #666;
+    display: none;
+}
+
+#name-hint {
+    margin-left: 10px;
+}
+
+#pass-hint {
+    margin-left: 30px;
+}
