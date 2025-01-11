@@ -406,3 +406,23 @@ def mark_attended(invite: str, userid: str, receipt_id: str, encrypt: str):
         return {'message': 'Unable to Attend', 'result': constants.RESULT_INVALID_REQUEST}
     
     return {'message': 'Attending', 'badge_number': result[1], 'result': constants.RESULT_OK}
+
+def mark_skipped(invite: str, userid: str, encrypt: str):
+    i = decrypt_string(invite, encrypt)
+
+    result = dataaccess.mark_skipped(userid, i)
+
+    if not result[0]:
+        return {'message': 'Unable to Skip', 'result': constants.RESULT_INVALID_REQUEST}
+    
+    return {'message': 'Skipped', 'result': constants.RESULT_OK}
+
+def get_attendance_info(invite: str, userid: str, encrypt: str):
+    i = decrypt_string(invite, encrypt)
+
+    result = dataaccess.get_attendance_info(userid, i)
+
+    if not result[0]:
+        return {'message': 'Unable to Attend', 'badge_number': '', 'receipt_id': '', 'result': constants.RESULT_INVALID_REQUEST}
+    
+    return {'message': 'Attending', 'badge_number': result[1], 'receipt_id': result[2], 'result': constants.RESULT_OK}

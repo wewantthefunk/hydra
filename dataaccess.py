@@ -765,3 +765,61 @@ def mark_attended(userid: int, invite: str, receipt_id: str):
     conn.close()
 
     return [True, badge_number]
+
+def mark_skipped(userid: int, invite: str):
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor() 
+
+    sql = "SELECT * FROM events WHERE code = '" + invite + "'"
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) < 1:
+        CURSOR.close()
+        conn.close()
+        return True
+
+    event_id = str(c[0][constants.EVENT_ID_COL])
+
+    sql = "DELETE FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return True
+
+def get_attendance_info(userid: int, invite: str):
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()  
+
+    sql = "SELECT * FROM events WHERE code = '" + invite + "'"
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) < 1:
+        CURSOR.close()
+        conn.close()
+        return [False, '', '']
+
+    event_id = str(c[0][constants.EVENT_ID_COL])
+
+    sql = "SELECT * FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) > 0:
+        CURSOR.close()
+        conn.close()
+        return [True, c[0][constants.ATTENDEE_BADGE_NUMBER_COL], c[0][constants.ATTENDEE_RECEIPT_ID_COL]]
+    
+    return [False, '', '']

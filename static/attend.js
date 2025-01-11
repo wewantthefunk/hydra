@@ -38,7 +38,24 @@ async function finishedLoad() {
     document.getElementById('attend-event-cost').innerHTML = event.cost;
     document.getElementById('attend-event-sku').innerHTML = event.sku;
 
-    sessionStorage.setItem('currentEvent',JSON.stringify(event));
+    sessionStorage.setItem('currentEvent', JSON.stringify(event));
+
+    const attend_info = await postJsonToApi('/get-attendance', {
+        'field1': token,
+        'field2': invite,
+        'field3': username,
+        'e': IS_HTTPS
+    }, 'not attending');
+
+    if (attend_info['badge_number'] != "") {
+        JsBarcode("#barcode", attend_info['badge_number'], {
+            fontSize: 20,
+            background: "royalblue",
+            lineColor: "#ffffff",
+            margin: 20,
+            marginLeft: 20
+        });
+    }
 };
 
 async function attend() {
@@ -49,7 +66,7 @@ async function attend() {
     const sku = await encryptWithPublicKey(document.getElementById('attend-event-sku').innerHTML);
     const quantity = await encryptWithPublicKey('1');
 
-    const result = await postJsonToApi('/create-checkout-session',{
+    const result = await postJsonToApi('/create-checkout-session', {
         'field1': token,
         'field3': username,
         'field2': sku,
@@ -59,4 +76,21 @@ async function attend() {
 
     sessionStorage.setItem('sessionId', result.sessionId);
     navigate(result.url);
+};
+
+async function unattend() {
+    const token = await encryptWithPublicKey(sessionStorage.getItem('token'));
+    const username = await encryptWithPublicKey(sessionStorage.getItem('uname'));
+    const i = JSON.parse(sessionStorage.getItem('currentEvent'))['inviteCode'];
+
+    const invite = await encryptWithPublicKey(i);
+
+    const result = await postJsonToApi('/mark-skipped',{
+        'field1': token,
+        'field3': username,
+        'field2': invite,
+        'e': IS_HTTPS
+    }, 'Unable to Skip');
+
+    navigate('/home');
 };

@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/static/attend.css?v={{ buster }}">
     <link rel="stylesheet" type="text/css" href="/static/hydra.css?v={{ buster }}">
     <link rel="stylesheet" type="text/css" href="/static/hydra-in.css?v={{ buster }}">
+    <script type="text/javascript" src="/static/JsBarcode.all.min.js?v={{ buster }}"></script>
     <script type="text/javascript" src="/static/crypto_key.js?v={{ buster }}"></script>
     <script type="text/javascript" src="/static/crypto.js?v={{ buster }}"></script>
     <script type="text/javascript" src="/static/universal.js?v={{ buster }}"></script>
@@ -83,6 +84,11 @@
                         </td>
                         <td>
                             <span id="attend-event-sku"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <img id="barcode" src=""/>
                         </td>
                     </tr>
                 </body>

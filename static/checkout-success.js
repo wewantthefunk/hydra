@@ -30,6 +30,8 @@ async function finishedLoad() {
     RECEIPT_URL = result['receipt_url'];
 
     const receipt_id = await encryptWithPublicKey(result['receipt_id']);
+    const receipt_num = await encryptWithPublicKey(result['message']);
+    const receipt_url = await encryptWithPublicKey(RECEIPT_URL);
 
     document.getElementById('attend-event-receipt-num').innerHTML = result['message'];
 
@@ -37,7 +39,9 @@ async function finishedLoad() {
         'field1': token,
         'field2': invite,
         'field3': uname,
-        'field4': receipt_id
+        'field4': receipt_id,
+        'field5': receipt_num,
+        'field6': receipt_url
     }, "ERROR");
 
     document.getElementById('attend-event-badge-num').innerHTML = attend_result['badge_number'];

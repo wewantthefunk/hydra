@@ -103,6 +103,54 @@ def mark_attended():
 
     return jsonify({'message': result['message'], 'badge_number': result['badge_number']}), result['result']
 
+@app.route('/mark-skipped', methods=['POST'])
+def mark_skipped():
+    if not request.is_json:
+        return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+          
+    data = request.get_json()
+
+    # Process the JSON data here as needed
+    processed_data = {
+        'token': data.get('field1'),
+        'invite': data.get('field2'),
+        'username': data.get('field3'),
+        'e': data.get('e')
+    }
+
+    rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+    if not rt[0]:
+        return jsonify({'message': rt[1]['message']}), rt[1]['result']
+    
+    result = businesslogic.mark_skipped(processed_data['invite'], rt[1]['userId'], processed_data['e'])
+
+    return jsonify({'message': result['message']}), result['result']
+
+@app.route('/get-attendance', methods=['POST'])
+def get_attendance_info():
+    if not request.is_json:
+        return jsonify({'message': "Invalid Request", 'badge_number': '', 'receipt_id': ''}), constants.RESULT_INVALID_REQUEST
+          
+    data = request.get_json()
+
+    # Process the JSON data here as needed
+    processed_data = {
+        'token': data.get('field1'),
+        'invite': data.get('field2'),
+        'username': data.get('field3'),
+        'e': data.get('e')
+    }
+
+    rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+    if not rt[0]:
+        return jsonify({'message': rt[1]['message'], 'badge_number': '', 'receipt_id': ''}), rt[1]['result']
+    
+    result = businesslogic.get_attendance_info(processed_data['invite'], rt[1]['userId'], processed_data['e'])
+
+    return jsonify({'message': result['message'], 'badge_number': result['badge_number'], 'receipt_id': result['receipt_id']}), result['result']
+
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     if not request.is_json:
