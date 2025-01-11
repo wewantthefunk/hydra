@@ -40,21 +40,21 @@ def publicevents():
 def getusers():
     pass
 
+@app.route('/attend/<invite>')
+def attend(invite):
+    return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite, buster=utilities.generate_random_string(6,False))
+
+@app.route('/create-checkout-session/success.html')
+def create_checkout_session_success():
+    return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+
 @app.route('/getpublicevents')
 def getpublicevents():
     result = businesslogic.get_public_events()
 
     return jsonify({'message': result['message']}), constants.RESULT_OK
 
-@app.route('/attend/<invite>')
-def attend(invite):
-    return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite)
-
-@app.route('/create-checkout-session/success.html')
-def create_checkout_session_success():
-    return render_template('in-checkout-success.html', app_name=constants.APP_NAME)
-
-@app.route('/get-payment-info', methods=['POST'])
+@app.route('/p-info', methods=['POST'])
 def get_payment_info():
     if not request.is_json:
         return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
@@ -91,6 +91,8 @@ def mark_attended():
         'invite': data.get('field2'),
         'username': data.get('field3'),
         'receipt_id': data.get('field4'),
+        'receipt_num': data.get("field5"),
+        'receipt_url': data.get("field6"),
         'e': data.get('e')
     }
 
@@ -99,7 +101,7 @@ def mark_attended():
     if not rt[0]:
         return jsonify({'message': rt[1]['message']}), rt[1]['result']
     
-    result = businesslogic.mark_attended(processed_data['invite'], rt[1]['userId'], processed_data['receipt_id'], processed_data['e'])
+    result = businesslogic.mark_attended(processed_data['invite'], rt[1]['userId'], processed_data['receipt_id'], processed_data['receipt_num'], processed_data['receipt_url'], processed_data['e'])
 
     return jsonify({'message': result['message'], 'badge_number': result['badge_number']}), result['result']
 
@@ -149,7 +151,12 @@ def get_attendance_info():
     
     result = businesslogic.get_attendance_info(processed_data['invite'], rt[1]['userId'], processed_data['e'])
 
-    return jsonify({'message': result['message'], 'badge_number': result['badge_number'], 'receipt_id': result['receipt_id']}), result['result']
+    return jsonify({'message': result['message'], 
+                    'badge_number': result['badge_number'], 
+                    'receipt_id': result['receipt_id'],
+                    'receipt_num': result['receipt_num'],
+                    'receipt_url': result['receipt_url']
+                    }), result['result']
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
@@ -420,7 +427,8 @@ def create_event():
             'requireSignIn': data.get('field15'),
             'paymentType': data.get('field16'),
             'cost': data.get('field17'),
-            'sku': data.get('field18')
+            'sku': data.get('field18'),
+            'lastCancel': data.get('field19')
         }
 
         session = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
@@ -450,7 +458,8 @@ def create_event():
                                            processed_data['cost'],
                                            processed_data['sku'],
                                            processed_data['update'],
-                                           processed_data['id'],                                           
+                                           processed_data['id'], 
+                                           processed_data['lastCancel'],                                          
                                            processed_data['e'])
 
         return jsonify({'message': r['message']}), r['result']

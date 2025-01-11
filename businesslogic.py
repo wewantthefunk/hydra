@@ -190,7 +190,7 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, sku: str, update_or_create: str, id: str, encrypt: bool = False) -> str:
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, sku: str, update_or_create: str, id: str, last_cancel: str, encrypt: bool = False) -> str:
     n = decrypt_string(name, encrypt)
     sd = decrypt_string(startdate, encrypt)
     ed = decrypt_string(enddate, encrypt)
@@ -207,6 +207,7 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     pt = decrypt_string(payment_type, encrypt)
     co = decrypt_string(cost, encrypt)
     s = decrypt_string(sku, encrypt)
+    lc = decrypt_string(last_cancel, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
 
@@ -214,14 +215,14 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
         if ev.id > 0:
             return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
 
-        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, co, s)
+        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, co, s, lc)
 
         return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
     else:
         if ev.id <= 0:
             return {'message': 'Event Does Not Exist, Unable to Update', 'id': eid, 'result': constants.RESULT_NOT_FOUND}
         
-        eid = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, eid, rsi, pt, co, s)
+        eid = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, eid, rsi, pt, co, s, lc)
 
         return {'message': 'Event Updated', 'id': str(eid), 'result': constants.RESULT_OK}
 
@@ -396,11 +397,13 @@ def get_payment_info(sesssion_id: str, encrypt: str):
 
     return {"receipt": charge['receipt_number'], "receipt_url": charge['receipt_url'], 'receipt_id': charge['id'], "result": constants.RESULT_OK}
 
-def mark_attended(invite: str, userid: str, receipt_id: str, encrypt: str):
+def mark_attended(invite: str, userid: str, receipt_id: str, receipt_num: str, receipt_url: str, encrypt: str):
     i = decrypt_string(invite, encrypt)
     rid = decrypt_string(receipt_id, encrypt)
+    rn = decrypt_string(receipt_num, encrypt)
+    rurl = decrypt_string(receipt_url, encrypt)
 
-    result = dataaccess.mark_attended(userid, i, rid)
+    result = dataaccess.mark_attended(userid, i, rid, rn, rurl)
 
     if not result[0]:
         return {'message': 'Unable to Attend', 'result': constants.RESULT_INVALID_REQUEST}
@@ -423,6 +426,11 @@ def get_attendance_info(invite: str, userid: str, encrypt: str):
     result = dataaccess.get_attendance_info(userid, i)
 
     if not result[0]:
-        return {'message': 'Unable to Attend', 'badge_number': '', 'receipt_id': '', 'result': constants.RESULT_INVALID_REQUEST}
+        return {'message': 'Unable to Attend', 'badge_number': '', 'receipt_id': '', 'receipt_num': '', 'receipt_url': '', 'result': constants.RESULT_INVALID_REQUEST}
     
-    return {'message': 'Attending', 'badge_number': result[1], 'receipt_id': result[2], 'result': constants.RESULT_OK}
+    return {'message': 'Attending', 
+            'badge_number': result[1], 
+            'receipt_id': result[2],
+            'receipt_num': result[3],
+            'receipt_url': result[4],
+            'result': constants.RESULT_OK}

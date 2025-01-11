@@ -1,8 +1,28 @@
 let RECEIPT_URL = "";
+let COUNTDOWN = 10;
 
 async function finishedLoad() {
     await universalFinishedLoad();
 
+    show(document.getElementById("attend-wait-msg-div"));
+    hide(document.getElementById("attend-event-info-div"));
+
+    setTimeout(getPaymentInfo, 10000);
+
+    setTimeout(countdown, 1000);
+};
+
+async function countdown() {
+    COUNTDOWN -= 1;
+    if (COUNTDOWN > 0) {
+        document.getElementById('countdown').innerHTML = '' + COUNTDOWN;
+        setTimeout(countdown, 1000);
+    }
+};
+
+async function getPaymentInfo() {
+    hide(document.getElementById("attend-wait-msg-div"));
+    show(document.getElementById("attend-event-info-div"));
     startProcessing();
 
     const event = JSON.parse(sessionStorage.getItem('currentEvent'));
@@ -21,19 +41,27 @@ async function finishedLoad() {
     const sessionId = await encryptWithPublicKey(sessionStorage.getItem('sessionId'));
     const invite = await encryptWithPublicKey(event.inviteCode);
 
-    const result = await postJsonToApi('/get-payment-info', {
+    debugger;
+    const result = await postJsonToApi('/p-info', {
         'field1': token,
         'field2': sessionId,
         'field3': uname
     }, 'ERROR');
 
+    debugger;
     RECEIPT_URL = result['receipt_url'];
 
+    let rn = '';
+
+    if (isValueValid(result['message'])) {
+        rn = result['message'];
+    }
+
     const receipt_id = await encryptWithPublicKey(result['receipt_id']);
-    const receipt_num = await encryptWithPublicKey(result['message']);
+    const receipt_num = await encryptWithPublicKey(rn);
     const receipt_url = await encryptWithPublicKey(RECEIPT_URL);
 
-    document.getElementById('attend-event-receipt-num').innerHTML = result['message'];
+    document.getElementById('attend-event-receipt-num').innerHTML = rn;
 
     const attend_result = await postJsonToApi('/mark-attended', {
         'field1': token,
@@ -64,5 +92,5 @@ function showReceipt() {
     var winHeight = 950;
 
     // Create a new browser window with the specified URL and size
-    var newWin = window.open(url, "_blank", `width=${winWidth}, height=${winHeight}`);
+    window.open(url, "_blank", `width=${winWidth}, height=${winHeight}`);
 };

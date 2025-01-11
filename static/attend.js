@@ -1,5 +1,11 @@
+let RECEIPT_URL = '';
+
 async function finishedLoad() {
     await universalFinishedLoad();
+
+    RECEIPT_URL = '';
+    hide(document.getElementById('receipt_num_row'));
+    hide(document.getElementById('receipt_url_row'));
 
     document.getElementById('attend-event-msg').innerHTML = PLACEHOLDER;
 
@@ -47,7 +53,7 @@ async function finishedLoad() {
         'e': IS_HTTPS
     }, 'not attending');
 
-    if (attend_info['badge_number'] != "") {
+    if (isValueValid(attend_info['badge_number'])) {
         JsBarcode("#barcode", attend_info['badge_number'], {
             fontSize: 20,
             background: "royalblue",
@@ -55,6 +61,12 @@ async function finishedLoad() {
             margin: 20,
             marginLeft: 20
         });
+
+        document.getElementById('attend-event-receipt-num').innerHTML = attend_info['receipt_num'];
+        RECEIPT_URL = attend_info['receipt_url'];
+
+        show(document.getElementById('receipt_num_row'));
+        show(document.getElementById('receipt_url_row'));
     }
 };
 
@@ -93,4 +105,14 @@ async function unattend() {
     }, 'Unable to Skip');
 
     navigate('/home');
+};
+
+function showReceipt() {
+    // Define the url and size of the window
+    var url = RECEIPT_URL;
+    var winWidth = 650;
+    var winHeight = 950;
+
+    // Create a new browser window with the specified URL and size
+    window.open(url, "_blank", `width=${winWidth}, height=${winHeight}`);
 };

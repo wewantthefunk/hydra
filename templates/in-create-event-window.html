@@ -30,6 +30,12 @@
                         <span id="end-time-hint" class="field-hint">End Time</span>
                 </div>
                 <div>
+                        <input type="date" id="last-cancel" placeholder="Last Cancel Date" class="required" title="Last Cancel Date"
+                                onblur="checkRequired(this);"
+                                onmouseenter="show_span(document.getElementById('last-cancel-hint'));" onmouseleave="hide(document.getElementById('last-cancel-hint'));" />
+                        <span id="last-cancel-hint" class="field-hint">Last Cancel Date</span>
+                </div>
+                <div>
                         <input type="text" id="location" placeholder="Location" class="required" title="Location"
                                 onblur="checkRequired(this);"
                                 onmouseenter="show_span(document.getElementById('loc-hint'));" onmouseleave="hide(document.getElementById('loc-hint'));" />

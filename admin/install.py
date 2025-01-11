@@ -155,6 +155,9 @@ def create_sql(passphrase, email, adminName, vcode):
     if 'sku' not in columns:
         cursor.execute("ALTER TABLE events ADD COLUMN sku TEXT")
 
+    if 'lastCancelDay' not in columns:
+        cursor.execute("ALTER TABLE events ADD COLUMN lastCancelDay DATE")
+
     cursor.execute("PRAGMA table_info(users)")
     columns = [column[1] for column in cursor.fetchall()]
 
@@ -177,6 +180,14 @@ def create_sql(passphrase, email, adminName, vcode):
     if 'receiptId' not in columns:
         # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE attendees ADD COLUMN receiptId TEXT")
+
+    if 'receiptNum' not in columns:
+        # Add new column 'code' to the 'events' table if it doesn't exist
+        cursor.execute("ALTER TABLE attendees ADD COLUMN receiptNum TEXT")
+
+    if 'receiptUrl' not in columns:
+        # Add new column 'code' to the 'events' table if it doesn't exist
+        cursor.execute("ALTER TABLE attendees ADD COLUMN receiptUrl TEXT")
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS event2owner

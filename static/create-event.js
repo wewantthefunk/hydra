@@ -10,6 +10,7 @@ function createNewEvent() {
     document.getElementById('startTime').value = "";
     document.getElementById('endDate').value = "";
     document.getElementById('endTime').value = "";
+    document.getElementById('last-cancel').value = "";
     document.getElementById('location').value = "";
     document.getElementById('max').value = "";
     document.getElementById('sku').value = "";
@@ -29,6 +30,7 @@ function createNewEvent() {
     document.getElementById('startTime').focus();
     document.getElementById('endTime').focus();
     document.getElementById('location').focus();
+    document.getElementById('last-cancel').focus();
     document.getElementById('eventName').focus();
 };
 
@@ -50,6 +52,7 @@ function updateEvent(event_row) {
     document.getElementById('createEventButton').value = 'Update';
     document.getElementById('new-or-update-event').innerHTML = 'update';
     document.getElementById('event-id').innerHTML = event_row.children[1].innerHTML;
+    document.getElementById('last-cancel').innerHTML = event_row.children[18].innerHTML;
 
     if (event_row.children[2].innerHTML == '1') {
         document.getElementById('allow-anonymous-signup').setAttribute('checked', 'checked');
@@ -76,6 +79,7 @@ function updateEvent(event_row) {
     document.getElementById('location').focus();
     document.getElementById('sku').focus();
     document.getElementById('cost').focus();
+    document.getElementById('last-cancel').focus();
     document.getElementById('eventName').focus();
 };
 
@@ -89,6 +93,7 @@ async function saveNewEvent() {
     const eventName = document.getElementById('eventName').value.trim();
     const startDate = document.getElementById('startDate').value.trim();
     const endDate = document.getElementById('endDate').value.trim();
+    const lastCancel = document.getElementById('last-cancel').value.trim()
     const startTime = document.getElementById('startTime').value.trim();
     const endTime = document.getElementById('endTime').value.trim();
     const location = document.getElementById('location').value.trim();
@@ -168,6 +173,15 @@ async function saveNewEvent() {
         return;
     }
 
+    parts = lastCancel.split("-");
+    const ld = parts[1] + "/" + parts[2] + '/' + parts[0];
+    if (!validateDate(ld)) {
+        document.getElementById('last-cancel').focus();
+        document.getElementById('createNewEventMessage').innerHTML = "Enter a valid date in";
+        document.getElementById('createNewEventMessage2').innerHTML = "MM/DD/YYYY format";
+        return;
+    }
+
     if (!isDate1LessThanOrEqual(startDate, endDate)) {
         document.getElementById('startDate').focus();
         document.getElementById('createNewEventMessage').innerHTML = "Start Date cannot be";
@@ -227,7 +241,8 @@ async function saveNewEvent() {
         'field15': await encryptWithPublicKey(rsi),
         'field16': await encryptWithPublicKey(paymentType),
         'field17': await encryptWithPublicKey(cost),
-        'field18': await encryptWithPublicKey(sku)
+        'field18': await encryptWithPublicKey(sku),
+        'field19': await encryptWithPublicKey(lastCancel)
     });
 
     document.getElementById('createNewEventMessage').innerHTML = result['message']

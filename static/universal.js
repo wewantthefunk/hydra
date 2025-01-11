@@ -16,7 +16,7 @@ const HIDE_PASSWORD_MESSAGE = 'Click to hide password';
 const SHOW_PASSWORD_MESSAGE = 'Click to show password';
 
 async function postJsonToApi(url, data, errmsg) {
-    if (data['e'] == null || data['e'] == 'undefined') {
+    if (!isValueValid(data['e'])) {
         data['e'] = IS_HTTPS;
     }
     try {
@@ -186,6 +186,7 @@ function navigate(url) {
     startProcessing();
     isUserMenuVisible = false;
     setTimeout(() => {
+        stopProcessing();
         window.location.href = url;
     }, 400);
 };

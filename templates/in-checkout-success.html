@@ -18,92 +18,96 @@
 <body onload="finishedLoad();">
     <div id="maindiv">
         <h1>Checkout Success!</h1>
-        <div>
-            <div id="attend-event-info-div">
-                <table>
-
-                    <body>
-                        <tr>
-                            <td class="label">
-                                <span>Event:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-name"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>Start:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-start-date"></span>
-                                &nbsp;
-                                <span id="attend-event-start-time"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>End:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-end-date"></span>
-                                &nbsp;
-                                <span id="attend-event-end-time"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>Location:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-location"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>Cost:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-cost"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>SKU:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-sku"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>Receipt #:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-receipt-num"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">
-                                <span>Badge #:</span>
-                            </td>
-                            <td>
-                                <span id="attend-event-badge-num"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>
-                                <img id="barcode" src=""/>
-                            </td>
-                        </tr>
-                    </body>
-                </table>
+        <div id="attend-wait-msg-div">
+            <div>
+                <h1>Please Wait While the Payment is Finalized!</h1>
+                <div>Only about <span id="countdown">10</span> seconds or so left...</div>
             </div>
         </div>
-        <div>&nbsp;</div>
-        <div id="receipt-div">
-            <input type="button" value="View Receipt" onclick="showReceipt();">
+        <div id="attend-event-info-div">
+            <table>
+
+                <body>
+                    <tr>
+                        <td class="label">
+                            <span>Event:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-name"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>Start:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-start-date"></span>
+                            &nbsp;
+                            <span id="attend-event-start-time"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>End:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-end-date"></span>
+                            &nbsp;
+                            <span id="attend-event-end-time"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>Location:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-location"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>Cost:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-cost"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>SKU:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-sku"></span>
+                        </td>
+                    </tr>
+                    <tr style="display: none;">
+                        <td class="label">
+                            <span>Receipt #:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-receipt-num"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <span>Badge #:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-badge-num"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <img id="barcode" src="" />
+                        </td>
+                    </tr>
+                </body>
+            </table>
+            <div>&nbsp;</div>
+            <div id="receipt-div">
+                <input type="button" value="View Receipt" onclick="showReceipt();">
+            </div>
         </div>
     </div>
     {% include 'in-menus.html' %}

@@ -72,18 +72,32 @@
                     </tr>
                     <tr>
                         <td class="label">
+                            <span>SKU:</span>
+                        </td>
+                        <td>
+                            <span id="attend-event-sku"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
                             <span>Cost:</span>
                         </td>
                         <td>
                             <span id="attend-event-cost"></span>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="receipt_num_row">
                         <td class="label">
-                            <span>SKU:</span>
+                            <span>Receipt #:</span>
                         </td>
                         <td>
-                            <span id="attend-event-sku"></span>
+                            <span id="attend-event-receipt-num"></span>
+                        </td>
+                    </tr>
+                    <tr id="receipt_url_row">
+                        <td>&nbsp;</td>
+                        <td>
+                            <span class="clickable" id="attend-event-receipt-url" onclick="showReceipt();">View Receipt</span>
                         </td>
                     </tr>
                     <tr>
