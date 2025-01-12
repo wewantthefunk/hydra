@@ -86,9 +86,11 @@
         </div>
         <div>&nbsp;</div>
         <div class="topspacer">
-            Type '<span id="delete-confirm-code">WWWWWW</span>' (without quotes) in the textbox below to confirm the delete.
+            Type&nbsp;&nbsp;<span id="delete-confirm-code">WWWWWW</span>&nbsp;&nbsp;&nbsp;in the textbox below to confirm the delete.
             <br/>
-            <input type="text" id="confirm-delete" placeholder="delete" class="topspacer"/>
+            <input type="text" id="confirm-delete" placeholder="delete" class="topspacer"
+            onmouseenter="show_span(document.getElementById('delete-confirm-hint'));" onmouseleave="hide(document.getElementById('delete-confirm-hint'));" />
+            <span id="delete-confirm-hint" class="field-hint">Delete Confirmation Code</span>
         </div>
         <div class="topspacer">
             <input type="button" id="delete-event-confirm" value="Confirm Delete" onclick="confirmDelete();"/>

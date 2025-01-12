@@ -107,3 +107,12 @@
 #delete-event-id {
     display: none;
 }
+
+#delete-confirm-code {
+    color: #C70039;
+    font-style: italic;
+}
+
+#delete-confirm-hint {
+    margin-top: 8px;
+}
