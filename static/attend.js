@@ -94,6 +94,16 @@ async function attend() {
 };
 
 async function unattend() {
+    show(document.getElementById('skip-event-div'));
+    document.getElementById('skip-event-name').innerHTML = JSON.parse(sessionStorage.getItem('currentEvent'))['name'];
+    document.getElementById('skip-confirm-code').innerHTML = generateRandomStringNoSymbols(6);
+};
+
+async function cancelSkip() {
+    hide(document.getElementById('skip-event-div'));
+};
+
+async function confirmSkip() {
     const token = await encryptWithPublicKey(sessionStorage.getItem('token'));
     const username = await encryptWithPublicKey(sessionStorage.getItem('uname'));
     const i = JSON.parse(sessionStorage.getItem('currentEvent'))['inviteCode'];
