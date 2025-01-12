@@ -191,6 +191,10 @@ function navigate(url) {
     }, 400);
 };
 
+function reload() {
+    window.location.reload();
+};
+
 function toggleUserMenu() {
     isUserMenuVisible = !isUserMenuVisible;
 
@@ -327,19 +331,19 @@ async function universalFinishedLoad() {
 
     if (parseInt(LEVEL) <= USER_LEVEL_ADMIN) {
         const a = document.getElementById('admin');
-        if (a != null && a != 'undefined') {
+        if (isValueValid(a)) {
             a.style.display = 'block';
         }
     }
 
     if (parseInt(LEVEL) > USER_LEVEL_ORGANIZER) {
         const a = document.getElementById('createEvent');
-        if (a != null && a != 'undefined') {
+        if (isValueValid(a)) {
             a.style.display = 'none';
         }
     } else {
         const a = document.getElementById('createEvent');
-        if (a != null && a != 'undefined') {
+        if (isValueValid(a)) {
             a.style.display = 'block';
         }
     }
@@ -371,7 +375,7 @@ async function universalFinishedLoad() {
 
     const create_event_invite_code = document.getElementById('invite');
 
-    if (create_event_invite_code != null && create_event_invite_code != 'undefined') {
+    if (isValueValid(create_event_invite_code)) {
         create_event_invite_code.style.backgroundColor = "#aaa";
     }
 };

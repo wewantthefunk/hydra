@@ -87,17 +87,11 @@
                         </td>
                     </tr>
                     <tr id="receipt_num_row">
-                        <td class="label">
+                        <td class="label" id="receipt_num_cell_1">
                             <span>Receipt #:</span>
                         </td>
-                        <td>
+                        <td id="receipt_num_cell_2">
                             <span id="attend-event-receipt-num"></span>
-                        </td>
-                    </tr>
-                    <tr id="receipt_url_row">
-                        <td>&nbsp;</td>
-                        <td>
-                            <span class="clickable" id="attend-event-receipt-url" onclick="showReceipt();">View Receipt</span>
                         </td>
                     </tr>
                     <tr>
@@ -107,6 +101,10 @@
                     </tr>
                 </body>
             </table>
+            <div>&nbsp;</div>
+            <div id="receipt-div">
+                <input type="button" value="View Receipt" onclick="showReceipt();">
+            </div>
         </div>
     </div>
 

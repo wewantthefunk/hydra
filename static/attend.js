@@ -5,7 +5,9 @@ async function finishedLoad() {
 
     RECEIPT_URL = '';
     hide(document.getElementById('receipt_num_row'));
-    hide(document.getElementById('receipt_url_row'));
+    hide(document.getElementById('receipt-div'));
+    hide(document.getElementById('receipt_num_cell_1'));
+    hide(document.getElementById('receipt_num_cell_2'));
 
     document.getElementById('attend-event-msg').innerHTML = PLACEHOLDER;
 
@@ -65,8 +67,9 @@ async function finishedLoad() {
         document.getElementById('attend-event-receipt-num').innerHTML = attend_info['receipt_num'];
         RECEIPT_URL = attend_info['receipt_url'];
 
-        show(document.getElementById('receipt_num_row'));
-        show(document.getElementById('receipt_url_row'));
+        show(document.getElementById('receipt-div'));
+        show(document.getElementById('receipt_num_cell_1'));
+        show_span(document.getElementById('receipt_num_cell_2'));
     }
 };
 
@@ -104,7 +107,7 @@ async function unattend() {
         'e': IS_HTTPS
     }, 'Unable to Skip');
 
-    navigate('/home');
+    reload();
 };
 
 function showReceipt() {
