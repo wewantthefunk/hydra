@@ -8,6 +8,11 @@ const USER_LEVEL_ORGANIZER = 50;
 const USER_LEVEL_ADMIN = 1;
 const USER_LEVEL_SUPERUSER = 0;
 
+const USER_LEVEL_ATTENDEE_NAME = 'Attendee';
+const USER_LEVEL_ORGANIZER_NAME = 'Organizer';
+const USER_LEVEL_ADMIN_NAME = 'Administrator';
+const USER_LEVEL_SUPERUSER_NAME = 'Super User';
+
 let IS_HTTPS = 0;
 
 const HIDE_PASSWORD_IMAGE = 'static/hide-static.png';

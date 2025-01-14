@@ -36,10 +36,6 @@ def admin():
 def publicevents():
     return render_template('in-public-events.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
-@app.route('/getusers', methods=['POST'])
-def getusers():
-    pass
-
 @app.route('/attend/<invite>')
 def attend(invite):
     return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite, buster=utilities.generate_random_string(6,False))
@@ -47,6 +43,34 @@ def attend(invite):
 @app.route('/create-checkout-session/success.html')
 def create_checkout_session_success():
     return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+
+@app.route('/getme', methods=['POST'])
+def get_me():
+    if not request.is_json:
+        return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    
+    data = request.get_json()
+
+    # Process the JSON data here as needed
+    processed_data = {
+        'token': data.get('field1'),
+        'username': data.get('field2'),
+        'e': data.get('e')
+    }
+
+    rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+    if not rt[0]:
+        return jsonify({'result': rt[1]['result'], 'message': rt[1]['message']}), rt[1]['result']
+    
+    result = businesslogic.get_user_by_name(processed_data['username'], processed_data['e'])
+
+    return jsonify({"email": result['email'],
+        "username": result['username'],
+        "id": result['id'],
+        "type": result['type'],
+        'message': 'user info',
+        'result': constants.RESULT_OK}), constants.RESULT_OK
 
 @app.route('/getpublicevents')
 def getpublicevents():

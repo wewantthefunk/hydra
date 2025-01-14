@@ -143,6 +143,21 @@ def check_token_post(token: str, username: str, encrypt: bool):
 
     return [True, token_r]
 
+def get_user_by_name(username: str, encrypt: bool):
+    u = decrypt_string(username, encrypt)
+
+    result = dataaccess.get_user_by_email_or_username(u, u)
+
+    if len(result) < 1:
+        return dataaccess.User('', '', -1, '', '', False, '00000', False)
+    
+    return {
+        "email": result[0].email,
+        "username": result[0].username,
+        "id": result[0].id,
+        "type": result[0].user_type
+    }
+
 def check_admin_post(username: str, encrypt: bool) -> bool:
     admin_r = check_admin(username, encrypt)
 

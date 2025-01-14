@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ app_name }}</title>
@@ -12,9 +13,55 @@
     <script type="text/javascript" src="/static/universal.js?v={{ buster }}"></script>
     <script type="text/javascript" src="/static/account.js?v={{ buster }}"></script>
 </head>
+
 <body onload="finishedLoad();">
     <div id="maindiv">
         <h1>Account Information</h1>
+        <div>
+            <table>
+                <tbody id="account-info-table-body">
+                    <tr>
+                        <td><span class='label'>UserName</span></td>
+                        <td><input type="text" id='account-username' placeholder="Username"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class='label'>Email</span></td>
+                        <td><input type="text" id="account-email" placeholder="Email"></td>
+                    </tr>
+                    <tr>
+                        <td><span class='label'>Account Type</span></td>
+                        <td><span id='account-type'></span></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><input type='button' id='account-save' value='Save' onclick="saveAccount();"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h1 id="account-security-header">Account Security</h1>
+        <div>
+            <table>
+                <tbody id="account-security-table-body">
+                    <tr>
+                        <td><span class='label'>Current Password</span></td>
+                        <td><input type='password' id='account-current-password'/></td>
+                    </tr>
+                    <tr>
+                        <td><span class='label'>New Password</span></td>
+                        <td><input type='password' id='account-new-password'/></td>
+                    </tr>
+                    <tr>
+                        <td><span class='label'>Confirm New Password</span></td>
+                        <td><input type='password' id='account-confirm-new-password'/></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><input type="button" id="change-password-save" value="Update Password" onclick="savePassword();" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     {% include 'in-menus.html' %}

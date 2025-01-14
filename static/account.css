@@ -1,0 +1,17 @@
+#account-info-table-body tr td:first-child,
+#account-security-table-body tr td:first-child {
+    text-align: right;
+}
+
+#account-info-table-body {
+    font-family: 'Lato', sans-serif;
+}
+
+.label {
+    text-align: right;
+    color: royalblue;
+}
+
+#account-security-header {
+    margin-top: 50px;
+}
