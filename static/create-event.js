@@ -52,7 +52,7 @@ function updateEvent(event_row) {
     document.getElementById('createEventButton').value = 'Update';
     document.getElementById('new-or-update-event').innerHTML = 'update';
     document.getElementById('event-id').innerHTML = event_row.children[1].innerHTML;
-    document.getElementById('last-cancel').innerHTML = event_row.children[18].innerHTML;
+    document.getElementById('last-cancel').value = event_row.children[18].innerHTML;
 
     if (event_row.children[2].innerHTML == '1') {
         document.getElementById('allow-anonymous-signup').setAttribute('checked', 'checked');

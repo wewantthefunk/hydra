@@ -308,7 +308,8 @@ def get_my_events(user_id: int):
         e = e + '"cost":' + str(event.cost) + ","
         e = e + '"paymentType":' + str(event.payment_required) + ","
         e = e + '"sku":"' + event.sku + '",'
-        e = e + '"relationship":' + str(event.relationship)
+        e = e + '"relationship":' + str(event.relationship) + ','
+        e = e + '"lastCancel":"' + event.last_cancel + '"'
         e = e + '}'
 
 

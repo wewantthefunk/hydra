@@ -129,6 +129,10 @@ async function displayEventsTable(events, table, tbody, level, header) {
             paymentType.textContent = event.paymentType;
             row.appendChild(paymentType);
 
+            const lastCancel = document.createElement('td');
+            lastCancel.textContent = event.lastCancel;
+            row.appendChild(lastCancel);
+
             const goto = document.createElement('td');
             const gotoi = document.createElement('img');
             gotoi.src = 'static/start.png';

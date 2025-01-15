@@ -55,7 +55,9 @@
 #event-list tr>td:nth-child(17), 
 #event-list tr>th:nth-child(17),
 #event-list tr>td:nth-child(18), 
-#event-list tr>th:nth-child(18) {
+#event-list tr>th:nth-child(18),
+#event-list tr>td:nth-child(19), 
+#event-list tr>th:nth-child(19) {
     display:none;
 }
 

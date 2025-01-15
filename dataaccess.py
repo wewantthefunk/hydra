@@ -463,7 +463,7 @@ def update_event(userId: int, name: str, startdate: str, enddate: str, starttime
     sql = sql + 'paymentType = ' + pt + ","
     sql = sql + 'cost = ' + co + ","
     sql = sql + "sku = '" + sku + "',"
-    sql = sql + 'lastCancelDay = ' + last_cancel + "'"
+    sql = sql + "lastCancelDay = '" + last_cancel + "'"
     sql = sql + " WHERE id = " + str(id)
 
     CURSOR.execute(sql)
