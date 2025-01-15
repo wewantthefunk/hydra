@@ -22,7 +22,7 @@
                 <tbody id="account-info-table-body">
                     <tr>
                         <td><span class='label'>UserName</span></td>
-                        <td><input type="text" id='account-username' placeholder="Username"></span></td>
+                        <td><input type="text" id='account-username' placeholder="Username" onblur="checkRequired(this);"></span></td>
                     </tr>
                     <tr>
                         <td><span class='label'>Email</span></td>
@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
-                        <td><input type='button' id='account-save' value='Save' onclick="saveAccount();"/></td>
+                        <td><input type='button' id='account-save' value='Save' onclick="confirmSaveAccount();"/></td>
                     </tr>
                 </tbody>
             </table>
@@ -61,6 +61,16 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div id="update-account-password-div">
+        <h1>Enter your password to make changes to your account</h1>
+        <div>
+            <input type="password" id="update-account-password" placeholder="Password" />
+        </div>
+        <div id="update-account-password-btn-div" class="topspacer">
+            <input type="button" value="Continue" id="update-account-password-btn" onclick="saveAccount();"/>
+            <input type="button" value="Cancel" id="update-account-password-btn-cancel" onclick="cancelSaveAccount();"/>
         </div>
     </div>
 

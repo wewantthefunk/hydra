@@ -833,4 +833,57 @@ def get_attendance_info(userid: int, invite: str):
                       c[0][constants.ATTENDEE_RECEIPT_NUM_COL], 
                       c[0][constants.ATTENDEE_RECEIPT_URL_COL]]
     
+    CURSOR.close()
+    conn.close()
     return [False, '', '']
+
+def update_username(userId: str, new_username: str, passphrase: str, token: str) -> User:
+    result = User('', '', 0, constants.ATTENDEE, '', False, '000000', False)
+
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    sql = "UPDATE users SET username = '" + new_username + "', passphrase = '" + passphrase + "' WHERE id = " +  userId
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    sql = "UPDATE session SET username = '" + new_username + "' WHERE token = '" +  token + "'"
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    c = get_user(new_username)
+
+    if len(c) > 0:
+        result = c[0]
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
+def update_email(userId: str, new_email: str, token: str) -> User:
+    result = User('', '', 0, constants.ATTENDEE, '', False, '000000', False)
+
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    sql = "UPDATE users SET email = '" + new_email + "' WHERE id = " +  userId
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    c = get_user_by_email(new_email)
+
+    if len(c) > 0:
+        result = c[0]
+
+    CURSOR.close()
+    conn.close()
+
+    return result

@@ -545,8 +545,10 @@ function validateTimeInput(inputElement) {
 function checkRequired(o) {
     if (o.value.trim() == '') {
         o.classList.add("required");
+        return true;
     } else {
         o.classList.remove("required");
+        return false;
     }
 };
 

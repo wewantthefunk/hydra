@@ -449,3 +449,61 @@ def get_attendance_info(invite: str, userid: str, encrypt: str):
             'receipt_num': result[3],
             'receipt_url': result[4],
             'result': constants.RESULT_OK}
+
+def update_username(current_username: str, new_username: str, pw: str, token: str, encrypt: str):
+    cu = decrypt_string(current_username, encrypt)
+    nu = decrypt_string(new_username, encrypt)
+    pwd = decrypt_string(pw, encrypt)
+
+    exists = dataaccess.get_user(nu)
+
+    if len(exists) > 0:
+        return {'message': 'Username already exists', 'result': constants.RESULT_CONFLICT}
+    
+    exists = dataaccess.get_user(cu)
+
+    if len(exists) < 1:
+        return {'message': 'Current username not found', 'result': constants.RESULT_NOT_FOUND}
+    
+    passphrase = crypto_symmetric.decrypt(base64.b64decode(exists[0].passphrase) , pwd.encode('utf-8'))
+
+    if passphrase != 'valid password: ' + exists[0].username:
+        return {'message': 'Invalid Password', 'result': constants.RESULT_FORBIDDEN}
+    
+    passphrase = 'valid password: ' + nu
+
+    p = crypto_symmetric.encrypt(passphrase, pwd.encode('utf-8'))
+
+    u = dataaccess.update_username(str(exists[0].id), nu, base64.b64encode(p).decode('ascii'), token)
+
+    if u.id > 0:
+        return {'message': 'Username Updated', 'result': constants.RESULT_OK}
+    
+    return {'message': 'Invalid', 'result': constants.RESULT_SERVER_ERROR}
+
+def update_email(current_email: str, new_email: str, pw: str, token: str, encrypt: str):
+    ce = decrypt_string(current_email, encrypt)
+    ne = decrypt_string(new_email, encrypt)
+    pwd = decrypt_string(pw, encrypt)
+
+    exists = dataaccess.get_user_by_email(ne)
+
+    if len(exists) > 0:
+        return {'message': 'Email already exists', 'result': constants.RESULT_CONFLICT}
+    
+    exists = dataaccess.get_user_by_email(ce)
+
+    if len(exists) < 1:
+        return {'message': 'Current email not found', 'result': constants.RESULT_NOT_FOUND}
+    
+    passphrase = crypto_symmetric.decrypt(base64.b64decode(exists[0].passphrase) , pwd.encode('utf-8'))
+
+    if passphrase != 'valid password: ' + exists[0].username:
+        return {'message': 'Invalid Password', 'result': constants.RESULT_FORBIDDEN}
+
+    u = dataaccess.update_email(str(exists[0].id), ne, token)
+
+    if u.id > 0:
+        return {'message': 'Email Updated', 'result': constants.RESULT_OK}
+    
+    return {'message': 'Invalid', 'result': constants.RESULT_SERVER_ERROR}
