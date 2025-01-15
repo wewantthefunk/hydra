@@ -276,13 +276,13 @@ def check_attendance():
         rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
 
         if not rt[0]:
-            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+            return jsonify({'message': rt[1]['message'], 'result': rt[1]['result'], 'reason': 99}), rt[1]['result']
         
         result = businesslogic.check_attendance(rt[1]['userId'], processed_data['invite'], processed_data['e'])
        
-        return jsonify({'message': result['message']}), result['result']
+        return jsonify({'message': result['message'], 'reason': result['reason'], 'result': result['result']}), result['result']
     
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST, 'reason': 99}), constants.RESULT_INVALID_REQUEST
 
 @app.route('/getevent', methods=['POST'])
 def get_event():

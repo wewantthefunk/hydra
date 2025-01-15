@@ -706,7 +706,7 @@ def check_attendance(userid: int, invite: str):
     if len(c) < 1:
         CURSOR.close()
         conn.close()
-        return False
+        return [False, 1]
 
     event_id = str(c[0][constants.EVENT_ID_COL])
 
@@ -717,7 +717,7 @@ def check_attendance(userid: int, invite: str):
     if len(c) > 0:
         CURSOR.close()
         conn.close()
-        return False 
+        return [False , 2]
 
     sql = "SELECT * FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
     CURSOR.execute(sql)
@@ -727,12 +727,12 @@ def check_attendance(userid: int, invite: str):
     if len(c) > 0:
         CURSOR.close()
         conn.close()
-        return False
+        return [False, 3]
 
     CURSOR.close()
     conn.close()
 
-    return True
+    return [True, 0]
 
 def mark_attended(userid: int, invite: str, receipt_id: str, receipt_num: str, receipt_url: str):
     conn = sqlite3.connect(constants.DB_LOCATION)

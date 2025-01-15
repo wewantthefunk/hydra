@@ -24,7 +24,10 @@ async function finishedLoad() {
 
     if (r['message'] == 'Already Attending') {
         document.getElementById('attend').style.display = 'none';
-        document.getElementById('skip').style.display = 'block';
+        if (r['reason'] != 2)
+            document.getElementById('skip').style.display = 'block';
+        else
+            document.getElementById('already-attending-msg').innerHTML = 'Your Event';
         show(document.getElementById('already-attending-div'));
     }
 

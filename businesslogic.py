@@ -332,10 +332,10 @@ def check_attendance(user_id: str, invite: str, encrypt: str):
 
     result = dataaccess.check_attendance(user_id, i)
 
-    if not result:
-        return {'message': 'Already Attending', 'result': constants.RESULT_ALREADY_ATTENDING}
+    if not result[0]:
+        return {'message': 'Already Attending', 'reason': result[1], 'result': constants.RESULT_ALREADY_ATTENDING}
     
-    return {'message': 'Not Attending', 'result': constants.RESULT_OK}
+    return {'message': 'Not Attending', 'reason': result[1], 'result': constants.RESULT_OK}
 
 def get_event(invite: str, encrypt: str):
     i = decrypt_string(invite, encrypt)
