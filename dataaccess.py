@@ -223,6 +223,35 @@ def get_user_by_email_or_username(email: str, username: str) -> List[User]:
 
     return result
 
+def get_user_by_email(email: str) -> List[User]:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    # Retrieve all users
+    CURSOR.execute("SELECT * FROM users WHERE email = '" + email + "'")
+    rows = CURSOR.fetchall()
+
+    result = []
+
+    for row in rows:
+        user = User(row[constants.USER_EMAIL_COL], 
+                    row[constants.USER_NAME_COL], 
+                    row[constants.USER_ID_COL], 
+                    row[constants.USER_TYPE_COL],
+                    row[constants.USER_PASSPHRASE_COL],
+                    row[constants.USER_IS_VERIFIED_COL],
+                    row[constants.USER_VERIFICATION_CODE_COL],
+                    row[constants.USER_IS_ACTIVE_COL]
+                   )
+        result.append(user)
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
 def get_user_by_email_and_verification_code(email: str, code: str) -> List[User]:
     result = []
     conn = sqlite3.connect(constants.DB_LOCATION)
