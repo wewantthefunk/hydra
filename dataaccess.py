@@ -104,7 +104,7 @@ def get_user(uname: str) -> List[User]:
 
     return result
 
-def get_user_by_email(email: str) -> List[User]:
+def get_user(uname: str) -> List[User]:
     result = []
 
     conn = sqlite3.connect(constants.DB_LOCATION)
@@ -113,7 +113,38 @@ def get_user_by_email(email: str) -> List[User]:
     CURSOR = conn.cursor()
 
     # Retrieve all users
-    CURSOR.execute("SELECT * FROM users  WHERE email = '" + email + "'")
+    CURSOR.execute("SELECT * FROM users where username = '" + uname + "'")
+
+    # Fetch all the rows
+    rows = CURSOR.fetchall()
+
+    for row in rows:
+        user = User(row[constants.USER_EMAIL_COL], 
+                    row[constants.USER_NAME_COL], 
+                    row[constants.USER_ID_COL], 
+                    row[constants.USER_TYPE_COL],
+                    row[constants.USER_PASSPHRASE_COL],
+                    row[constants.USER_IS_VERIFIED_COL],
+                    row[constants.USER_VERIFICATION_CODE_COL],
+                    row[constants.USER_IS_ACTIVE_COL]
+                   )
+        result.append(user)
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
+def get_user_by_userid(userid: int) -> List[User]:
+    result = []
+
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    # Retrieve all users
+    CURSOR.execute("SELECT * FROM users  WHERE id = '" + str(userid) + "'")
     rows = CURSOR.fetchall()
 
     for row in rows:
@@ -879,6 +910,29 @@ def update_email(userId: str, new_email: str, token: str) -> User:
     conn.commit()
 
     c = get_user_by_email(new_email)
+
+    if len(c) > 0:
+        result = c[0]
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
+def update_password(userId: int, new_passphrase: str) -> User:
+    result = User('', '', 0, constants.ATTENDEE, '', False, '000000', False)
+
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    sql = "UPDATE users SET passphrase = '" + new_passphrase + "' WHERE id = " +  str(userId)
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    c = get_user_by_userid(userId)
 
     if len(c) > 0:
         result = c[0]

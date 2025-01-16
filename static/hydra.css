@@ -257,6 +257,20 @@ label {
     cursor:pointer;
 }
 
+.click-link {
+    font-size: small;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.padding-chars {
+    color: aliceblue;
+}
+
 #popup-msg-div, #popup-error-msg-div {
     min-width:500px;
     max-width:500px;

@@ -123,6 +123,31 @@ def change_email():
 
     return jsonify({'result':result['result'], 'message': result['message']}), result['result']
 
+@app.route("/changepassword", methods=['POST'])
+def change_password():
+    if not request.is_json:
+        return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    
+    data = request.get_json()
+
+    # Process the JSON data here as needed
+    processed_data = {
+        'token': data.get('field1'),
+        'newpassword': data.get('field2'),
+        'password': data.get('field3'),
+        'username': data.get('field4'),
+        'e': data.get('e')
+    }
+
+    rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+    if not rt[0]:
+        return jsonify({'result': rt[1]['result'], 'message': rt[1]['message']}), rt[1]['result']
+
+    result = businesslogic.update_password(processed_data['newpassword'], processed_data['password'], rt[1]['userId'], processed_data['e'])
+
+    return jsonify({'result':result['result'], 'message': result['message']}), result['result']
+
 @app.route('/getpublicevents')
 def getpublicevents():
     result = businesslogic.get_public_events()

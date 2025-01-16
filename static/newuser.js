@@ -79,3 +79,11 @@ async function finishedLoad() {
         });
     }
 };
+
+async function closePasswordRequirements() {
+    hide(document.getElementById('password-requirements-div'));
+};
+
+async function showPasswordRequirements() {
+    show(document.getElementById('password-requirements-div'));
+};

@@ -30,6 +30,9 @@
             <input type="password" id="cpwd" placeholder="Confirm Password" /><img id="cpassword-view" src="static/reveal-static.png" title="Click to show password" />
         </div>
         <div>
+            <span class="clickable click-link" onclick="showPasswordRequirements();">Password Requirements</span>
+        </div>
+        <div>
             <input id="create" type="button" value="Create" onclick="createAccount()" />
         </div>
         <div>
@@ -43,6 +46,21 @@
         </div>
 
         {% include 'out-menus.html' %}
+    </div>
+    <div id="password-requirements-div">
+        <div>
+            All passwords must meet the following requirements:<br/>
+            <ol>
+                <li>12-25 length</li>
+                <li>At least 2 upper case letters</li>
+                <li>At least 2 lower case letters</li>
+                <li>At least 2 numbers</li>
+                <li>At least 2 special characters (!, @, #, $, %, ^, &, *)</li>
+            </ol>
+        </div>
+        <div>
+            <input type="button" value="Close" id="password-requirements-btn-close" onclick="closePasswordRequirements();"/>
+        </div>
     </div>
 
     {% include 'all-processing.html' %}

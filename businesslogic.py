@@ -131,7 +131,7 @@ def check_token(token: str, username: str, encrypt: bool):
     rows = dataaccess.get_session_by_username_token_and_issued(jdate=jdate, uname=u, token=t) 
 
     if len(rows) < 1:
-        return {'message': 'Invalid Token', 'result': constants.RESULT_FORBIDDEN}
+        return {'message': 'Invalid Token', 'userId': -1, 'result': constants.RESULT_FORBIDDEN}
 
     return {'message': 'success', 'userId': rows[0].id, 'result': constants.RESULT_OK}
 
@@ -506,5 +506,28 @@ def update_email(current_email: str, new_email: str, pw: str, token: str, encryp
 
     if u.id > 0:
         return {'message': 'Email Updated', 'result': constants.RESULT_OK}
+    
+    return {'message': 'Invalid', 'result': constants.RESULT_SERVER_ERROR}
+
+def update_password(new_password: str, password: str, user_id: int, encrypt: str):
+    npwd = decrypt_string(new_password, encrypt)
+    pwd = decrypt_string(password, encrypt)
+
+    exists = dataaccess.get_user_by_userid(user_id)
+
+    if len(exists) < 1:
+        return {'message': 'User Not Found', 'result': constants.RESULT_NOT_FOUND}
+    
+    passphrase = crypto_symmetric.decrypt(base64.b64decode(exists[0].passphrase) , pwd.encode('utf-8'))
+
+    if passphrase != 'valid password: ' + exists[0].username:
+        return {'message': 'Invalid Password', 'result': constants.RESULT_FORBIDDEN}
+    
+    new_passphrase =  crypto_symmetric.encrypt(passphrase, npwd.encode('utf-8'))
+
+    u = dataaccess.update_password(str(exists[0].id), base64.b64encode(new_passphrase).decode('ascii'))
+
+    if u.id > 0:
+        return {'message': 'Password Updated', 'result': constants.RESULT_OK}
     
     return {'message': 'Invalid', 'result': constants.RESULT_SERVER_ERROR}

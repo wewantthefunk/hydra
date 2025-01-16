@@ -29,7 +29,7 @@
                         <td><input type="text" id="account-email" placeholder="Email"></td>
                     </tr>
                     <tr>
-                        <td><span class='label'>Account Type</span></td>
+                        <td><span class="padding-chars">WWW----</span><span class='label'>Account Type</span></td>
                         <td><span id='account-type'></span></td>
                     </tr>
                     <tr>
@@ -45,32 +45,66 @@
                 <tbody id="account-security-table-body">
                     <tr>
                         <td><span class='label'>Current Password</span></td>
-                        <td><input type='password' id='account-current-password'/></td>
+                        <td>
+                            <input type='password' id='account-current-password'/>
+                            <img src="static/reveal-static.png" id="account-current-password-reveal" title="Click to show current password"/>
+                        </td>
                     </tr>
                     <tr>
                         <td><span class='label'>New Password</span></td>
-                        <td><input type='password' id='account-new-password'/></td>
+                        <td>
+                            <input type='password' id='account-new-password'/>
+                            <img src="static/reveal-static.png" id="account-new-password-reveal" title="Click to show new password"/>
+                        </td>
                     </tr>
                     <tr>
                         <td><span class='label'>Confirm New Password</span></td>
-                        <td><input type='password' id='account-confirm-new-password'/></td>
+                        <td>
+                            <input type='password' id='account-confirm-new-password'/>
+                            <img src="static/reveal-static.png" id="account-confirm-new-password-reveal" title="Click to show new password confirmation"/>
+                        </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                         <td><input type="button" id="change-password-save" value="Update Password" onclick="savePassword();" /></td>
                     </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <span class="clickable click-link" onclick="showPasswordRequirements();">Password Requirements</span>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
+        </div>
+        <div id="stats-div">
+            <h1>Stats</h1>
         </div>
     </div>
     <div id="update-account-password-div">
         <h1>Enter your password to make changes to your account</h1>
         <div>
             <input type="password" id="update-account-password" placeholder="Password" />
+            <img src="static/reveal-static.png" id="update-account-password-reveal" title="Click to show password"/>
         </div>
         <div id="update-account-password-btn-div" class="topspacer">
             <input type="button" value="Continue" id="update-account-password-btn" onclick="saveAccount();"/>
             <input type="button" value="Cancel" id="update-account-password-btn-cancel" onclick="cancelSaveAccount();"/>
+        </div>
+    </div>
+    <div id="password-requirements-div">
+        <div>
+            All passwords must meet the following requirements:<br/>
+            <ol>
+                <li>12-25 length</li>
+                <li>At least 2 upper case letters</li>
+                <li>At least 2 lower case letters</li>
+                <li>At least 2 numbers</li>
+                <li>At least 2 special characters (!, @, #, $, %, ^, &, *)</li>
+            </ol>
+        </div>
+        <div>
+            <input type="button" value="Close" id="password-requirements-btn-close" onclick="closePasswordRequirements();"/>
         </div>
     </div>
 
