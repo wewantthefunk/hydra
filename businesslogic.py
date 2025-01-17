@@ -205,7 +205,7 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, sku: str, update_or_create: str, id: str, last_cancel: str, encrypt: bool = False) -> str:
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, sku: str, update_or_create: str, id: str, last_cancel: str, organizerAsAttendee: str, encrypt: bool = False) -> str:
     n = decrypt_string(name, encrypt)
     sd = decrypt_string(startdate, encrypt)
     ed = decrypt_string(enddate, encrypt)
@@ -223,6 +223,7 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     co = decrypt_string(cost, encrypt)
     s = decrypt_string(sku, encrypt)
     lc = decrypt_string(last_cancel, encrypt)
+    oaa = decrypt_string(organizerAsAttendee, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
 
@@ -230,14 +231,14 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
         if ev.id > 0:
             return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
 
-        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, co, s, lc)
+        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, co, s, lc, oaa)
 
         return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
     else:
         if ev.id <= 0:
             return {'message': 'Event Does Not Exist, Unable to Update', 'id': eid, 'result': constants.RESULT_NOT_FOUND}
         
-        eid = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, eid, rsi, pt, co, s, lc)
+        eid = dataaccess.update_event(userId, n, sd, ed, st, et, l, io, m, c, aas, eid, rsi, pt, co, s, lc, oaa)
 
         return {'message': 'Event Updated', 'id': str(eid), 'result': constants.RESULT_OK}
 
@@ -309,7 +310,8 @@ def get_my_events(user_id: int):
         e = e + '"paymentType":' + str(event.payment_required) + ","
         e = e + '"sku":"' + event.sku + '",'
         e = e + '"relationship":' + str(event.relationship) + ','
-        e = e + '"lastCancel":"' + event.last_cancel + '"'
+        e = e + '"lastCancel":"' + event.last_cancel + '",'
+        e = e + '"organizerAsAttendee":' + str(event.organizer_as_attendee)
         e = e + '}'
 
 
@@ -360,7 +362,9 @@ def get_event(invite: str, encrypt: str):
     e = e + '"cost":' + str(event.cost) + ","
     e = e + '"paymentType":' + str(event.payment_required) + ","
     e = e + '"sku":"' + event.sku + '",'
-    e = e + '"relationship":' + str(event.relationship)
+    e = e + '"relationship":' + str(event.relationship) + ","
+    e = e + '"organizerAsAttendee":' + str(event.organizer_as_attendee) + ","
+    e = e + '"lastCancel":"' + event.last_cancel + '"'
     e = e + '}'
     
     return {'message': e, 'result': constants.RESULT_OK}

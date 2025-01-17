@@ -158,6 +158,9 @@ def create_sql(passphrase, email, adminName, vcode):
     if 'lastCancelDay' not in columns:
         cursor.execute("ALTER TABLE events ADD COLUMN lastCancelDay DATE")
 
+    if 'organizerAsAttendee' not in columns:
+        cursor.execute("ALTER TABLE events ADD COLUMN organizerAsAttendee INTEGER")
+
     cursor.execute("PRAGMA table_info(users)")
     columns = [column[1] for column in cursor.fetchall()]
 

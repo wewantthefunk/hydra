@@ -133,6 +133,10 @@ async function displayEventsTable(events, table, tbody, level, header) {
             lastCancel.textContent = event.lastCancel;
             row.appendChild(lastCancel);
 
+            const organizerAsAttendee = document.createElement('td');
+            organizerAsAttendee.textContent = event.organizerAsAttendee;
+            row.appendChild(organizerAsAttendee);
+
             const goto = document.createElement('td');
             const gotoi = document.createElement('img');
             gotoi.src = 'static/start.png';

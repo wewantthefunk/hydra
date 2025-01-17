@@ -242,7 +242,8 @@ async function saveNewEvent() {
         'field16': await encryptWithPublicKey(paymentType),
         'field17': await encryptWithPublicKey(cost),
         'field18': await encryptWithPublicKey(sku),
-        'field19': await encryptWithPublicKey(lastCancel)
+        'field19': await encryptWithPublicKey(lastCancel),
+        'field20': 0
     });
 
     document.getElementById('createNewEventMessage').innerHTML = result['message']
