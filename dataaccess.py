@@ -490,7 +490,7 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR = conn.cursor()    
     
     sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups, requireSignIn, paymentType, cost, sku, lastCancelDay, organizerAsAttendee) VALUES('"
-    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas + "," + rsi + "," + pt + "," + co + ",'" + sku + "','" + last_cancel + "," + organizer_as_attendee + "'"
+    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas + "," + rsi + "," + pt + "," + co + ",'" + sku + "','" + last_cancel + "'," + str(organizer_as_attendee)
     sql = sql + ")"
     CURSOR.execute(sql)
     inserted_id = CURSOR.lastrowid
@@ -647,7 +647,7 @@ def get_my_events(user_id: int) -> List[Event]:
         if not first:
             ids = ids + ','
 
-        ids = ids + str(o_row[constants.EVENT_OWNER_ID_COL])
+        ids = ids + str(o_row[constants.EVENT_ATTENDEE_ID_COL])
 
         first = False
 

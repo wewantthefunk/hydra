@@ -44,6 +44,10 @@ def attend(invite):
 def create_checkout_session_success():
     return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
+@app.route('/attend/success.html')
+def create_attend_checkout_session_success():
+    return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+
 @app.route('/getme', methods=['POST'])
 def get_me():
     if not request.is_json:

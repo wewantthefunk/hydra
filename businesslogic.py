@@ -375,12 +375,18 @@ def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
 
     try: 
         price_id = 'ID'
+        cost = 1.0
 
         stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
 
         for price in stripe_api_key['prices']:
             if price['sku'] == s:
                 price_id = price['price_id']
+                cost = price['price']
+                break
+
+        if cost == 0.0:
+            return {"url":'success.html','sessionId':constants.FREE_EVENT_RECEIPT,'message':'checkout complete','result': constants.RESULT_OK}
 
         stripe.api_key = stripe_api_key['stripe-test']
 
@@ -404,6 +410,10 @@ def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
 
 def get_payment_info(sesssion_id: str, encrypt: str):
     sid = decrypt_string(sesssion_id, encrypt)
+
+    if sid == constants.FREE_EVENT_RECEIPT:
+        return {'receipt': constants.FREE_EVENT_RECEIPT, 'receipt_url':constants.FREE_RECEIPT_URL, 'receipt_id': constants.FREE_RECEIPT_ID, 'result': constants.RESULT_OK}
+
     stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
 
     stripe.api_key = stripe_api_key['stripe-test']
