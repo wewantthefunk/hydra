@@ -1,4 +1,5 @@
-#invite_code {
+#invite_code,
+#cancel-msg {
     display: none;
 }
 

@@ -75,6 +75,12 @@ async function finishedLoad() {
         show_span(document.getElementById('receipt_num_cell_2'));
     }
 
+    if (isDateInPast(event.lastCancel)) {
+        document.getElementById('skip').style.display = 'none';
+        document.getElementById("attend-last-cancel-date").innerHTML = event.lastCancel;
+        document.getElementById('cancel-msg').style.display = 'block';
+    }
+
     if (sessionStorage.getItem("refund") == '1') {
         sessionStorage.setItem('refund', null);
         showMsg("Refund Issued");
@@ -124,7 +130,7 @@ async function confirmSkip() {
 
     const invite = await encryptWithPublicKey(i);
 
-    const result = await postJsonToApi('/mark-skipped',{
+    const result = await postJsonToApi('/mark-skipped', {
         'field1': token,
         'field3': username,
         'field2': invite,

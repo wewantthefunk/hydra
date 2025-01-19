@@ -568,4 +568,15 @@ function isValueNotEmpty(v) {
     }
 
     return va;
-}
+};
+
+function isDateInPast(dateString) {
+    // Create a Date object from the input string
+    const inputDate = new Date(dateString);
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Compare the dates and return true if the input date is in the past, false otherwise
+    return inputDate < currentDate;
+};
