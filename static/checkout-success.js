@@ -1,5 +1,5 @@
 let RECEIPT_URL = "";
-let COUNTDOWN = 10;
+let COUNTDOWN = 4;
 
 async function finishedLoad() {
     await universalFinishedLoad();
@@ -7,7 +7,9 @@ async function finishedLoad() {
     show(document.getElementById("attend-wait-msg-div"));
     hide(document.getElementById("attend-event-info-div"));
 
-    setTimeout(getPaymentInfo, 10000);
+    document.getElementById('countdown').innerHTML = COUNTDOWN;
+
+    setTimeout(getPaymentInfo, COUNTDOWN * 1000);
 
     setTimeout(countdown, 1000);
 };
@@ -41,14 +43,12 @@ async function getPaymentInfo() {
     const sessionId = await encryptWithPublicKey(sessionStorage.getItem('sessionId'));
     const invite = await encryptWithPublicKey(event.inviteCode);
 
-    debugger;
     const result = await postJsonToApi('/p-info', {
         'field1': token,
         'field2': sessionId,
         'field3': uname
     }, 'ERROR');
 
-    debugger;
     RECEIPT_URL = result['receipt_url'];
 
     let rn = '';

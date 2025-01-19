@@ -22,3 +22,6 @@ if __name__ == '__main__':
     if sys.argv[1] == 'showencrypt':
         print(constants.USE_ENCRYPTION)
         exit(0)
+
+    if sys.argv[1] == 'refund':
+        print(businesslogic.issue_refund(sys.argv[2], False))

@@ -634,7 +634,7 @@ def get_my_events(user_id: int) -> List[Event]:
                         )
             result.append(event)
 
-    CURSOR.execute("SELECT * FROM attendees WHERE userId = " + str(user_id))
+    CURSOR.execute("SELECT * FROM attendees WHERE attending = 1 AND userId = " + str(user_id))
     o_rows = CURSOR.fetchall()
 
     if len(o_rows) < 1:
@@ -656,7 +656,7 @@ def get_my_events(user_id: int) -> List[Event]:
     rows = CURSOR.fetchall()
 
     for row in rows:
-        CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
+        CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE attending = 1 AND eventId = " + str(row[constants.EVENT_ID_COL]))
         c = CURSOR.fetchall()
 
         event = Event(row[constants.EVENT_ID_COL],
@@ -716,6 +716,7 @@ def get_event(invite: str) -> Event:
                      row[constants.EVENT_SKU_COL],
                      constants.EVENT_OWNER,
                      row[constants.EVENT_LAST_CANCEL_DATE_COL],
+                     row[constants.EVENT_ORGANIZER_AS_ATTENDEE_COL],
                      row[constants.EVENT_PAYMENT_COST_COL],
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
@@ -783,7 +784,7 @@ def check_attendance(userid: int, invite: str):
         conn.close()
         return [False , 2]
 
-    sql = "SELECT * FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    sql = "SELECT * FROM attendees WHERE attending = 1 AND eventId = " + event_id + " AND userId = " + str(userid)
     CURSOR.execute(sql)
 
     c = CURSOR.fetchall()
@@ -816,7 +817,7 @@ def mark_attended(userid: int, invite: str, receipt_id: str, receipt_num: str, r
 
     event_id = str(c[0][constants.EVENT_ID_COL])
 
-    sql = "SELECT * FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    sql = "SELECT * FROM attendees WHERE attending = 1 AND eventId = " + event_id + " AND userId = " + str(userid)
     CURSOR.execute(sql)
 
     c = CURSOR.fetchall()
@@ -828,7 +829,7 @@ def mark_attended(userid: int, invite: str, receipt_id: str, receipt_num: str, r
     
     badge_number = utilities.generate_random_string(10, False)
     
-    sql = "INSERT INTO attendees (eventId, userId, badgeNumber, receiptId, receiptNum, receiptUrl) VALUES(" + event_id + "," + str(userid) + ",'" + badge_number + "','" + receipt_id + "','" + receipt_num + "','" + receipt_url + "')"
+    sql = "INSERT INTO attendees (eventId, userId, badgeNumber, receiptId, receiptNum, receiptUrl, attending) VALUES(" + event_id + "," + str(userid) + ",'" + badge_number + "','" + receipt_id + "','" + receipt_num + "','" + receipt_url + "',1)"
     CURSOR.execute(sql)
 
     conn.commit()
@@ -852,11 +853,22 @@ def mark_skipped(userid: int, invite: str):
     if len(c) < 1:
         CURSOR.close()
         conn.close()
-        return True
+        return [True, '']
 
     event_id = str(c[0][constants.EVENT_ID_COL])
 
-    sql = "DELETE FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    sql = "SELECT * FROM attendees WHERE attending = 1 AND eventId = " + event_id + " AND userId = " + str(userid)
+    CURSOR.execute(sql)
+
+    c = CURSOR.fetchall()
+
+    if len(c) < 1:
+        CURSOR.close()
+        conn.close()
+        return [True, '']
+
+    stripe_charge_id = c[0][constants.ATTENDEE_RECEIPT_ID_COL]
+    sql = "UPDATE attendees SET attending = 0 WHERE eventId = " + event_id + " AND userId = " + str(userid)
     CURSOR.execute(sql)
 
     conn.commit()
@@ -864,7 +876,7 @@ def mark_skipped(userid: int, invite: str):
     CURSOR.close()
     conn.close()
 
-    return True
+    return [True, stripe_charge_id]
 
 def get_attendance_info(userid: int, invite: str):
     conn = sqlite3.connect(constants.DB_LOCATION)
@@ -884,7 +896,7 @@ def get_attendance_info(userid: int, invite: str):
 
     event_id = str(c[0][constants.EVENT_ID_COL])
 
-    sql = "SELECT * FROM attendees WHERE eventId = " + event_id + " AND userId = " + str(userid)
+    sql = "SELECT * FROM attendees WHERE attending = 1 AND eventId = " + event_id + " AND userId = " + str(userid)
     CURSOR.execute(sql)
 
     c = CURSOR.fetchall()

@@ -58,7 +58,7 @@ async function finishedLoad() {
         'e': IS_HTTPS
     }, 'not attending');
 
-    if (isValueValid(attend_info['badge_number'])) {
+    if (isValueNotEmpty(attend_info['badge_number'])) {
         JsBarcode("#barcode", attend_info['badge_number'], {
             fontSize: 20,
             background: "royalblue",
@@ -73,6 +73,14 @@ async function finishedLoad() {
         show(document.getElementById('receipt-div'));
         show(document.getElementById('receipt_num_cell_1'));
         show_span(document.getElementById('receipt_num_cell_2'));
+    }
+
+    if (sessionStorage.getItem("refund") == '1') {
+        sessionStorage.setItem('refund', null);
+        showMsg("Refund Issued");
+    } else if (sessionStorage.getItem("refund") == "0") {
+        sessionStorage.setItem("refund", null);
+        showMsg("Canceled Attendance");
     }
 };
 
@@ -99,7 +107,9 @@ async function attend() {
 async function unattend() {
     show(document.getElementById('skip-event-div'));
     document.getElementById('skip-event-name').innerHTML = JSON.parse(sessionStorage.getItem('currentEvent'))['name'];
-    document.getElementById('skip-confirm-code').innerHTML = generateRandomStringNoSymbols(6);
+    const c = generateRandomStringNoSymbols(6);
+    document.getElementById('skip-confirm-code').innerHTML = c;
+    document.getElementById('confirm-skip').setAttribute('placeholder', c);
 };
 
 async function cancelSkip() {
@@ -107,6 +117,7 @@ async function cancelSkip() {
 };
 
 async function confirmSkip() {
+    startProcessing();
     const token = await encryptWithPublicKey(sessionStorage.getItem('token'));
     const username = await encryptWithPublicKey(sessionStorage.getItem('uname'));
     const i = JSON.parse(sessionStorage.getItem('currentEvent'))['inviteCode'];
@@ -120,7 +131,17 @@ async function confirmSkip() {
         'e': IS_HTTPS
     }, 'Unable to Skip');
 
-    reload();
+    if (result['result'] == 200) {
+        if (parseFloat(document.getElementById('attend-event-cost').innerHTML) > 0.0) {
+            sessionStorage.setItem("refund", "1");
+        } else {
+            sessionStorage.setItem("refund", "0");
+        }
+
+        reload();
+    }
+
+    stopProcessing();
 };
 
 function showReceipt() {

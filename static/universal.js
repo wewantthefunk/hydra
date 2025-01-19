@@ -559,3 +559,13 @@ function isValueValid(v) {
 
     return true;
 };
+
+function isValueNotEmpty(v) {
+    const va = isValueValid(v);
+
+    if (va) {
+        return v != "";
+    }
+
+    return va;
+}

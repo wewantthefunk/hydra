@@ -1,5 +1,5 @@
 import dataaccess, constants, crypto_asymmetric, crypto_symmetric, utilities
-import base64
+import base64, sys
 from datetime import datetime
 import stripe
 
@@ -427,6 +427,19 @@ def get_payment_info(sesssion_id: str, encrypt: str):
 
     return {"receipt": charge['receipt_number'], "receipt_url": charge['receipt_url'], 'receipt_id': charge['id'], "result": constants.RESULT_OK}
 
+def issue_refund(charge_id: str, encrypt: str):
+    cid = decrypt_string(charge_id, encrypt)
+
+    stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
+
+    stripe.api_key = stripe_api_key['stripe-test']
+
+    charge = stripe.Charge.retrieve(cid)
+
+    refund = stripe.Refund.create(payment_intent=charge['payment_intent'])
+
+    return refund
+
 def mark_attended(invite: str, userid: str, receipt_id: str, receipt_num: str, receipt_url: str, encrypt: str):
     i = decrypt_string(invite, encrypt)
     rid = decrypt_string(receipt_id, encrypt)
@@ -448,7 +461,22 @@ def mark_skipped(invite: str, userid: str, encrypt: str):
     if not result[0]:
         return {'message': 'Unable to Skip', 'result': constants.RESULT_INVALID_REQUEST}
     
-    return {'message': 'Skipped', 'result': constants.RESULT_OK}
+    id = 'free'
+
+    if result[1] != '':
+        stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
+        stripe.api_key = stripe_api_key['stripe-test']
+
+        charge = stripe.Charge.retrieve(id=result[1])
+
+        refund = stripe.Refund.create(payment_intent=charge.payment_intent)
+
+        id = refund.id
+
+        if (refund.status != 'succeeded'):
+            return {'message': "Error Issuing Refund", 'refund': 'error', result: constants.RESULT_SERVER_ERROR}
+    
+    return {'message': 'Skipped', 'refund': id, 'result': constants.RESULT_OK}
 
 def get_attendance_info(invite: str, userid: str, encrypt: str):
     i = decrypt_string(invite, encrypt)
@@ -456,7 +484,7 @@ def get_attendance_info(invite: str, userid: str, encrypt: str):
     result = dataaccess.get_attendance_info(userid, i)
 
     if not result[0]:
-        return {'message': 'Unable to Attend', 'badge_number': '', 'receipt_id': '', 'receipt_num': '', 'receipt_url': '', 'result': constants.RESULT_INVALID_REQUEST}
+        return {'message': 'Not Attending', 'badge_number': '', 'receipt_id': '', 'receipt_num': '', 'receipt_url': '', 'result': constants.RESULT_NOT_FOUND}
     
     return {'message': 'Attending', 
             'badge_number': result[1], 
@@ -545,3 +573,7 @@ def update_password(new_password: str, password: str, user_id: int, encrypt: str
         return {'message': 'Password Updated', 'result': constants.RESULT_OK}
     
     return {'message': 'Invalid', 'result': constants.RESULT_SERVER_ERROR}
+
+if __name__ == '__main__':
+    if sys.argv[1] == 'paymentinfo':
+        get_payment_info(sys.argv[2], False)

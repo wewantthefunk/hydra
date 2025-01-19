@@ -192,6 +192,10 @@ def create_sql(passphrase, email, adminName, vcode):
         # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE attendees ADD COLUMN receiptUrl TEXT")
 
+    if 'attending' not in columns:
+        # Add new column 'code' to the 'events' table if it doesn't exist
+        cursor.execute("ALTER TABLE attendees ADD COLUMN attending INTEGER")
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS event2owner
         (id INTEGER PRIMARY KEY, ownerId INTEGER, eventId INTEGER)

@@ -227,11 +227,11 @@ def mark_skipped():
     rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
 
     if not rt[0]:
-        return jsonify({'message': rt[1]['message']}), rt[1]['result']
+        return jsonify({'message': rt[1]['message'], 'result': rt[1]['result']}), rt[1]['result']
     
     result = businesslogic.mark_skipped(processed_data['invite'], rt[1]['userId'], processed_data['e'])
 
-    return jsonify({'message': result['message']}), result['result']
+    return jsonify({'message': result['message'], 'result': result['result']}), result['result']
 
 @app.route('/get-attendance', methods=['POST'])
 def get_attendance_info():
