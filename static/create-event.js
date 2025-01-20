@@ -99,7 +99,7 @@ async function saveNewEvent() {
     const location = document.getElementById('location').value.trim();
     const max = document.getElementById('max').value.trim();
     const sku = document.getElementById('sku').value.trim();
-    const cost = document.getElementById('cost').value.trim();
+    let cost = document.getElementById('cost').value.trim();
 
     if (eventName == '') {
         document.getElementById('eventName').focus();
@@ -154,6 +154,8 @@ async function saveNewEvent() {
         document.getElementById('createNewEventMessage').innerHTML = "Fill Out All Required Fields";
         return;
     }
+
+    cost = calcStripeFees(parseFloat(cost));
 
     let parts = startDate.split("-");
     const sd = parts[1] + "/" + parts[2] + '/' + parts[0];
@@ -221,6 +223,14 @@ async function saveNewEvent() {
         return;
     }
 
+    const stripePriceId = document.getElementById('stripe-price-id').value.trim();
+
+    if (cost > 0 && stripePriceId == '') {
+        document.getElementById('stripe-price-id').focus();
+        document.getElementById('createNewEventMessage').innerHTML = "Stripe Price Code required when Cost > 0";
+        return;
+    }
+
     const aas = document.getElementById('allow-anonymous-signup').checked ? '1' : '0';
 
     const rsi = document.getElementById('require-signin').checked ? '1' : '0';
@@ -247,6 +257,7 @@ async function saveNewEvent() {
         'field17': await encryptWithPublicKey(cost),
         'field18': await encryptWithPublicKey(sku),
         'field19': await encryptWithPublicKey(lastCancel),
+        'field21': await encryptWithPublicKey(stripePriceId),
         'field20': 0
     });
 

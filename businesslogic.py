@@ -1,5 +1,5 @@
 import dataaccess, constants, crypto_asymmetric, crypto_symmetric, utilities
-import base64, sys
+import base64, sys, json
 from datetime import datetime
 import stripe
 
@@ -205,7 +205,7 @@ def unverify_user(name: str) -> bool:
     
     return dataaccess.unverify_user(rows[0].id)
 
-def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, sku: str, update_or_create: str, id: str, last_cancel: str, organizerAsAttendee: str, encrypt: bool = False) -> str:
+def create_new_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, allow_anonymous_signups: str, require_signin: str, payment_type: str, cost: str, sku: str, update_or_create: str, id: str, last_cancel: str, organizerAsAttendee: str, stripe_price_id: str, encrypt: bool = False) -> str:
     n = decrypt_string(name, encrypt)
     sd = decrypt_string(startdate, encrypt)
     ed = decrypt_string(enddate, encrypt)
@@ -224,6 +224,7 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
     s = decrypt_string(sku, encrypt)
     lc = decrypt_string(last_cancel, encrypt)
     oaa = decrypt_string(organizerAsAttendee, encrypt)
+    spid = decrypt_string(stripe_price_id, encrypt)
 
     ev = dataaccess.get_event_by_userid_and_name_or_invite_code(userId, n, c)
 
@@ -231,7 +232,27 @@ def create_new_event(userId: int, name: str, startdate: str, enddate: str, start
         if ev.id > 0:
             return {'message': 'Event Already Exists', 'id': ev.id, 'result': constants.RESULT_CONFLICT}
 
-        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, co, s, lc, oaa)
+        id = dataaccess.create_event(userId, n, sd, ed, st, et, l, io, m, c, aas, rsi, pt, str(co), s, lc, oaa)
+
+        stripe_info = utilities.load_json_file('private/stripe-api-key.json')
+
+        prices = stripe_info['prices']
+
+        out_prices = []
+
+        for price in prices:
+            if price['sku'] != s:
+                out_prices.append(price)
+
+        out_prices.append({
+            'sku': s,
+            'price': co,
+            'price_id':spid
+        })
+
+        stripe_info['prices'] = out_prices
+
+        utilities.write_to_file('private/stripe-api-key.json', json.dumps(stripe_info))
 
         return {'message': 'Event Created', 'id': str(id), 'result': constants.RESULT_OK}
     else:

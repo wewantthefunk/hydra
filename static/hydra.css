@@ -175,6 +175,10 @@ label {
     display:none;
 }
 
+#stripe-price-calc {
+    display: inline;
+}
+
 #userMenu {
     display: none;
     position: absolute;

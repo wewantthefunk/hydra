@@ -23,7 +23,7 @@ class Session:
         self.id = id
 
 class Event:
-    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, allowanonymoussignups, requiresignin, sku, relationship, last_cancel, organizer_as_attendee, cost = 0.0, paymentRequired = 0, currentattendees = 0):
+    def __init__(self, id, name, startdate, enddate, starttime, endtime, location, inviteonly, invitecode, max, allowanonymoussignups, requiresignin, sku, relationship, last_cancel, organizer_as_attendee, cost = 0.0, price_id = '', paymentRequired = 0, currentattendees = 0):
         self.id = id
         self.name = name
         self.start_date = startdate
@@ -43,6 +43,7 @@ class Event:
         self.relationship = relationship
         self.last_cancel = last_cancel
         self.organizer_as_attendee = organizer_as_attendee
+        self.price_id = price_id
 
 def get_all_users() -> List[User]:
     result = []
@@ -420,7 +421,10 @@ def unverify_user(id: int) -> bool:
     return True
 
 def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: str) -> Event:
-    result = Event(-1, '', '', '', '', '', '', 0, '', 0, 0, 0, '', 0, '', 0, 0, 0)
+    stripe_events = utilities.load_json_file('private/stripe-api-key.json') 
+    prices = stripe_events['prices']
+
+    result = Event(-1, '', '', '', '', '', '', 0, '', 0, 0, 0, '', 0, '', 0, 0, '', 0)
 
     conn = sqlite3.connect(constants.DB_LOCATION)
 
@@ -433,6 +437,12 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
     found = False
 
     if len(r) > 0:
+        price_id = ''
+            
+        for price in prices:
+            if price['sku'] == r[0][constants.EVENT_SKU_COL]:
+                price_id = price['price_id']
+
         result = Event(r[0][constants.EVENT_ID_COL], 
                        r[0][constants.EVENT_NAME_COL], 
                        r[0][constants.EVENT_START_DATE_COL], 
@@ -448,7 +458,9 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
                        r[0][constants.EVENT_SKU_COL],
                        constants.EVENT_OWNER,
                        r[0][constants.EVENT_LAST_CANCEL_DATE_COL],
+                       r[0][constants.EVENT_ORGANIZER_AS_ATTENDEE_COL],
                        r[0][constants.EVENT_PAYMENT_COST_COL],
+                       price_id,
                        r[0][constants.EVENT_PAYMENT_TYPE_COL],
                        0)
         found = True
@@ -476,7 +488,9 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
                        r[0][constants.EVENT_SKU_COL],
                        constants.EVENT_OWNER,
                        r[0][constants.EVENT_LAST_CANCEL_DATE_COL],
+                       r[0][constants.EVENT_ORGANIZER_AS_ATTENDEE_COL],
                        r[0][constants.EVENT_PAYMENT_COST_COL],
+                       price_id,
                        r[0][constants.EVENT_PAYMENT_TYPE_COL])
 
     CURSOR.close()
@@ -485,6 +499,15 @@ def get_event_by_userid_and_name_or_invite_code(userId: int, name: str, code: st
     return result
 
 def create_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, rsi: str, pt: str, co: str, sku: str, last_cancel: str, organizer_as_attendee: str) -> Event:
+    stripe_events = utilities.load_json_file('private/stripe-api-key.json') 
+    prices = stripe_events['prices']
+
+    price_id = ''
+            
+    for price in prices:
+        if price['sku'] == sku:
+            price_id = price['price_id']
+    
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
@@ -503,9 +526,12 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.close()
     conn.close()
 
-    return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, constants.EVENT_OWNER, last_cancel, organizer_as_attendee, co, pt, 0)
+    return Event(inserted_id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, constants.EVENT_OWNER, last_cancel, organizer_as_attendee, co, price_id, pt, 0)
 
 def update_event(userId: int, name: str, startdate: str, enddate: str, starttime: str, endtime: str, location: str, invite_only: str, max: str, code: str, aas: str, id: int, rsi: str, pt: str, co: str, sku: str, last_cancel: str, organizer_as_attendee: str) -> Event:
+    stripe_events = utilities.load_json_file('private/stripe-api-key.json') 
+    prices = stripe_events['prices']
+
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
@@ -536,15 +562,22 @@ def update_event(userId: int, name: str, startdate: str, enddate: str, starttime
     CURSOR.close()
     conn.close()
 
-    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, constants.EVENT_OWNER, last_cancel, organizer_as_attendee, co, pt)
+    price_id = ''
+            
+    for price in prices:
+        if price['sku'] == sku:
+            price_id = price['price_id']
+
+    return Event(id, name, startdate, enddate, starttime, endtime, location, invite_only, code, max, aas, rsi, sku, constants.EVENT_OWNER, last_cancel, organizer_as_attendee, co, price_id, pt)
 
 def get_public_events() -> List[Event]:
+    stripe_events = utilities.load_json_file('private/stripe-api-key.json') 
+    prices = stripe_events['prices']
+    
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
-    CURSOR = conn.cursor()
-
-    
+    CURSOR = conn.cursor()    
 
     CURSOR.execute("SELECT * FROM events WHERE endDate > '" + date.today().strftime("%Y-%m-%d") + "' AND inviteType = " + str(constants.PUBLIC_EVENT))
     rows = CURSOR.fetchall()
@@ -552,6 +585,12 @@ def get_public_events() -> List[Event]:
     result = []
 
     for row in rows:
+        price_id = ''
+            
+        for price in prices:
+            if price['sku'] == row[constants.EVENT_SKU_COL]:
+                price_id = price['price_id']
+
         CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
         c = CURSOR.fetchall()
 
@@ -572,6 +611,7 @@ def get_public_events() -> List[Event]:
                      row[constants.EVENT_LAST_CANCEL_DATE_COL],
                      row[constants.EVENT_ORGANIZER_AS_ATTENDEE_COL],
                      row[constants.EVENT_PAYMENT_COST_COL],
+                     price_id,
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
                      )
@@ -583,6 +623,9 @@ def get_public_events() -> List[Event]:
     return result
 
 def get_my_events(user_id: int) -> List[Event]:
+    stripe_events = utilities.load_json_file('private/stripe-api-key.json') 
+    prices = stripe_events['prices']
+    
     result = []
 
     conn = sqlite3.connect(constants.DB_LOCATION)
@@ -593,7 +636,7 @@ def get_my_events(user_id: int) -> List[Event]:
     CURSOR.execute("SELECT * FROM event2owner WHERE ownerId = " + str(user_id))
     o_rows = CURSOR.fetchall()
 
-    if len(o_rows) > 0:  
+    if len(o_rows) > 0:
         ids = ''
         first = True
 
@@ -611,6 +654,12 @@ def get_my_events(user_id: int) -> List[Event]:
         rows = CURSOR.fetchall()
 
         for row in rows:
+            price_id = ''
+            
+            for price in prices:
+                if price['sku'] == row[constants.EVENT_SKU_COL]:
+                    price_id = price['price_id']
+
             CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
             c = CURSOR.fetchall()
 
@@ -631,6 +680,7 @@ def get_my_events(user_id: int) -> List[Event]:
                         row[constants.EVENT_LAST_CANCEL_DATE_COL],
                         row[constants.EVENT_ORGANIZER_AS_ATTENDEE_COL],
                         row[constants.EVENT_PAYMENT_COST_COL],
+                        price_id,
                         row[constants.EVENT_PAYMENT_TYPE_COL],
                         c[0][0] + row[constants.EVENT_ORGANIZER_AS_ATTENDEE_COL]
                         )
@@ -658,6 +708,12 @@ def get_my_events(user_id: int) -> List[Event]:
     rows = CURSOR.fetchall()
 
     for row in rows:
+        price_id = ''
+            
+        for price in prices:
+            if price['sku'] == row[constants.EVENT_SKU_COL]:
+                price_id = price['price_id']
+
         CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE attending = 1 AND eventId = " + str(row[constants.EVENT_ID_COL]))
         c = CURSOR.fetchall()
 
@@ -676,7 +732,9 @@ def get_my_events(user_id: int) -> List[Event]:
                      row[constants.EVENT_SKU_COL],
                      constants.EVENT_ATTENDEE,
                      row[constants.EVENT_LAST_CANCEL_DATE_COL],
+                     row[constants.EVENT_ORGANIZER_AS_ATTENDEE_COL],
                      row[constants.EVENT_PAYMENT_COST_COL],
+                     price_id,
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
                      )
@@ -688,6 +746,9 @@ def get_my_events(user_id: int) -> List[Event]:
     return result
 
 def get_event(invite: str) -> Event:
+    stripe_events = utilities.load_json_file('private/stripe-api-key.json') 
+    prices = stripe_events['prices']
+
     conn = sqlite3.connect(constants.DB_LOCATION)
 
     # Create a cursor object
@@ -700,6 +761,12 @@ def get_event(invite: str) -> Event:
     result = None
 
     for row in rows:
+        price_id = ''
+            
+        for price in prices:
+            if price['sku'] == row[constants.EVENT_SKU_COL]:
+                price_id = price['price_id']
+
         CURSOR.execute("SELECT COUNT(*) FROM attendees WHERE eventId = " + str(row[constants.EVENT_ID_COL]))
         c = CURSOR.fetchall()
 
@@ -720,6 +787,7 @@ def get_event(invite: str) -> Event:
                      row[constants.EVENT_LAST_CANCEL_DATE_COL],
                      row[constants.EVENT_ORGANIZER_AS_ATTENDEE_COL],
                      row[constants.EVENT_PAYMENT_COST_COL],
+                     price_id,
                      row[constants.EVENT_PAYMENT_TYPE_COL],
                      c[0][0]
                      )

@@ -595,3 +595,7 @@ function isDateInPast(dateString) {
     // Compare the dates and return true if the input date is in the past, false otherwise
     return inputDate < currentDate;
 };
+
+function calcStripeFees(cost) {
+    return ((cost * 1.029) + .3).toFixed(2);
+};

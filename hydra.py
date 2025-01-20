@@ -533,7 +533,8 @@ def create_event():
             'cost': data.get('field17'),
             'sku': data.get('field18'),
             'lastCancel': data.get('field19'),
-            'organizerIsAttendee': data.get('field20')
+            'organizerIsAttendee': data.get('field20'),
+            'stripePriceId': data.get('field21')
         }
 
         session = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
@@ -565,7 +566,8 @@ def create_event():
                                            processed_data['update'],
                                            processed_data['id'], 
                                            processed_data['lastCancel'],
-                                           processed_data['organizerIsAttendee'],                                          
+                                           processed_data['organizerIsAttendee'],
+                                           processed_data['stripePriceId'],                                          
                                            processed_data['e'])
 
         return jsonify({'message': r['message']}), r['result']

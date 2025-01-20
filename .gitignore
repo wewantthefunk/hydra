@@ -4,6 +4,7 @@ private/mail.json
 private/port.json
 private/url.json
 private/stripe-api-key.json
+private/stripe-api-key.bak
 data/user_db.db
 static/crypto_key.js
 hydra-env/

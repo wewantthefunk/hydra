@@ -54,10 +54,17 @@
                         <span id="sku-hint" class="field-hint">SKU</span>
                 </div>
                 <div>
+                        <span class="pre-field-hint" id="stripe-price-calc">0.00</span>
                         <input type="text" id="cost" placeholder="Cost" class="required" title="Cost"
-                                oninput="validateNumericInput(this);" onblur="checkRequired(this);"
+                                onblur="checkRequired(this);"
+                                oninput="validateNumericInput(this);document.getElementById('stripe-price-calc').innerHTML = calcStripeFees(this.value);"
                                 onmouseenter="show_span(document.getElementById('cost-hint'));" onmouseleave="hide(document.getElementById('cost-hint'));" />
                         <span id="cost-hint" class="field-hint">Cost</span>
+                </div>
+                <div>
+                        <input type="text" id="stripe-price-id" placeholder="Stripe Price Code" title="Stripe Price Code"
+                                onmouseenter="show_span(document.getElementById('stripe-price-hint'));" onmouseleave="hide(document.getElementById('stripe-price-hint'));" />
+                        <span id="stripe-price-hint" class="field-hint">Stripe Price Code</span>
                 </div>
                 <div class="hidden">
                         <select id="paymentType" class="">
