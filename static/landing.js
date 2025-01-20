@@ -10,13 +10,18 @@ async function finishedLoad() {
 
     const result = await postJsonToApi('/myevents', { 'field1': t, 'field2': u, 'e': IS_HTTPS });
 
-    displayEventsTable(JSON.parse(result.message)['events'], 'event-list', 'event-list-body', 0, 'event-org-header');
+    displayEventsTable(JSON.parse(result.message)['events'], 'event-list', 'event-list-body', 0, 'event-org-header', true);
+    displayEventsTable(JSON.parse(result.message)['events'], 'past-event-list', 'past-event-list-body', 0, 'past-event-org-header', false);
 
-    displayAttendeeTable(JSON.parse(result.message)['events'], 'attendee-list', 'attendee-list-body', 2, 'event-attend-header');
+    displayAttendeeTable(JSON.parse(result.message)['events'], 'attendee-list', 'attendee-list-body', 2, 'event-attend-header', true);
+    displayAttendeeTable(JSON.parse(result.message)['events'], 'past-attendee-list', 'past-attendee-list-body', 2, 'past-event-attend-header', false);
     stopProcessing();
 };
 
-async function displayEventsTable(events, table, tbody, level, header) {
+async function displayEventsTable(events, table, tbody, level, header, future) {
+    const yourDate = new Date();
+    const today = yourDate.toISOString().split('T')[0];
+
     // Get the table body element where we'll append the rows
     const tableBody = document.getElementById(tbody);
 
@@ -26,7 +31,9 @@ async function displayEventsTable(events, table, tbody, level, header) {
     let rows = 0;
     // Loop through each event object and create a new row for it
     events.forEach(event => {
-        if (event.relationship == level) {
+        past = isDateInPast(event.endDate, today);
+
+        if (event.relationship == level && past != future) {
             rows++;
             // Create a new <tr> element for the row
             const row = document.createElement('tr');
@@ -158,7 +165,10 @@ async function displayEventsTable(events, table, tbody, level, header) {
     }
 };
 
-async function displayAttendeeTable(events, table, tbody, level, header) {
+async function displayAttendeeTable(events, table, tbody, level, header, future) {
+    const yourDate = new Date();
+    const today = yourDate.toISOString().split('T')[0];
+
     // Get the table body element where we'll append the rows
     const tableBody = document.getElementById(tbody);
 
@@ -168,8 +178,8 @@ async function displayAttendeeTable(events, table, tbody, level, header) {
     let rows = 0;
     // Loop through each event object and create a new row for it
     events.forEach(event => {
-
-        if (event.relationship == level) {
+        past = isDateInPast(event.endDate, today);
+        if (event.relationship == level && past != future) {
             rows++;
             // Create a new <tr> element for the row
             const row = document.createElement('tr');

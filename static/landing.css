@@ -6,8 +6,12 @@
 
 #event-list,
 #attendee-list,
+#past-event-list,
+#past-attendee-list,
 #event-org-header,
-#event-attend-header {
+#event-attend-header,
+#past-event-org-header,
+#past-event-attend-header {
     /* Apply borders to the bottom of each row and the right of each cell */
     border-collapse: collapse;
     width: 100%;
@@ -15,14 +19,25 @@
 }
 
 #event-attend-header,
-#event-org-header {
+#past-event-attend-header,
+#event-org-header,
+#past-event-org-header {
     margin-bottom: 10px;
+}
+
+#past-event-attend-header,
+#past-event-org-header {
+    margin-top: 30px;
 }
 
 #event-list td,
 #event-list th,
+#past-event-list td,
+#past-event-list th,
 #attendee-list td,
-#attendee-list th {
+#attendee-list th,
+#past-attendee-list td,
+#past-attendee-list th {
     border-bottom: 1px solid #333;
     border-right: 1px solid #333;
     padding-bottom: 5px;
@@ -33,7 +48,9 @@
 }
 
 #event-list th,
-#attendee-list th {
+#past-event-list th,
+#attendee-list th,
+#past-attendee-list th {
     background-color: royalblue;
     color: #fff;
 }
@@ -41,8 +58,12 @@
 /* Apply a border on the left of the first cell in each row */
 #event-list tr>td:first-child, 
 #event-list tr>th:first-child,
+#past-event-list tr>td:first-child, 
+#past-event-list tr>th:first-child,
 #attendee-list tr>td:first-child, 
-#attendee-list tr>th:first-child {
+#attendee-list tr>th:first-child,
+#past-attendee-list tr>td:first-child, 
+#past-attendee-list tr>th:first-child {
     border-left: 1px solid #333;
 }
 
@@ -59,7 +80,30 @@
 #event-list tr>td:nth-child(19),  
 #event-list tr>th:nth-child(19), 
 #event-list tr>td:nth-child(20), 
-#event-list tr>th:nth-child(20)   {
+#event-list tr>th:nth-child(20),
+#past-event-list tr>td:nth-child(2), 
+#past-event-list tr>th:nth-child(2),
+#past-event-list tr>td:nth-child(3), 
+#past-event-list tr>th:nth-child(3),
+#past-event-list tr>td:nth-child(4), 
+#past-event-list tr>th:nth-child(4),
+#past-event-list tr>td:nth-child(17), 
+#past-event-list tr>th:nth-child(17),
+#past-event-list tr>td:nth-child(18), 
+#past-event-list tr>th:nth-child(18),
+#past-event-list tr>td:nth-child(19),  
+#past-event-list tr>th:nth-child(19), 
+#past-event-list tr>td:nth-child(20), 
+#past-event-list tr>th:nth-child(20)    {
+    display:none;
+}
+
+#past-event-list tr>td:nth-child(14), 
+#past-event-list tr>th:nth-child(14),
+#past-event-list tr>td:nth-child(15), 
+#past-event-list tr>th:nth-child(15),
+#past-event-list tr>td:nth-child(16), 
+#past-event-list tr>th:nth-child(16)     {
     display:none;
 }
 
@@ -68,22 +112,38 @@
 #attendee-list tr>td:nth-child(3), 
 #attendee-list tr>th:nth-child(3),
 #attendee-list tr>td:nth-child(4), 
-#attendee-list tr>th:nth-child(4) {
+#attendee-list tr>th:nth-child(4),
+#past-attendee-list tr>td:nth-child(2), 
+#past-attendee-list tr>th:nth-child(2),
+#past-attendee-list tr>td:nth-child(3), 
+#past-attendee-list tr>th:nth-child(3),
+#past-attendee-list tr>td:nth-child(4), 
+#past-attendee-list tr>th:nth-child(4),
+#past-attendee-list tr>td:nth-child(10), 
+#past-attendee-list tr>th:nth-child(10),
+#past-attendee-list tr>td:nth-child(11), 
+#past-attendee-list tr>th:nth-child(11) {
     display: none;
 }
 
 #event-list tr:first-child > th,
-#attendee-list tr:first-child > th {
+#past-event-list tr:first-child > th,
+#attendee-list tr:first-child > th,
+#past-attendee-list tr:first-child > th {
     border-top: 1px solid #333;
 }
 
 #event-list tr:first-child > th:first-child,
-#attendee-list tr:first-child > th:first-child {
+#past-event-list tr:first-child > th:first-child,
+#attendee-list tr:first-child > th:first-child,
+#past-attendee-list tr:first-child > th:first-child {
     border-top-left-radius: 5px;
 }
 
 #event-list img,
-#attendee-list img {
+#past-event-list img,
+#attendee-list img,
+#past-attendee-list img {
     width: 30px;
     height: 30px;
 }

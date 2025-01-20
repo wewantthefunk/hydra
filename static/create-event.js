@@ -93,7 +93,7 @@ async function saveNewEvent() {
     const eventName = document.getElementById('eventName').value.trim();
     const startDate = document.getElementById('startDate').value.trim();
     const endDate = document.getElementById('endDate').value.trim();
-    const lastCancel = document.getElementById('last-cancel').value.trim()
+    let lastCancel = document.getElementById('last-cancel').value.trim()
     const startTime = document.getElementById('startTime').value.trim();
     const endTime = document.getElementById('endTime').value.trim();
     const location = document.getElementById('location').value.trim();
@@ -187,6 +187,10 @@ async function saveNewEvent() {
         document.getElementById('createNewEventMessage').innerHTML = "Start Date cannot be";
         document.getElementById('createNewEventMessage2').innerHTML = "Greater than End Date";
         return;
+    }
+
+    if (!isDate1LessThanOrEqual(lastCancel, startDate)) {
+        lastCancel = startDate;
     }
 
     if (startDate == endDate) {

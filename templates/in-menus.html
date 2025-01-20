@@ -9,7 +9,7 @@
             <span>Home</span>
         </div>
         <div id="publicevents" class="link" onclick="publicevents();">
-            <span>Public Events</span>
+            <span>Upcoming Events</span>
         </div>
         <div id="admin" class="link" onclick="admin();">
             <span>Admin</span>
@@ -23,7 +23,7 @@
     </div>
     <div id="heading">
         <h2 onclick="home();" id="bannerhome">{{ app_name }}</h2>
-        <span id="user" onclick="toggleUserMenu();"><img id="userMenuImg" src="/static/menu.jpg"/></span>
+        <span id="user" onclick="toggleUserMenu();"><span>Hello,&nbsp;</span><span id="mnu-username"></span><img id="userMenuImg" src="/static/menu.jpg"/></span>
         <input type="button" id="createEvent" onclick="createNewEvent();" value="Create" class="headerButton"/>
     </div>
     <div id="userMenu">

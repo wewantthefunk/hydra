@@ -57,6 +57,10 @@ function displayEventsTable(events) {
         current.textContent = String(spotsLeft);
         row.appendChild(current);
 
+        const cost = document.createElement('td');
+        cost.textContent = String(event.cost);
+        row.appendChild(cost);
+
         const attend = document.createElement('td');
         if (spotsLeft > 0) {
             const cal = document.createElement('img');
@@ -75,13 +79,14 @@ function displayEventsTable(events) {
         code.setAttribute('value', event.inviteCode);
         code.setAttribute('id', 'i-' + event.inviteCode);
         code.classList.add('readonly');
+        code.classList.add('hidden');
         code.style.backgroundColor = 'rgb(170, 170, 170)';
         const copy = document.createElement('img');
         copy.src = 'static/copy.png';
         copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "');");
         copy.setAttribute('title', "Copy Event Link");
         copy.className = 'clickable';
-        copy.style.position = "fixed";
+        //copy.style.position = "fixed";
         link.appendChild(code);
         link.appendChild(copy);
 

@@ -1,6 +1,7 @@
 import sqlite3
 from typing import List
 import constants, utilities
+from datetime import date
 
 
 class User:
@@ -543,8 +544,9 @@ def get_public_events() -> List[Event]:
     # Create a cursor object
     CURSOR = conn.cursor()
 
-    # Retrieve all users
-    CURSOR.execute("SELECT * FROM events WHERE inviteType = " + str(constants.PUBLIC_EVENT))
+    
+
+    CURSOR.execute("SELECT * FROM events WHERE endDate > '" + date.today().strftime("%Y-%m-%d") + "' AND inviteType = " + str(constants.PUBLIC_EVENT))
     rows = CURSOR.fetchall()
 
     result = []

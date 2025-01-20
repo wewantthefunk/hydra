@@ -354,6 +354,7 @@ async function universalFinishedLoad() {
     }
 
     document.getElementById('menu_username').innerHTML = sessionStorage.getItem('uname');
+    document.getElementById('mnu-username').innerHTML = sessionStorage.getItem('uname');
 
     switch (parseInt(LEVEL)) {
         case USER_LEVEL_ADMIN:

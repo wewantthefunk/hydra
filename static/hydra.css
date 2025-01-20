@@ -144,6 +144,10 @@ label {
     cursor: pointer;
 }
 
+#userMenuImg {
+    display:none;
+}
+
 .headerButton {
     background-color: aliceblue;
 }
