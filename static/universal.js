@@ -420,21 +420,35 @@ function showErrMsg(text) {
     }, 2000);
 };
 
-function copyToClipboard(textBoxId) {
+function copyToClipboard(textBoxId, prefix) {
     // Get the text field
     var copyText = document.getElementById(textBoxId).value;
 
-    if (isValueValid(navigator.clipboard)) {
-        navigator.clipboard.writeText(copyText)
-            .then(() => {
-                showMsg("Copied to Clipboard!");
-            })
-            .catch(() => {
-                showErrMsg("Failed to Copy to Clipboard");
-            });
-    } else {
-        showErrMsg("Clipboard not Available");
+    if (isValueValid(copyText)) {
+        document.getElementById('text-copy-temp').value = prefix + copyText;
+        copyInputText();
     }
+};
+
+function copyInputText() {
+    // Get the input element
+    let inputElement = document.getElementById("text-copy-temp");
+
+    // Select the text in the input box
+    inputElement.select();
+
+    // For mobile devices, set the selection range
+    inputElement.setSelectionRange(0, 99999);
+
+    // Copy the selected text to the clipboard
+    try {
+        document.execCommand("copy");
+        showMsg("Copied to clipboard");
+    } catch (err) {
+        showErrMsg("Unable to copy text to clipboard");
+    }
+
+    inputElement.blur();
 };
 
 function validateNumericInput(inputElement) {

@@ -120,7 +120,7 @@ async function displayEventsTable(events, table, tbody, level, header, future) {
             code.classList.add('hidden');
             const copy = document.createElement('img');
             copy.src = 'static/copy.png';
-            copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "');");
+            copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "', window.location.origin + '/attend/');");
             copy.setAttribute('title', "Copy Event Link");
             copy.className = 'clickable';
             link.appendChild(code);

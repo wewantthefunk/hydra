@@ -51,6 +51,12 @@ select {
     background-color: #fff;
 }
 
+#text-copy-temp {
+    background-color: aliceblue;
+    color: aliceblue;
+    border:none;
+}
+
 select {
     width: 185px;
     min-width: 185px;

@@ -1,5 +1,5 @@
 function copylink() {
-    copyToClipboard('invite');
+    copyToClipboard('invite', window.location.origin + "/attend/");
 };
 
 function createNewEvent() {

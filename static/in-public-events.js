@@ -83,7 +83,7 @@ function displayEventsTable(events) {
         code.style.backgroundColor = 'rgb(170, 170, 170)';
         const copy = document.createElement('img');
         copy.src = 'static/copy.png';
-        copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "');");
+        copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "', window.location.origin + '/attend/');");
         copy.setAttribute('title', "Copy Event Link");
         copy.className = 'clickable';
         //copy.style.position = "fixed";
