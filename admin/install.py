@@ -161,11 +161,13 @@ def create_sql(passphrase, email, adminName, vcode):
     if 'organizerAsAttendee' not in columns:
         cursor.execute("ALTER TABLE events ADD COLUMN organizerAsAttendee INTEGER")
 
+    if 'isActive' not in columns:
+        cursor.execute("ALTER TABLE events ADD COLUMN isActive INTEGER")
+
     cursor.execute("PRAGMA table_info(users)")
     columns = [column[1] for column in cursor.fetchall()]
 
     if 'uniqueId' not in columns:
-        # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE users ADD COLUMN uniqueId TEXT")
 
     cursor.execute('''
@@ -177,23 +179,18 @@ def create_sql(passphrase, email, adminName, vcode):
     columns = [column[1] for column in cursor.fetchall()]
 
     if 'badgeNumber' not in columns:
-        # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE attendees ADD COLUMN badgeNumber TEXT")
 
     if 'receiptId' not in columns:
-        # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE attendees ADD COLUMN receiptId TEXT")
 
     if 'receiptNum' not in columns:
-        # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE attendees ADD COLUMN receiptNum TEXT")
 
     if 'receiptUrl' not in columns:
-        # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE attendees ADD COLUMN receiptUrl TEXT")
 
     if 'attending' not in columns:
-        # Add new column 'code' to the 'events' table if it doesn't exist
         cursor.execute("ALTER TABLE attendees ADD COLUMN attending INTEGER")
 
     cursor.execute('''

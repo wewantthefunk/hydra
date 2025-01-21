@@ -10,11 +10,16 @@ async function finishedLoad() {
 
     const result = await postJsonToApi('/myevents', { 'field1': t, 'field2': u, 'e': IS_HTTPS });
 
-    displayEventsTable(JSON.parse(result.message)['events'], 'event-list', 'event-list-body', 0, 'event-org-header', true);
-    displayEventsTable(JSON.parse(result.message)['events'], 'past-event-list', 'past-event-list-body', 0, 'past-event-org-header', false);
+    if (JSON.parse(result.message)['events'].length < 1) {
+        document.getElementById("create-attend-msg-div").style.display = 'block';
+    } else {
+        displayEventsTable(JSON.parse(result.message)['events'], 'event-list', 'event-list-body', 0, 'event-org-header', true);
+        displayEventsTable(JSON.parse(result.message)['events'], 'past-event-list', 'past-event-list-body', 0, 'past-event-org-header', false);
 
-    displayAttendeeTable(JSON.parse(result.message)['events'], 'attendee-list', 'attendee-list-body', 2, 'event-attend-header', true);
-    displayAttendeeTable(JSON.parse(result.message)['events'], 'past-attendee-list', 'past-attendee-list-body', 2, 'past-event-attend-header', false);
+        displayAttendeeTable(JSON.parse(result.message)['events'], 'attendee-list', 'attendee-list-body', 2, 'event-attend-header', true);
+        displayAttendeeTable(JSON.parse(result.message)['events'], 'past-attendee-list', 'past-attendee-list-body', 2, 'past-event-attend-header', false);
+    }
+
     stopProcessing();
 };
 

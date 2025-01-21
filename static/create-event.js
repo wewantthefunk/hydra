@@ -45,6 +45,7 @@ function updateEvent(event_row) {
     document.getElementById('location').value = event_row.children[4].innerHTML;
     document.getElementById('max').value = event_row.children[9].innerHTML;
     document.getElementById('cost').value = event_row.children[11].innerHTML;
+    document.getElementById('stripe-price-calc').innerHTML = calcStripeFees(event_row.children[11].innerHTML);
     document.getElementById('sku').value = event_row.children[12].innerHTML;
     document.getElementById("createNewEventMessage").innerHTML = PLACEHOLDER;
     document.getElementById("createNewEventMessage2").innerHTML = PLACEHOLDER;
@@ -154,8 +155,6 @@ async function saveNewEvent() {
         document.getElementById('createNewEventMessage').innerHTML = "Fill Out All Required Fields";
         return;
     }
-
-    cost = calcStripeFees(parseFloat(cost));
 
     let parts = startDate.split("-");
     const sd = parts[1] + "/" + parts[2] + '/' + parts[0];

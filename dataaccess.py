@@ -513,8 +513,8 @@ def create_event(userId: int, name: str, startdate: str, enddate: str, starttime
     # Create a cursor object
     CURSOR = conn.cursor()    
     
-    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups, requireSignIn, paymentType, cost, sku, lastCancelDay, organizerAsAttendee) VALUES('"
-    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas + "," + rsi + "," + pt + "," + co + ",'" + sku + "','" + last_cancel + "'," + str(organizer_as_attendee)
+    sql = "INSERT INTO events (name, startDate, endDate, startTime, endTime, maxAttendees, location, inviteType, code, allowAnonymousSignups, requireSignIn, paymentType, cost, sku, lastCancelDay, organizerAsAttendee, isActive) VALUES('"
+    sql = sql + name + "','" + startdate + "','" + enddate + "','" + starttime + "','" + endtime + "'," + max + ",'" + location + "'," + invite_only + ",'" + code + "'," + aas + "," + rsi + "," + pt + "," + co + ",'" + sku + "','" + last_cancel + "'," + str(organizer_as_attendee) + ",1"
     sql = sql + ")"
     CURSOR.execute(sql)
     inserted_id = CURSOR.lastrowid
@@ -579,7 +579,7 @@ def get_public_events() -> List[Event]:
     # Create a cursor object
     CURSOR = conn.cursor()    
 
-    CURSOR.execute("SELECT * FROM events WHERE endDate > '" + date.today().strftime("%Y-%m-%d") + "' AND inviteType = " + str(constants.PUBLIC_EVENT))
+    CURSOR.execute("SELECT * FROM events WHERE isActive = 1 AND endDate > '" + date.today().strftime("%Y-%m-%d") + "' AND inviteType = " + str(constants.PUBLIC_EVENT))
     rows = CURSOR.fetchall()
 
     result = []
@@ -649,7 +649,7 @@ def get_my_events(user_id: int) -> List[Event]:
             first = False
 
         # Retrieve all users
-        CURSOR.execute("SELECT * FROM events WHERE id in (" + ids + ")")
+        CURSOR.execute("SELECT * FROM events WHERE isActive = 1 AND id in (" + ids + ")")
 
         rows = CURSOR.fetchall()
 
@@ -703,7 +703,7 @@ def get_my_events(user_id: int) -> List[Event]:
 
         first = False
 
-    CURSOR.execute("SELECT * FROM events WHERE id in (" + ids + ")")
+    CURSOR.execute("SELECT * FROM events WHERE isActive = 1 AND id in (" + ids + ")")
 
     rows = CURSOR.fetchall()
 
@@ -811,13 +811,7 @@ def delete_event(user_id: int, event_id: int):
     if len(rows) < 1:
         return False
     
-    sql = "DELETE FROM attendees WHERE eventId = " + str(event_id)
-    CURSOR.execute(sql)
-
-    sql = "DELETE FROM event2owner WHERE eventId = " + str(event_id)
-    CURSOR.execute(sql)
-    
-    sql = "DELETE FROM events WHERE id = " + str(event_id)
+    sql = "UPDATE events SET isActive = 0 WHERE id = " + str(event_id)
     CURSOR.execute(sql)
 
     conn.commit()

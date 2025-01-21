@@ -180,3 +180,8 @@
 #delete-confirm-hint {
     margin-top: 8px;
 }
+
+#create-attend-msg-div {
+    display:none;
+    margin-left:50px;
+}

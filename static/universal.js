@@ -453,7 +453,7 @@ function copyInputText() {
 
 function validateNumericInput(inputElement) {
     // Remove any non-numeric characters except for the minus sign (-)
-    var cleanedValue = inputElement.value.replace(/[^0-9-]/g, '');
+    var cleanedValue = inputElement.value.replace(/[^0-9-\.]/g, '');
 
     // Limit the number of minus signs to at most one (at the beginning)
     if (cleanedValue.startsWith('-')) {
@@ -596,6 +596,8 @@ function isDateInPast(dateString) {
     return inputDate < currentDate;
 };
 
-function calcStripeFees(cost) {
-    return ((cost * 1.029) + .3).toFixed(2);
+function calcStripeFees(cost) {    
+    const c = parseFloat(cost);
+    return c.toFixed(2);
+    /*return ((c * 1.029) + .3).toFixed(2);*/
 };
