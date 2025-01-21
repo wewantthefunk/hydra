@@ -77,7 +77,7 @@ function show(o) {
 
 function show_span(o) {
     if (o != null && o != 'undefined' && o != 'null') {
-        o.style.display = 'inline';
+        o.style.display = 'inline-flex';
     }
 };
 

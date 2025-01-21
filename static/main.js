@@ -42,9 +42,30 @@ async function finishedLoad() {
     await outsideFinishedLoad();
 
     const toggleButton = document.getElementById('password-view');
-    if (toggleButton != null && toggleButton != 'undefined') {
+    if (isValueValid(toggleButton)) {
         toggleButton.addEventListener('click', () => {
             togglePasswordReveal(toggleButton, 'pwd');
         });
     }
+
+    // Call the function initially to set the position of the target element
+    setElementPosition();
+
+    // Add an event listener to update the position of the target element if the window is resized
+    window.addEventListener("resize", setElementPosition);
 };
+
+function setElementPosition() {
+
+    // Select the elements
+    const referenceElement = document.getElementById("pwd");
+    const targetElement = document.getElementById("pass-hint");
+    // Get the dimensions and position of the reference element
+    const referenceRect = referenceElement.getBoundingClientRect();
+
+    // Set the top of the target element to be equal to the top of the reference element
+    targetElement.style.top = `${referenceRect.top}px`;
+
+    // Set the left of the target element to be 45 pixels to the right of the width of the reference element
+    targetElement.style.left = `${referenceRect.right}px`;
+}

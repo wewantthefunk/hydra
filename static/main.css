@@ -26,6 +26,10 @@
     display: none;
 }
 
+#pass-hint1 {
+    position:absolute;
+}
+
 #name-hint {
     margin-left: 10px;
 }
