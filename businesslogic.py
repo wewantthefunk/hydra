@@ -332,7 +332,8 @@ def get_my_events(user_id: int):
         e = e + '"sku":"' + event.sku + '",'
         e = e + '"relationship":' + str(event.relationship) + ','
         e = e + '"lastCancel":"' + event.last_cancel + '",'
-        e = e + '"organizerAsAttendee":' + str(event.organizer_as_attendee)
+        e = e + '"organizerAsAttendee":' + str(event.organizer_as_attendee) + ","
+        e = e + '"stripePriceCode":"' + event.price_id + '"'
         e = e + '}'
 
 

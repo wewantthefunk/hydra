@@ -54,6 +54,7 @@ function updateEvent(event_row) {
     document.getElementById('new-or-update-event').innerHTML = 'update';
     document.getElementById('event-id').innerHTML = event_row.children[1].innerHTML;
     document.getElementById('last-cancel').value = event_row.children[18].innerHTML;
+    document.getElementById('stripe-price-id').value = event_row.children[20].innerHTML;
 
     if (event_row.children[2].innerHTML == '1') {
         document.getElementById('allow-anonymous-signup').setAttribute('checked', 'checked');

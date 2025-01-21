@@ -81,6 +81,8 @@
 #event-list tr>th:nth-child(19), 
 #event-list tr>td:nth-child(20), 
 #event-list tr>th:nth-child(20),
+#event-list tr>td:nth-child(21), 
+#event-list tr>th:nth-child(21),
 #past-event-list tr>td:nth-child(2), 
 #past-event-list tr>th:nth-child(2),
 #past-event-list tr>td:nth-child(3), 
@@ -94,7 +96,9 @@
 #past-event-list tr>td:nth-child(19),  
 #past-event-list tr>th:nth-child(19), 
 #past-event-list tr>td:nth-child(20), 
-#past-event-list tr>th:nth-child(20)    {
+#past-event-list tr>th:nth-child(20),
+#past-event-list tr>td:nth-child(21), 
+#past-event-list tr>th:nth-child(21)    {
     display:none;
 }
 

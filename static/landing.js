@@ -149,6 +149,10 @@ async function displayEventsTable(events, table, tbody, level, header, future) {
             organizerAsAttendee.textContent = event.organizerAsAttendee;
             row.appendChild(organizerAsAttendee);
 
+            const stripePriceCode = document.createElement('td');
+            stripePriceCode.textContent = event.stripePriceCode;
+            row.appendChild(stripePriceCode);
+
             const goto = document.createElement('td');
             const gotoi = document.createElement('img');
             gotoi.src = 'static/start.png';
