@@ -163,6 +163,10 @@ function base64ToUint8Array(base64) {
 };
 
 function exit() {
+    show(document.getElementById('confirm-exit-div'));
+};
+
+function confirmExit() {
     sessionStorage.setItem("token", null);
     sessionStorage.setItem("level", "9999");
     sessionStorage.setItem("uname", null);

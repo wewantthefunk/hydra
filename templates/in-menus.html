@@ -23,6 +23,14 @@
         <div id="text-copy-temp-div">
             <input type="text" id="text-copy-temp" />
         </div>
+        <div id="footer-menu">
+            <div>
+                <span class="link">Disclaimer</span>
+            </div>
+            <div>
+                <span class="link">License</span>
+            </div>
+        </div>
     </div>
     <div id="heading">
         <h2 onclick="home();" id="bannerhome">{{ app_name }}</h2>
@@ -39,4 +47,13 @@
             <li onclick="account();">Account</li>
             <li onclick="exit();">Exit</li>
         </ul>
+    </div>
+    <div id="confirm-exit-div">
+        <div>
+            Are you sure you want to exit?
+        </div>
+        <div>
+            <input type="button" id="confirm-exit-ok-btn" onclick="confirmExit();" value="Exit"/>
+            <input type="button" id="cancel-exit-btn" onclick="hide(document.getElementById('confirm-exit-div'));" value="Cancel"/>
+        </div>
     </div>

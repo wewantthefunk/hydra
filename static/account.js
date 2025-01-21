@@ -61,7 +61,7 @@ function convertUserType(t) {
         return USER_LEVEL_SUPERUSER_NAME;
     }
 
-    return USER_LEVEL_ADMIN_NAME;
+    return USER_LEVEL_ATTENDEE_NAME;
 };
 
 async function confirmSaveAccount() {
