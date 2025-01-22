@@ -36,6 +36,10 @@ def admin():
 def publicevents():
     return render_template('in-public-events.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
+@app.route("/history")
+def history():
+    return render_template('in-history.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+
 @app.route('/attend/<invite>')
 def attend(invite):
     return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite, buster=utilities.generate_random_string(6,False))

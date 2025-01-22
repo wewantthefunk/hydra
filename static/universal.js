@@ -191,6 +191,10 @@ function publicevents() {
     navigate("/publicevents");
 };
 
+function history() {
+    navigate("/history");
+};
+
 function navigate(url) {
     startProcessing();
     isUserMenuVisible = false;

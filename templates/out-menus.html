@@ -3,3 +3,21 @@
         <li id="view-public-events" onclick="navigate('/outpublicevents');">Public Events</li>
     </ul>
 </div>
+<div id="footer-menu">
+    <div>
+        <span class="link" onclick="show(document.getElementById('disclaimer-div'));">Disclaimer</span>
+    </div>
+    <div>
+        <span class="link" onclick="show(document.getElementById('license-div'));">License</span>
+    </div>
+</div>
+<div id="license-div">
+    <div class="center-div-horizontal">
+        {% include 'license-popup.html' %}
+    </div>
+</div>
+<div id="disclaimer-div">
+    <div class="center-div-horizontal">
+        {% include 'disclaimer-popup.html' %}
+    </div>
+</div>

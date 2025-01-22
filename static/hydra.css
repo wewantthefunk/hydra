@@ -387,3 +387,23 @@ label {
 #confirm-exit-div div {
     background-color: royalblue;
 }
+
+#license-div,
+#disclaimer-div {
+    max-width: 50%;
+    width: 50%;
+    min-width:50%;
+    max-height: 400px;
+    min-height: 400px;
+    height: 400px;
+    overflow: auto;
+    top: 25%;
+    left: 25%;
+    position: absolute;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 5px 5px 5px #999;
+    display:none;
+    white-space: pre;
+}

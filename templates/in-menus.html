@@ -11,6 +11,9 @@
         <div id="publicevents" class="link" onclick="publicevents();">
             <span>Upcoming Events</span>
         </div>
+        <div id="history" class="link" onclick="history();">
+            <span>History</span>
+        </div>
         <div id="admin" class="link" onclick="admin();">
             <span>Admin</span>
         </div>
@@ -25,10 +28,10 @@
         </div>
         <div id="footer-menu">
             <div>
-                <span class="link">Disclaimer</span>
+                <span class="link" onclick="show(document.getElementById('disclaimer-div'));">Disclaimer</span>
             </div>
             <div>
-                <span class="link">License</span>
+                <span class="link" onclick="show(document.getElementById('license-div'));">License</span>
             </div>
         </div>
     </div>
@@ -55,5 +58,15 @@
         <div>
             <input type="button" id="confirm-exit-ok-btn" onclick="confirmExit();" value="Exit"/>
             <input type="button" id="cancel-exit-btn" onclick="hide(document.getElementById('confirm-exit-div'));" value="Cancel"/>
+        </div>
+    </div>
+    <div id="license-div">
+        <div class="center-div-horizontal">
+            {% include 'license-popup.html' %}
+        </div>
+    </div>
+    <div id="disclaimer-div">
+        <div class="center-div-horizontal">
+            {% include 'disclaimer-popup.html' %}
         </div>
     </div>

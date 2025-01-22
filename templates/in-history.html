@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ app_name }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/fonts.css?v={{ buster }}">
+    <link rel="stylesheet" type="text/css" href="/static/in-history.css?v={{ buster }}">
+    <link rel="stylesheet" type="text/css" href="/static/hydra.css?v={{ buster }}">
+    <link rel="stylesheet" type="text/css" href="/static/hydra-in.css?v={{ buster }}">
+    <script type="text/javascript" src="/static/crypto_key.js?v={{ buster }}"></script>
+    <script type="text/javascript" src="/static/crypto.js?v={{ buster }}"></script>
+    <script type="text/javascript" src="/static/universal.js?v={{ buster }}"></script>
+    <script type="text/javascript" src="/static/in-history.js?v={{ buster }}"></script>
+</head>
+
+<body onload="finishedLoad();">
+    <div id="maindiv">
+        <h1>My Stats</h1>
+        <div id="history-div">
+        </div>
+    </div>
+
+    {% include 'in-menus.html' %}
+
+    {% include 'in-create-event-window.html' %}
+
+    {% include 'all-processing.html' %}
+</body>
