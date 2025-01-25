@@ -156,7 +156,7 @@ async function displayEventsTable(events, table, tbody, level, header, future) {
             const goto = document.createElement('td');
             const gotoi = document.createElement('img');
             gotoi.src = 'static/start.png';
-            gotoi.setAttribute("onclick", "gotoEvent('" + event.id + "');");
+            gotoi.setAttribute("onclick", "gotoEvent('" + event.inviteCode + "', this);");
             gotoi.setAttribute('title', "Go To Event");
             gotoi.className = 'clickable';
             goto.appendChild(gotoi);
@@ -314,4 +314,28 @@ async function confirmDelete() {
 
 async function attend(code) {
     navigate('/attend/' + code);
+};
+
+async function gotoEvent(id, o) {
+    sessionStorage.setItem('eventAdmin', id);
+
+    const event = {
+        "inviteCode": o.parentElement.parentElement.children[15].children[0].value,
+        "name": o.parentElement.parentElement.children[0].innerHTML,
+        "startDate": o.parentElement.parentElement.children[5].innerHTML,
+        "startTime": o.parentElement.parentElement.children[6].innerHTML,
+        "endDate": o.parentElement.parentElement.children[7].innerHTML,
+        "endTime": o.parentElement.parentElement.children[8].innerHTML,
+        "location": o.parentElement.parentElement.children[4].innerHTML,
+        "maxAttendees": o.parentElement.parentElement.children[9].innerHTML,
+        "cost": o.parentElement.parentElement.children[11].innerHTML,
+        "sku": o.parentElement.parentElement.children[12].innerHTML,
+        "id": o.parentElement.parentElement.children[1].innerHTML,
+        "lastDayToCancel": o.parentElement.parentElement.children[18].innerHTML,
+        "stripePriceId": o.parentElement.parentElement.children[20].innerHTML,
+    };
+
+    sessionStorage.setItem('currentEvent', JSON.stringify(event));
+
+    navigate("/eventadmin");
 };

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ app_name }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/fonts.css?v={{ buster }}">
+    <link rel="stylesheet" type="text/css" href="/static/in-event.css?v={{ buster }}">
+    <link rel="stylesheet" type="text/css" href="/static/hydra.css?v={{ buster }}">
+    <link rel="stylesheet" type="text/css" href="/static/hydra-in.css?v={{ buster }}">
+    <script type="text/javascript" src="/static/crypto_key.js?v={{ buster }}"></script>
+    <script type="text/javascript" src="/static/crypto.js?v={{ buster }}"></script>
+    <script type="text/javascript" src="/static/universal.js?v={{ buster }}"></script>
+    <script type="text/javascript" src="/static/in-event.js?v={{ buster }}"></script>
+</head>
+
+<body onload="finishedLoad();">
+    <div id="maindiv">
+        <h1 id="event-admin-header">Event</h1>
+        <div id="event-admin-div">
+            <div id="event-days-until-start"></div>
+            <div id="check-in-div">
+                <input type="button" id="check-in-btn" value="Check In Attendee" onclick="check_in();"/>
+            </div>
+            <div>
+                <h3 id="attendees-list-header">Attendees</h3>
+                <table id="attendees-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Unique Id
+                            </th>
+                            <th>
+                                User Type Id
+                            </th>
+                            <th>
+                                User Type
+                            </th>
+                            <th>
+                                Badge Number
+                            </th>
+                            <th>
+                                Check In
+                            </th>
+                            <th>
+                                Receipt
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendees-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="check-in-modal-div">
+        <h1>Check In Attendee</h1>
+        <div>
+            <span class="label">Badge Number:</span><input type="text" id="attendee-badge-number" placeholder="Badge Number" />
+        </div>
+        <div>
+            <span id="attendee-check-in-msg">&nbsp;</span>
+        </div>
+        <div id="check-in-btn-div">
+            <input type="button" id="check-in-confirm-btn" value="Check In" onclick="check_in_confirm();" />
+            <input type="button" id="check-in-cancel-btn" value="Cancel" onclick="hide(document.getElementById('check-in-modal-div'));" />
+        </div>
+    </div>
+
+    {% include 'in-menus.html' %}
+
+    {% include 'in-create-event-window.html' %}
+
+    {% include 'all-processing.html' %}
+</body>

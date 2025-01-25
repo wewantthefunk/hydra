@@ -391,6 +391,53 @@ def get_event(invite: str, encrypt: str):
     
     return {'message': e, 'result': constants.RESULT_OK}
 
+def get_event_attendees(invite: str, encrypt: str):
+    i = decrypt_string(invite, encrypt)
+
+    attendees = dataaccess.get_event_attendees(i)
+
+    a = '{"attendees":['
+    first = True
+
+    for attendee in attendees:
+        if not first:
+            a = a + ","
+        a = a + '{"name":"' + attendee.name + '",'
+        a = a + '"email":"' + attendee.email + '",'
+        a = a + '"badgeNumber":"' + attendee.badgeNumber + '",'
+        a = a + '"uniqueId":"' + attendee.uniqueId + '",'
+        a = a + '"userType":' + str(attendee.userType) + ','
+        a = a + '"receiptUrl":"' + attendee.recieptUrl + '"'
+        a = a + "}"
+
+        first = False
+
+    a = a + "]}"
+
+    return {'message': a, 'result': constants.RESULT_OK}
+
+def check_in_attendee(invite: str, badge_number: str, encrypt: str):
+    i = decrypt_string(invite, encrypt)
+    b = decrypt_string(badge_number, encrypt)
+
+    # Get the current date and time
+    now = datetime.now()
+
+    # Format the date as YYYY-MM-DD
+    formatted_date = now.strftime("%Y-%m-%d")
+
+    # Format the time as HH:MM (24-hour format)
+    formatted_time = now.strftime("%H:%M")
+
+    result = dataaccess.check_in_attendee(b, i, formatted_date, formatted_time)
+
+    if result:
+        return {'message': 'Check In Successful', 'result': constants.RESULT_OK}
+    
+    return {'message': 'Unable to Check In', 'result': constants.RESULT_INVALID_REQUEST}
+
+
+
 def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
     s = decrypt_string(sku, encrypt)
     q = decrypt_string(quantity, encrypt)
@@ -407,7 +454,7 @@ def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
                 cost = price['price']
                 break
 
-        if cost == 0.0:
+        if float(cost) == 0.0:
             return {"url":'success.html','sessionId':constants.FREE_EVENT_RECEIPT,'message':'checkout complete','result': constants.RESULT_OK}
 
         stripe.api_key = stripe_api_key['stripe-test']

@@ -45,6 +45,15 @@ class Event:
         self.organizer_as_attendee = organizer_as_attendee
         self.price_id = price_id
 
+class Attendee:
+    def __init__(self, name, email, uniqueId, userType, badgeNumber, receiptUrl):
+        self.name = name
+        self.email = email
+        self.uniqueId = uniqueId
+        self.userType = userType
+        self.badgeNumber = badgeNumber
+        self.recieptUrl = receiptUrl
+
 def get_all_users() -> List[User]:
     result = []
 
@@ -797,6 +806,64 @@ def get_event(invite: str) -> Event:
     conn.close()
 
     return result
+
+def get_event_attendees(invite: str) -> List[Attendee]:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    # Retrieve all users
+    CURSOR.execute("SELECT * FROM events WHERE code = '" + invite + "'")
+    rows = CURSOR.fetchall()
+
+    result = []
+
+    for row in rows:
+        sql = "select a.badgeNumber, a.receiptUrl, u.username, u.email, u.uniqueId, u.userType from attendees a inner join users u on u.id = a.userId where a.attending = 1 and u.isActive = 1 and a.eventId = " + str(row[constants.EVENT_ID_COL]) + " ORDER BY u.username"
+        CURSOR.execute(sql)
+        cu = CURSOR.fetchall()
+
+        for c in cu:
+            attendee = Attendee(
+                            c[2],
+                            c[3],
+                            c[4],
+                            str(c[5]),
+                            c[0],
+                            c[1]
+                        )
+            
+            result.append(attendee)
+
+    CURSOR.close()
+    conn.close()
+
+    return result
+
+def check_in_attendee(badge_number: str, invite: str, check_in_date: str, check_in_time: str):
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    sql = "SELECT a.eventId, a.userId FROM attendees a INNER JOIN events e ON a.eventId = e.id WHERE a.badgeNumber = '" + badge_number + "' AND e.code = '" + invite + "'"
+    CURSOR.execute(sql)
+    rows = CURSOR.fetchall()
+
+    if len(rows) < 1:
+        return False
+    
+    sql = "INSERT INTO checkin (eventId, checkInDate, checkInTime, attendeeId) VALUES (" + str(rows[0][0]) + ",'" + check_in_date + "','" + check_in_time + "'," + str(rows[0][1]) + ")"
+
+    CURSOR.execute(sql)
+
+    conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return True
 
 def delete_event(user_id: int, event_id: int):
     conn = sqlite3.connect(constants.DB_LOCATION)

@@ -76,8 +76,8 @@ async function getPaymentInfo() {
 
     JsBarcode("#barcode", attend_result['badge_number'], {
         fontSize: 20,
-        background: "royalblue",
-        lineColor: "#ffffff",
+        background: "#fff",
+        lineColor: "#000",
         margin: 20,
         marginLeft: 20
     });

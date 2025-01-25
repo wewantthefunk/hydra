@@ -1,0 +1,87 @@
+#event-admin-div {
+    width:80%;
+    margin-left:20px;
+    font-family: 'Lato', sans-serif;
+}
+
+#attendees-table {
+    /* Apply borders to the bottom of each row and the right of each cell */
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#attendees-list-header,
+#check-in-div,
+#check-in-btn-div{
+    margin-bottom: 10px;
+    margin-top:30px;
+}
+
+#attendees-table tr>td:nth-child(3), 
+#attendees-table tr>th:nth-child(3),
+#attendees-table tr>td:nth-child(4), 
+#attendees-table tr>th:nth-child(4),
+#check-in-div {
+    display: none;
+}
+
+#attendees-table td,
+#attendees-table th {
+    border-bottom: 1px solid #333;
+    border-right: 1px solid #333;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 5px;
+    text-align: center;
+}
+
+#attendees-table th {
+    background-color: royalblue;
+    color: #fff;
+}
+
+#attendees-table tr>td:first-child, 
+#attendees-table tr>th:first-child {
+    border-left: 1px solid #333;
+}
+
+#attendees-table tr:first-child > th {
+    border-top: 1px solid #333;
+}
+
+#attendees-table img {
+    width: 30px;
+    height: 30px;
+}
+
+#check-in-modal-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding:20px;
+    background-color: aliceblue;
+    color: #333;
+    max-height: 190px;
+    height: 190px;
+    min-height: 190px;
+    margin-top: -95px;
+    margin-left: -200px;
+    box-shadow: 5px 5px 5px #999;
+    max-width: 400px;
+    width: 400px;
+    min-width:400px;
+    display:none;
+}
+
+input[type="text"] {
+    border-radius: 7px;
+    padding: 5px;
+    background-color: #fff;
+}
+
+.label {
+    margin-right: 10px;
+}

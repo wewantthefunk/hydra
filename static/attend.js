@@ -61,8 +61,8 @@ async function finishedLoad() {
     if (isValueNotEmpty(attend_info['badge_number'])) {
         JsBarcode("#barcode", attend_info['badge_number'], {
             fontSize: 20,
-            background: "royalblue",
-            lineColor: "#ffffff",
+            background: "#fff",
+            lineColor: "#000",
             margin: 20,
             marginLeft: 20
         });
@@ -153,8 +153,8 @@ async function confirmSkip() {
 function showReceipt() {
     // Define the url and size of the window
     var url = RECEIPT_URL;
-    var winWidth = 650;
-    var winHeight = 950;
+    var winWidth = RECEIPT_WINDOW_WIDTH;
+    var winHeight = RECEIPT_WINDOW_HEIGHT;
 
     // Create a new browser window with the specified URL and size
     window.open(url, "_blank", `width=${winWidth}, height=${winHeight}`);

@@ -40,6 +40,10 @@ def publicevents():
 def history():
     return render_template('in-history.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
 
+@app.route('/eventadmin')
+def event_admin():
+    return render_template('in-event-admin.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+
 @app.route('/attend/<invite>')
 def attend(invite):
     return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite, buster=utilities.generate_random_string(6,False))
@@ -160,7 +164,7 @@ def change_password():
 def getpublicevents():
     result = businesslogic.get_public_events()
 
-    return jsonify({'message': result['message']}), constants.RESULT_OK
+    return jsonify({'message': result['message'], 'result': constants.RESULT_OK}), constants.RESULT_OK
 
 @app.route('/p-info', methods=['POST'])
 def get_payment_info():
@@ -211,7 +215,7 @@ def mark_attended():
     
     result = businesslogic.mark_attended(processed_data['invite'], rt[1]['userId'], processed_data['receipt_id'], processed_data['receipt_num'], processed_data['receipt_url'], processed_data['e'])
 
-    return jsonify({'message': result['message'], 'badge_number': result['badge_number']}), result['result']
+    return jsonify({'message': result['message'], 'badge_number': result['badge_number'], 'result': result['result']}), result['result']
 
 @app.route('/mark-skipped', methods=['POST'])
 def mark_skipped():
@@ -263,7 +267,8 @@ def get_attendance_info():
                     'badge_number': result['badge_number'], 
                     'receipt_id': result['receipt_id'],
                     'receipt_num': result['receipt_num'],
-                    'receipt_url': result['receipt_url']
+                    'receipt_url': result['receipt_url'],
+                    'result': result['result']
                     }), result['result']
 
 @app.route('/create-checkout-session', methods=['POST'])
@@ -337,9 +342,58 @@ def get_event():
         
         result = businesslogic.get_event(processed_data['invite'], processed_data['e'])
 
-        return jsonify({'message': result['message']}), result['result']
+        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
 
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
+
+@app.route("/geteventattendees", methods=['POST'])
+def get_event_attendees():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'token': data.get('field1'),
+            'username': data.get('field2'),
+            'invite': data.get('field3'),
+            'e': data.get('e')
+        }
+
+        rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+        if not rt[0]:
+            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+        
+        result = businesslogic.get_event_attendees(processed_data['invite'], processed_data['e'])
+
+        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
+
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
+
+@app.route('/checkin', methods=['POST'])
+def check_in_to_event():
+    if request.is_json:
+        data = request.get_json()
+
+        # Process the JSON data here as needed
+        processed_data = {
+            'token': data.get('field1'),
+            'username': data.get('field2'),
+            'invite': data.get('field3'),
+            'badgeNumber': data.get('field4'),
+            'e': data.get('e')
+        }
+
+        rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
+
+        if not rt[0]:
+            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+        
+        result = businesslogic.check_in_attendee(processed_data['invite'], processed_data['badgeNumber'], processed_data['e'])
+
+        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
+
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 @app.route('/myevents', methods=['POST'])
 def my_events():
@@ -356,13 +410,13 @@ def my_events():
         rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], processed_data['e'])
 
         if not rt[0]:
-            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+            return jsonify({'message': rt[1]['message'], 'result': rt[1]['result']}), rt[1]['result']
         
         result = businesslogic.get_my_events(rt[1]['userId'])
 
-        return jsonify({'message': result['message']}), constants.RESULT_OK
+        return jsonify({'message': result['message'], 'result': constants.RESULT_OK}), constants.RESULT_OK
     
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 @app.route('/deleteevent', methods=['POST'])
 def delete_event():
@@ -380,13 +434,13 @@ def delete_event():
         rt = businesslogic.check_token_post(processed_data['token'], processed_data['username'], utilities.use_encrypt(processed_data['e']))
 
         if not rt[0]:
-            return jsonify({'message': rt[1]['message']}), rt[1]['result']
+            return jsonify({'message': rt[1]['message'], 'result': rt[1]['result']}), rt[1]['result']
         
         result = businesslogic.delete_event(rt[1]['userId'], processed_data['eventId'], processed_data['e'])
 
-        return jsonify({'message': result['message']}), result['result']
+        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
     
-    return jsonify({'message': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': 'Invalid Request', 'result': constants.RESULT_INVALID_REQUEST, 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -404,11 +458,11 @@ def login():
         result = businesslogic.login(processed_data['username'], processed_data['password'], processed_data['tempPassword'], utilities.use_encrypt(processed_data['e']))
 
         if result['result'] != constants.RESULT_OK:
-            return jsonify({'message': result['message']}), result['result']
+            return jsonify({'message': result['message'], 'result': result['result']}), result['result']
             
-        return jsonify({'message': 'Successful Login', 'token': result['token'], 'level': result['level'], 'uname': result['uname']}), constants.RESULT_OK
+        return jsonify({'message': 'Successful Login', 'token': result['token'], 'level': result['level'], 'uname': result['uname'], 'result': constants.RESULT_OK}), constants.RESULT_OK
     
-    return jsonify({'message': 'Invalid Request'}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': 'Invalid Request', 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 @app.route("/check", methods=['POST'])
 def checkToken():
@@ -424,9 +478,9 @@ def checkToken():
 
         result = businesslogic.check_token(processed_data['token'], processed_data['username'], utilities.use_encrypt(processed_data['e']))
         
-        return jsonify({'message': result['message']}), result['result']
+        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
     
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
     
 @app.route('/verifyaccount', methods=['POST'])
 def verifyaccount():
@@ -443,9 +497,9 @@ def verifyaccount():
 
         result = businesslogic.verify_account(processed_data['email'], processed_data['password'], processed_data['code'], utilities.use_encrypt(processed_data['e']))        
 
-        return jsonify({'message': result['message']}), result['result']
+        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
     
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 @app.route('/generateverify', methods=['POST'])
 def generateverify():
@@ -465,7 +519,7 @@ def generateverify():
 
             return jsonify({'message': 'Verification Email Sent', 'status': result['result'], 'result': result['message']}), result['result']
 
-    return jsonify({'message': "Invalid Request", 'message': result['message'], 'status': str(result['result'])}), result['result']
+    return jsonify({'result': result['result'], 'message': result['message'], 'status': str(result['result'])}), result['result']
 
 @app.route("/checkadmin", methods=['POST'])
 def checkAdminVerification():
@@ -482,9 +536,9 @@ def checkAdminVerification():
 
         result = businesslogic.check_admin(processed_data['username'], utilities.use_encrypt(processed_data['e']))
 
-        return jsonify({'message': result['message']}), result['result']
+        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
     
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 @app.route("/createaccount", methods=['POST'])
 def createaccount():
@@ -504,11 +558,11 @@ def createaccount():
         if result['result'] == constants.RESULT_OK:
             send_verification_email(result['email'], result['vcode'])
 
-            return jsonify({'message': "Account Creation Successful! You must verify your account before you can login. An email has been sent with your verification code. Click the 'Verify Account' link below and enter the code in the email."}), constants.RESULT_OK
+            return jsonify({'result': constants.RESULT_OK,'message': "Account Creation Successful! You must verify your account before you can login. An email has been sent with your verification code. Click the 'Verify Account' link below and enter the code in the email."}), constants.RESULT_OK
         
-        return jsonify({"message": result['message']}), result['result']
+        return jsonify({"message": result['message'], 'result': result['result']}), result['result']
     
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 @app.route('/createevent', methods=['POST'])
 def create_event():
@@ -544,12 +598,12 @@ def create_event():
         session = businesslogic.check_token_post(processed_data['token'], processed_data['uname'], processed_data['e'])
 
         if not session[0]:
-            return jsonify({'message': "User Not Authorized to Create Events"}), constants.RESULT_FORBIDDEN
+            return jsonify({'message': "User Not Authorized to Create Events", 'result': constants.RESULT_FORBIDDEN}), constants.RESULT_FORBIDDEN
         
         r = businesslogic.check_organizer_post(processed_data['uname'], processed_data['e'])
 
         if not r:
-            return jsonify({'message': "User Not Authorized to Create Events"}), constants.RESULT_FORBIDDEN
+            return jsonify({'message': "User Not Authorized to Create Events", 'result': constants.RESULT_FORBIDDEN}), constants.RESULT_FORBIDDEN
         
 
         r = businesslogic.create_new_event(session[1]['userId'],
@@ -574,9 +628,9 @@ def create_event():
                                            processed_data['stripePriceId'],                                          
                                            processed_data['e'])
 
-        return jsonify({'message': r['message']}), r['result']
+        return jsonify({'message': r['message'], 'result': r['result']}), r['result']
 
-    return jsonify({'message': "Invalid Request"}), constants.RESULT_INVALID_REQUEST
+    return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
 
 def send_verification_email(email: str, code: str):
     hostJson = utilities.load_json_file('private/url.json')

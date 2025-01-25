@@ -20,6 +20,12 @@ const SHOW_PASSWORD_IMAGE = 'static/reveal-static.png';
 const HIDE_PASSWORD_MESSAGE = 'Click to hide password';
 const SHOW_PASSWORD_MESSAGE = 'Click to show password';
 
+const RECEIPT_WINDOW_WIDTH = 650;
+const RECEIPT_WINDOW_HEIGHT = 950;
+
+const RESULT_OK = 200;
+const RESULT_ERROR = 400;
+
 async function postJsonToApi(url, data, errmsg) {
     if (!isValueValid(data['e'])) {
         data['e'] = IS_HTTPS;
@@ -33,15 +39,10 @@ async function postJsonToApi(url, data, errmsg) {
             body: JSON.stringify(data)
         });
 
-        /*if (!response.ok) {
-            const r = 
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }*/
-
         const jsonResponse = await response.json();
         return jsonResponse;
     } catch (error) {
-        return { "message": errmsg, "status": error.message };
+        return { "message": errmsg, "status": error.message, "result": RESULT_ERROR };
     }
 };
 
@@ -536,6 +537,26 @@ function isDate1LessThanOrEqual(dateString1, dateString2) {
     return date1 <= date2;
 };
 
+function getTimeDifference(jsonObject) {
+    const now = new Date();
+    const givenDateAndTime = new Date(`${jsonObject.date}T${jsonObject.time}`);
+
+    const diffInMs = givenDateAndTime - now;
+
+    if (diffInMs < 0) {
+        // Given date and time is in the past, return negative difference
+        const diffInDays = Math.floor(Math.abs(diffInMs) / (1000 * 60 * 60 * 24));
+        const diffInHours = Math.floor((Math.abs(diffInMs) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        return { days: -diffInDays, hours: -diffInHours };
+    } else {
+        // Given date and time is in the future, return positive difference
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+        const diffInHours = Math.floor((diffInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const diffInMinutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+        return { days: diffInDays, hours: diffInHours, minutes: diffInMinutes };
+    }
+};
+
 function julianDayOfYear(dateString) {
     // Parse input date from string format into Date object
     const date = new Date(dateString);
@@ -604,7 +625,7 @@ function isDateInPast(dateString) {
     return inputDate < currentDate;
 };
 
-function calcStripeFees(cost) {    
+function calcStripeFees(cost) {
     const c = parseFloat(cost);
     return c.toFixed(2);
     /*return ((c * 1.029) + .3).toFixed(2);*/

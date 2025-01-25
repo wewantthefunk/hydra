@@ -59,3 +59,7 @@
 #skip-confirm-hint {
     margin-top: 8px;
 }
+
+#barcode {
+    border: 1px solid #000;
+}

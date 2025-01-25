@@ -131,6 +131,11 @@ def create_sql(passphrase, email, adminName, vcode):
         (id INTEGER PRIMARY KEY, name TEXT, startDate DATE, endDate DATE, startTime TIME, endTime TIME, maxAttendees INTEGER, location TEXT, inviteType INTEGER, code TEXT)
     ''')
 
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS checkin
+        (id INTEGER PRIMARY KEY, eventId INTEGER, checkInDate DATE, checkInTime TIME, attendeeId INTEGER)
+    ''')
+
     cursor.execute("PRAGMA table_info(events)")
     columns = [column[1] for column in cursor.fetchall()]
 
