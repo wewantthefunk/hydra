@@ -4,6 +4,8 @@ let COUNTDOWN = 4;
 async function finishedLoad() {
     await universalFinishedLoad();
 
+    startProcessing();
+
     show(document.getElementById("attend-wait-msg-div"));
     hide(document.getElementById("attend-event-info-div"));
 
@@ -19,10 +21,17 @@ async function countdown() {
     if (COUNTDOWN > 0) {
         document.getElementById('countdown').innerHTML = '' + COUNTDOWN;
         setTimeout(countdown, 1000);
+    } else {
+        stopProcessing();
     }
 };
 
 async function getPaymentInfo() {
+    const event = JSON.parse(sessionStorage.getItem('currentEvent'));
+    navigate("/attend/" + event.inviteCode);
+};
+
+async function showPaymentInfo() {
     hide(document.getElementById("attend-wait-msg-div"));
     show(document.getElementById("attend-event-info-div"));
     startProcessing();

@@ -225,26 +225,34 @@ function closeAllModals() {
     toggleUserMenu();
 };
 
+function showOverlay() {
+    const overlay = document.getElementById("overlay");
+    if (isValueValid(overlay)) {
+        show(overlay);
+    }
+};
+
+function hideOverlay() {
+    const overlay = document.getElementById("overlay");
+    if (isValueValid(overlay)) {
+        hide(overlay);
+    }
+};
+
 function startProcessing() {
     const processing = document.getElementById("processing");
-    if (processing != null && processing != 'undefined') {
-        processing.style.display = 'block';
+    if (isValueValid(processing)) {
+        show(processing);
     }
-    const overlay = document.getElementById("overlay");
-    if (overlay != null && overlay != 'undefined') {
-        overlay.style.display = 'block';
-    }
+    showOverlay();
 };
 
 function stopProcessing() {
     const processing = document.getElementById("processing");
-    if (processing != null && processing != 'undefined') {
-        processing.style.display = 'none';
+    if (isValueValid(processing)) {
+        hide(processing);
     }
-    const overlay = document.getElementById("overlay");
-    if (overlay != null && overlay != 'undefined') {
-        overlay.style.display = 'none';
-    }
+    hideOverlay();
 };
 
 function getWindowSize() {

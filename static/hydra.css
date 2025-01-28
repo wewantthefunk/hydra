@@ -390,9 +390,6 @@ label {
 
 #license-div,
 #disclaimer-div {
-    max-width: 50%;
-    width: 50%;
-    min-width:50%;
     max-height: 400px;
     min-height: 400px;
     height: 400px;

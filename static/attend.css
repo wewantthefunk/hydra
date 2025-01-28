@@ -1,9 +1,12 @@
 #invite_code,
-#cancel-msg {
+#cancel-msg,
+#current-msg {
     display: none;
 }
 
-#already-attending-div, #attend-event-msg-div {
+#already-attending-div, 
+#attend-event-msg-div,
+#event-info-div {
     font-family: 'Lato', sans-serif;
 }
 
@@ -29,17 +32,40 @@
 
 #skip-event-div {
     background-color: aliceblue;
-    height:30%;
+    height:40%;
     width:30%;
     border:2px solid #333;
     border-radius: 5px;
     display: none;
     position: fixed;
-    top: 35%;
+    top: 30%;
     left: 35%;
     padding: 10px;
     box-shadow: 5px 5px 5px #999;
     font-family: 'Lato', sans-serif;
+}
+
+#confirm-event-div {
+    background-color: aliceblue;
+    height:50%;
+    width:50%;
+    border:2px solid #333;
+    border-radius: 5px;
+    display: none;
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    padding: 10px;
+    box-shadow: 5px 5px 5px #999;
+    font-family: 'Lato', sans-serif;
+    margin-bottom: 10px;
+}
+
+#terms {
+    margin-top: 10px;
+    max-height: 65%;
+    overflow: auto;
+    white-space: pre;
 }
 
 #skip-event-name {
@@ -62,4 +88,8 @@
 
 #barcode {
     border: 1px solid #000;
+}
+
+.topspacer {
+    margin-top: 15px;
 }

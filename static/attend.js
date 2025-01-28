@@ -76,9 +76,13 @@ async function finishedLoad() {
     }
 
     if (isDateInPast(event.lastCancel)) {
-        document.getElementById('skip').style.display = 'none';
+        hide(document.getElementById('skip'));
         document.getElementById("attend-last-cancel-date").innerHTML = event.lastCancel;
-        document.getElementById('cancel-msg').style.display = 'block';
+        show(document.getElementById('cancel-msg'));
+    }
+
+    if (isDateInPast(event.startDate) && !isDateInPast(event.endDate)) {
+        show(document.getElementById('current-msg'));
     }
 
     if (sessionStorage.getItem("refund") == '1') {
@@ -91,6 +95,10 @@ async function finishedLoad() {
 };
 
 async function attend() {
+    show(document.getElementById("confirm-event-div"));
+};
+
+async function confirmAttend() {
     document.getElementById('attend-event-msg').innerHTML = PLACEHOLDER;
 
     const token = await encryptWithPublicKey(sessionStorage.getItem('token'));

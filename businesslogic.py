@@ -532,7 +532,7 @@ def mark_skipped(invite: str, userid: str, encrypt: str):
     
     id = 'free'
 
-    if result[1] != '':
+    if result[1] != '' and result[1] != '0':
         stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
         stripe.api_key = stripe_api_key['stripe-test']
 
