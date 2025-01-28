@@ -3,6 +3,15 @@ import base64, sys, json
 from datetime import datetime
 import stripe
 
+def get_environment():
+    result = "test"
+
+    stripe_info = utilities.load_json_file('private/stripe-api-key.json')
+
+    result = stripe_info['environment']
+
+    return result
+
 def login(username: str, password: str, temp_password: str, encrypt: bool):
     tempPassword = decrypt_string(temp_password, encrypt)
     uname = decrypt_string(username, encrypt)
@@ -457,7 +466,7 @@ def checkout(full_url: str, sku: str, quantity: str, encrypt: str) -> str:
         if float(cost) == 0.0:
             return {"url":'success.html','sessionId':constants.FREE_EVENT_RECEIPT,'message':'checkout complete','result': constants.RESULT_OK}
 
-        stripe.api_key = stripe_api_key['stripe-test']
+        stripe.api_key = stripe_api_key['stripe-key']
 
         checkout_session = stripe.checkout.Session.create(
             line_items=[
@@ -485,7 +494,7 @@ def get_payment_info(sesssion_id: str, encrypt: str):
 
     stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
 
-    stripe.api_key = stripe_api_key['stripe-test']
+    stripe.api_key = stripe_api_key['stripe-key']
 
     session = stripe.checkout.Session.retrieve(
             sid,
@@ -501,7 +510,7 @@ def issue_refund(charge_id: str, encrypt: str):
 
     stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
 
-    stripe.api_key = stripe_api_key['stripe-test']
+    stripe.api_key = stripe_api_key['stripe-key']
 
     charge = stripe.Charge.retrieve(cid)
 
@@ -534,7 +543,7 @@ def mark_skipped(invite: str, userid: str, encrypt: str):
 
     if result[1] != '' and result[1] != '0':
         stripe_api_key = utilities.load_json_file("private/stripe-api-key.json")
-        stripe.api_key = stripe_api_key['stripe-test']
+        stripe.api_key = stripe_api_key['stripe-key']
 
         charge = stripe.Charge.retrieve(id=result[1])
 

@@ -401,6 +401,12 @@ async function universalFinishedLoad() {
     if (isValueValid(create_event_invite_code)) {
         create_event_invite_code.style.backgroundColor = "#aaa";
     }
+    
+    const env = document.getElementById('environment').innerHTML;
+    
+    if (env != 'prod') {
+        show_span(document.getElementById('testmode'));
+    }
 };
 
 async function outsideFinishedLoad() {

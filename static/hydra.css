@@ -404,3 +404,12 @@ label {
     display:none;
     white-space: pre;
 }
+
+#environment,
+#testmode {
+    display:none;
+}
+
+#history {
+    display:none;
+}

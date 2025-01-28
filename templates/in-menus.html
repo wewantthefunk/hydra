@@ -1,4 +1,5 @@
- <!--
+    <div id="environment">{{ environment }}</div>
+    <!--
         These are the semi-static elements and they need to be rendered last for the z-index
     -->
     <div id="leftmenu">
@@ -36,7 +37,7 @@
         </div>
     </div>
     <div id="heading">
-        <h2 onclick="home();" id="bannerhome">{{ app_name }}</h2>
+        <h2 onclick="home();" id="bannerhome">{{ app_name }}&nbsp;<span id="testmode">TEST MODE</span></h2>
         <span id="user" onclick="toggleUserMenu();"><span>Hello,&nbsp;</span><span id="mnu-username"></span><img id="userMenuImg" src="/static/menu.jpg"/></span>
         <input type="button" id="createEvent" onclick="createNewEvent();" value="Create" class="headerButton"/>
     </div>

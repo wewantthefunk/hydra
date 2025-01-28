@@ -10,7 +10,7 @@ def home():
 
 @app.route("/home")
 def landing():
-    return render_template('in-landing.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template('in-landing.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route("/newuser")
 def newuser():
