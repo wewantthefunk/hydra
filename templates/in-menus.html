@@ -71,3 +71,13 @@
             {% include 'disclaimer-popup.html' %}
         </div>
     </div>
+    <div id="autoLogoutWarning">
+        <div class="center-div-horizontal">
+            <h1>You will be automatically logged out in 1 minute</h1>
+            <div>Press the button below to remain logged in</div>
+            <div class="topspacer">
+                <input type="button" id="stay-logged-in" value="Stay Logged In" onclick="stayLoggedIn();" />
+                <input type="button" id="log-out-now" value="Log Out Now" onclick="confirmExit();" />
+            </div>
+        </div>
+    </div>

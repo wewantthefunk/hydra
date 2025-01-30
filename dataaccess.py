@@ -206,6 +206,20 @@ def create_user_session(jdate: int, uname: str, token: str) -> bool:
 
     return True
 
+def update_token(token: str, uname: str) -> bool:
+    conn = sqlite3.connect(constants.DB_LOCATION)
+
+    # Create a cursor object
+    CURSOR = conn.cursor()
+
+    CURSOR.execute("UPDATE session SET token = '" + token + "' WHERE username = '" + uname + "'")
+    conn.commit()
+
+    CURSOR.close()
+    conn.close()
+
+    return True
+
 def get_user_by_email_or_username(email: str, username: str) -> List[User]:
     conn = sqlite3.connect(constants.DB_LOCATION)
 

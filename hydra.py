@@ -473,12 +473,20 @@ def checkToken():
         processed_data = {
             'token': data.get('field1'),
             'username': data.get('field2'),
-            'e': data.get('e')
+            'e': data.get('e'),
+            'tempPassword': data.get('tp')
         }
 
         result = businesslogic.check_token(processed_data['token'], processed_data['username'], utilities.use_encrypt(processed_data['e']))
+
+        token = businesslogic.decrypt_value(processed_data['token'], processed_data['e'])
+
+        if result['result'] == constants.RESULT_OK:        
+            token = businesslogic.get_new_token(processed_data['username'], processed_data['e'])
         
-        return jsonify({'message': result['message'], 'result': result['result']}), result['result']
+        newtoken = businesslogic.encrypt_symmetric_string(token, businesslogic.decrypt_value(processed_data['tempPassword'], processed_data['e']), processed_data['e'])
+
+        return jsonify({'message': result['message'], 'result': result['result'], 'nt': newtoken}), result['result']
     
     return jsonify({'message': "Invalid Request", 'result': constants.RESULT_INVALID_REQUEST}), constants.RESULT_INVALID_REQUEST
     

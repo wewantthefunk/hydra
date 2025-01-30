@@ -34,12 +34,19 @@ def login(username: str, password: str, temp_password: str, encrypt: bool):
         jdate = utilities.date_to_julian(datetime.now())
         result = dataaccess.create_user_session(jdate, uname, token)
         if (result):
-            tp = decrypt_symmetric_string(token, tempPassword, encrypt)
+            tp = encrypt_symmetric_string(token, tempPassword, encrypt)
             return {'result': constants.RESULT_OK, 'token': tp, 'level': level, 'uname': rows[0].username}
         else:
             return {"message": "Server Error", 'result': constants.RESULT_UNVERIFIED_ACCOUNT }
     else:
         return {'message': 'Invalid Username and Password', 'result': constants.RESULT_FORBIDDEN }
+    
+def get_new_token(uname: str, encrypt: bool) -> str:
+    u = decrypt_string(uname, encrypt)
+    token = utilities.generate_random_string(15)
+    dataaccess.update_token(token, u)
+
+    return token
     
 def create_account(email: str, password: str, username: str, encrypt: bool):
     email = decrypt_string(email, encrypt=encrypt)
@@ -131,6 +138,9 @@ def verify_account(email: str, password: str, code: str, encrypt: bool):
 
     return result
 
+def decrypt_value(val: str, encrypt: bool) -> str:
+    return decrypt_string(val, encrypt)
+
 def check_token(token: str, username: str, encrypt: bool):
     t = decrypt_string(token, encrypt)
     u = decrypt_string(username, encrypt)
@@ -197,7 +207,7 @@ def decrypt_string(s: str, encrypt: bool = False) -> str:
     
     return s
 
-def decrypt_symmetric_string(s: str, p: str, encrypt: bool = False) -> str:
+def encrypt_symmetric_string(s: str, p: str, encrypt: bool = False) -> str:
     e = utilities.str_to_bool(str(encrypt))
 
     if e:

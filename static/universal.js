@@ -1,5 +1,6 @@
 let isUserMenuVisible = false;
 let userMenuOpened = false;
+let ACTIVE_OK = true;
 
 const PLACEHOLDER = "&nbsp;";
 const SUCCESS_LOGIN_MSG = 'Successful Login';
@@ -30,6 +31,14 @@ async function postJsonToApi(url, data, errmsg) {
     if (!isValueValid(data['e'])) {
         data['e'] = IS_HTTPS;
     }
+    if (!isValueValid(data['tp'])) {
+        data['tp'] = generateRandomString(12);
+    }
+
+    const tp = data['tp'];
+
+    data['tp'] = await encryptWithPublicKey(tp);
+
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -40,6 +49,12 @@ async function postJsonToApi(url, data, errmsg) {
         });
 
         const jsonResponse = await response.json();
+
+        if (isValueValid(jsonResponse['nt'])) {
+            const token = await decryptString(jsonResponse['nt'], tp);
+
+            sessionStorage.setItem('token', token);
+        }
         return jsonResponse;
     } catch (error) {
         return { "message": errmsg, "status": error.message, "result": RESULT_ERROR };
@@ -407,6 +422,38 @@ async function universalFinishedLoad() {
     if (env != 'prod') {
         show_span(document.getElementById('testmode'));
     }
+
+    ACTIVE_OK = true;
+
+    setTimeout(async () => {
+        await autoLogoutWarn();},
+        300000
+    );
+};
+
+async function autoLogoutWarn() {
+    show(document.getElementById('autoLogoutWarning'));
+    ACTIVE_OK = false;
+    setTimeout(async () => {
+        await autoLogout();},
+        60000
+    );
+};
+
+async function stayLoggedIn() {
+    hide(document.getElementById('autoLogoutWarning'));
+    ACTIVE_OK = true;
+    setTimeout(async () => {
+        await autoLogoutWarn();},
+        300000
+    );
+};
+
+async function autoLogout() {
+    if (ACTIVE_OK) {
+        return;
+    }
+    confirmExit();
 };
 
 async function outsideFinishedLoad() {
