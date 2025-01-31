@@ -26,35 +26,35 @@ def verify():
 
 @app.route("/account")
 def account():
-    return render_template("in-account.html", app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template("in-account.html", app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route("/admin")
 def admin():
-    return render_template("in-admin.html", app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template("in-admin.html", app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route("/publicevents")
 def publicevents():
-    return render_template('in-public-events.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template('in-public-events.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route("/history")
 def history():
-    return render_template('in-history.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template('in-history.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route('/eventadmin')
 def event_admin():
-    return render_template('in-event-admin.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template('in-event-admin.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route('/attend/<invite>')
 def attend(invite):
-    return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite, buster=utilities.generate_random_string(6,False))
+    return render_template('in-attend-event.html', app_name=constants.APP_NAME, invite_code=invite, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route('/create-checkout-session/success.html')
 def create_checkout_session_success():
-    return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route('/attend/success.html')
 def create_attend_checkout_session_success():
-    return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False))
+    return render_template('in-checkout-success.html', app_name=constants.APP_NAME, buster=utilities.generate_random_string(6,False), environment=businesslogic.get_environment())
 
 @app.route('/getme', methods=['POST'])
 def get_me():
