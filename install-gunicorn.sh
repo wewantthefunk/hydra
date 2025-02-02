@@ -3,16 +3,25 @@
 sudo apt update
 sudo apt upgrade -y
 sudo apt autoremove -y
-sudo apt install nginx -y
-sudo apt install jq -y
 
-# activate the virtual environment
+sudo apt install python-is-python3 python3.10-venv -y
+
+# create the python virtual environment
+python -m venv hydra-env
 
 source hydra-env/bin/activate
 
+# install dependencies in the virtual environment
+pip install cryptography
+pip install flask
+pip install flask_mail
+pip install wheel
+pip install jdcal
+pip install stripe
+
 # configure gunicorn
 
-sudo pip install gunicorn
+pip install gunicorn
 
 current_dir=$(pwd)
 
