@@ -25,8 +25,18 @@ pip install stripe
 # install the configuration for the the hydra application
 python admin/install.py false
 
+stripe_key_file="private/stripe-api-key.json"
+
+echo "{" > ${stripe_key_file}
+echo "  \"stripe-key\": \"\"," >> ${stripe_key_file}
+echo "  \"environment\": \"test\"," >> ${stripe_key_file}
+echo "  \"prices\": [" >> ${stripe_key_file}
+echo "  ]" >> ${stripe_key_file}
+echo "}" >> ${stripe_key_file}
+
 echo "Your Hydra server is ready to run"
 echo "For development and testing purposes, you can execute the ./start-dev.sh script"
 echo ""
 echo "For a production environment, install gunicorn and nginx"
 echo "  the ./install-gunicorn.sh script is included to aid in this on Debian based systems"
+echo "Edit the private/stripe-api-key.json file with your Stripe information"
