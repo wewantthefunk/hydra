@@ -18,6 +18,7 @@ pip install flask_mail
 pip install wheel
 pip install jdcal
 pip install stripe
+pip install jq
 
 # configure gunicorn
 
