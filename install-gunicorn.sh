@@ -4,7 +4,7 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt autoremove -y
 
-sudo apt install python-is-python3 python3.10-venv -y
+sudo apt install python-is-python3 python3.10-venv jq -y
 
 # create the python virtual environment
 python -m venv hydra-env
@@ -18,7 +18,6 @@ pip install flask_mail
 pip install wheel
 pip install jdcal
 pip install stripe
-pip install jq
 
 # configure gunicorn
 
