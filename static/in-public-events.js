@@ -21,54 +21,54 @@ function displayEventsTable(events) {
         // Create a <td> element for the 'name' column and append it to the row
         const nameCell = document.createElement('td');
         nameCell.textContent = event.name;
-        nameCell.className = "primarybackgroundcolor tertiarytextcolor";
+        nameCell.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(nameCell);
 
         // Create a <td> element for the 'id' column and append it to the row
         const idCell = document.createElement('td');
         idCell.textContent = event.id;
-        idCell.className = "primarybackgroundcolor tertiarytextcolor";
+        idCell.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(idCell);
 
         const locationCell = document.createElement('td');
         locationCell.textContent = event.location;
-        locationCell.className = "primarybackgroundcolor tertiarytextcolor";
+        locationCell.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(locationCell);
 
         const startDateCell = document.createElement('td');
         startDateCell.textContent = event.startDate;
-        startDateCell.className = "primarybackgroundcolor tertiarytextcolor";
+        startDateCell.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(startDateCell);
 
         const startTimeeCell = document.createElement('td');
         startTimeeCell.textContent = event.startTime;
-        startTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
+        startTimeeCell.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(startTimeeCell);
 
         const endDateCell = document.createElement('td');
         endDateCell.textContent = event.endDate;
-        endDateCell.className = "primarybackgroundcolor tertiarytextcolor";
+        endDateCell.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(endDateCell);
 
         const endTimeeCell = document.createElement('td');
         endTimeeCell.textContent = event.endTime;
-        endTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
+        endTimeeCell.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(endTimeeCell);
 
         const max = document.createElement('td');
         max.textContent = event.maxAttendees;
-        max.className = "tertiarytextcolor";
+        max.className = "primarytextcolor";
         row.appendChild(max);
 
         const current = document.createElement('td');
         const spotsLeft = parseInt(event.maxAttendees) - parseInt(event.currentAttendees);
         current.textContent = String(spotsLeft);
-        current.className = "primarybackgroundcolor tertiarytextcolor";
+        current.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(current);
 
         const cost = document.createElement('td');
         cost.textContent = String(event.cost);
-        cost.className = "primarybackgroundcolor tertiarytextcolor";
+        cost.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(cost);
 
         const attend = document.createElement('td');
@@ -80,11 +80,11 @@ function displayEventsTable(events) {
             cal.className = 'clickable';
             attend.appendChild(cal);
         }
-        attend.className = "primarybackgroundcolor tertiarytextcolor";
+        attend.className = "secondarybackgroundcolor primarytextcolor";
         row.appendChild(attend);
 
         const link = document.createElement('td');
-        link.className = "tertiarytextcolor";
+        link.className = "primarytextcolor";
         const code = document.createElement('input');
         code.setAttribute('type', 'text');
         code.setAttribute('readonly', 'readonly');
@@ -97,7 +97,7 @@ function displayEventsTable(events) {
         copy.src = 'static/copy.png';
         copy.setAttribute("onclick", "copyToClipboard('i-" + event.inviteCode + "', window.location.origin + '/attend/');");
         copy.setAttribute('title', "Copy Event Link");
-        copy.className = 'clickable primarybackgroundcolor tertiarytextcolor';
+        copy.className = 'clickable secondarybackgroundcolor primarytextcolor';
         //copy.style.position = "fixed";
         link.appendChild(code);
         link.appendChild(copy);
