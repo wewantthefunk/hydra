@@ -8,7 +8,6 @@ h1 {
     font-weight: bold;
     font-size: larger;
     font-family: 'Lato', sans-serif;
-    color: royalblue;
 }
 
 h2 {
@@ -22,7 +21,6 @@ h3 {
     font-weight: bold;
     font-size: larger;
     font-family: 'Lato', sans-serif;
-    color: royalblue;
     padding:0;
     margin:0;
 }
@@ -49,6 +47,18 @@ select {
     border-radius: 7px;
     padding: 5px;
     background-color: #fff;
+}
+
+.primarytextcolor {
+    color: royalblue;
+}
+
+.primarybackgroundcolor {
+    background-color: royalblue;
+}
+
+.tertiarytextcolor {
+    color: #fff;
 }
 
 #text-copy-temp {
@@ -138,7 +148,6 @@ label {
     width: 100%;
     min-width: 100%;
     max-width: 100%;
-    background-color: royalblue;
     border-bottom: 1px solid #333;
     position: fixed;
     padding-left: 5px;
@@ -164,7 +173,6 @@ label {
 
 .nonHeaderButton {
     color: #fff;
-    background-color: royalblue;
 }
 
 #bannerhome:hover {
@@ -204,7 +212,6 @@ label {
 
 .closeModal {
     border: 1px solid #333;
-    background-color: royalblue;
     padding-left: 2px;
     padding-right: 2px;
     padding-top: 1px;
@@ -366,7 +373,6 @@ label {
     border: 1px solid #333;
     border-radius: 8px;
     padding:20px;
-    background-color: royalblue;
     color: #fff;
     max-height: 65px;
     height: 65px;
@@ -403,10 +409,6 @@ label {
 
 #confirm-exit-div input[type="button"] {
     margin-top: 8px;
-}
-
-#confirm-exit-div div {
-    background-color: royalblue;
 }
 
 #license-div,

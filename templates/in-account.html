@@ -16,20 +16,20 @@
 
 <body onload="finishedLoad();">
     <div id="maindiv">
-        <h1>Account Information</h1>
+        <h1 class="primarytextcolor">Account Information</h1>
         <div>
             <table>
                 <tbody id="account-info-table-body">
                     <tr>
-                        <td><span class='label'>UserName</span></td>
+                        <td><span class='label primarytextcolor'>UserName</span></td>
                         <td><input type="text" id='account-username' placeholder="Username" onblur="checkRequired(this);"></span></td>
                     </tr>
                     <tr>
-                        <td><span class='label'>Email</span></td>
+                        <td><span class='label primarytextcolor'>Email</span></td>
                         <td><input type="text" id="account-email" placeholder="Email"></td>
                     </tr>
                     <tr>
-                        <td><span class="padding-chars">WWW----</span><span class='label'>Account Type</span></td>
+                        <td><span class="padding-chars">WWW----</span><span class='label primarytextcolor'>Account Type</span></td>
                         <td><span id='account-type'></span></td>
                     </tr>
                     <tr>
@@ -39,26 +39,26 @@
                 </tbody>
             </table>
         </div>
-        <h1 id="account-security-header">Account Security</h1>
+        <h1 class="primarytextcolor" id="account-security-header">Account Security</h1>
         <div>
             <table>
                 <tbody id="account-security-table-body">
                     <tr>
-                        <td><span class='label'>Current Password</span></td>
+                        <td><span class='label primarytextcolor'>Current Password</span></td>
                         <td>
                             <input type='password' id='account-current-password'/>
                             <img src="static/reveal-static.png" id="account-current-password-reveal" title="Click to show current password"/>
                         </td>
                     </tr>
                     <tr>
-                        <td><span class='label'>New Password</span></td>
+                        <td><span class='label primarytextcolor'>New Password</span></td>
                         <td>
                             <input type='password' id='account-new-password'/>
                             <img src="static/reveal-static.png" id="account-new-password-reveal" title="Click to show new password"/>
                         </td>
                     </tr>
                     <tr>
-                        <td><span class='label'>Confirm New Password</span></td>
+                        <td><span class='label primarytextcolor'>Confirm New Password</span></td>
                         <td>
                             <input type='password' id='account-confirm-new-password'/>
                             <img src="static/reveal-static.png" id="account-confirm-new-password-reveal" title="Click to show new password confirmation"/>
@@ -78,11 +78,11 @@
             </table>
         </div>
         <div id="stats-div">
-            <h1>Stats</h1>
+            <h1 class="primarytextcolor">Stats</h1>
         </div>
     </div>
     <div id="update-account-password-div">
-        <h1>Enter your password to make changes to your account</h1>
+        <h1 class="primarytextcolor">Enter your password to make changes to your account</h1>
         <div>
             <input type="password" id="update-account-password" placeholder="Password" />
             <img src="static/reveal-static.png" id="update-account-password-reveal" title="Click to show password"/>

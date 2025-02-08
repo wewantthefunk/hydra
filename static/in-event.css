@@ -36,11 +36,6 @@
     text-align: center;
 }
 
-#attendees-table th {
-    background-color: royalblue;
-    color: #fff;
-}
-
 #attendees-table tr>td:first-child, 
 #attendees-table tr>th:first-child {
     border-left: 1px solid #333;

@@ -18,7 +18,7 @@
 <body onload="finishedLoad();">
     <div id="maindiv">
         <span id="invite_code">{{ invite_code }}</span>
-        <h1>Attend Event</h1>
+        <h1 class="primarytextcolor">Attend Event</h1>
         <div id="already-attending-div" class="hidden">
             <div id="already-attending-msg">
                 Already Attending
@@ -38,7 +38,7 @@
 
                 <body>
                     <tr>
-                        <td class="label">
+                        <td class="label primarytextcolor">
                             <span>Event:</span>
                         </td>
                         <td>
@@ -46,7 +46,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">
+                        <td class="label primarytextcolor">
                             <span>Start:</span>
                         </td>
                         <td>
@@ -56,7 +56,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">
+                        <td class="label primarytextcolor">
                             <span>End:</span>
                         </td>
                         <td>
@@ -66,7 +66,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">
+                        <td class="label primarytextcolor">
                             <span>Location:</span>
                         </td>
                         <td>
@@ -74,7 +74,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">
+                        <td class="label primarytextcolor">
                             <span>SKU:</span>
                         </td>
                         <td>
@@ -82,7 +82,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">
+                        <td class="label primarytextcolor">
                             <span>Cost:</span>
                         </td>
                         <td>
@@ -90,7 +90,7 @@
                         </td>
                     </tr>
                     <tr id="receipt_num_row">
-                        <td class="label" id="receipt_num_cell_1">
+                        <td class="label primarytextcolor" id="receipt_num_cell_1">
                             <span>Receipt #:</span>
                         </td>
                         <td id="receipt_num_cell_2">
@@ -112,7 +112,7 @@
     </div>
 
     <div id="skip-event-div">
-        <h1>Skip Event</h1>
+        <h1 class="primarytextcolor">Skip Event</h1>
         <div>
             Are you sure you want to skip this event?
         </div>
@@ -139,7 +139,7 @@
     </div>
 
     <div id="confirm-event-div">
-        <h1>Confirm Attendance</h1>
+        <h1 class="primarytextcolor">Confirm Attendance</h1>
         <div>By completing the attendance form, which may include monetary payment, you are agreeing to the Terms of Service.</div>
         <div id="terms">{% include 'disclaimer-text.html' %}</div>
         <div class="topspacer">

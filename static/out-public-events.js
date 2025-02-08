@@ -28,46 +28,57 @@ function displayEventsTable(events) {
         // Create a <td> element for the 'name' column and append it to the row
         const nameCell = document.createElement('td');
         nameCell.textContent = event.name;
+        nameCell.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(nameCell);
 
         // Create a <td> element for the 'id' column and append it to the row
         const idCell = document.createElement('td');
         idCell.textContent = event.id;
+        idCell.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(idCell);
 
         const locationCell = document.createElement('td');
         locationCell.textContent = event.location;
+        locationCell.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(locationCell);
 
         const startDateCell = document.createElement('td');
         startDateCell.textContent = event.startDate;
+        startDateCell.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(startDateCell);
 
         const startTimeeCell = document.createElement('td');
         startTimeeCell.textContent = event.startTime;
+        startTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(startTimeeCell);
 
         const endDateCell = document.createElement('td');
         endDateCell.textContent = event.endDate;
+        endDateCell.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(endDateCell);
 
         const endTimeeCell = document.createElement('td');
         endTimeeCell.textContent = event.endTime;
+        endTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(endTimeeCell);
 
         const max = document.createElement('td');
         max.textContent = event.maxAttendees;
+        max.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(max);
 
         const current = document.createElement('td');
         current.textContent = String(parseInt(event.maxAttendees) - parseInt(event.currentAttendees));
+        current.className = "primarybackgroundcolor tertiarytextcolor";
         row.appendChild(current);
 
         const allowAnonymous = document.createElement('td');
         allowAnonymous.textContent = event.allowAnonymousAttendees;
+        allowAnonymous.className = "tertiarytextcolor";
         row.appendChild(allowAnonymous);
 
         const attend = document.createElement('td');
+        attend.className = "primarybackgroundcolor tertiarytextcolor";
         const cal = document.createElement('img');
         cal.src = 'static/calendar.png';
         cal.setAttribute("onclick", "attend('" + event.inviteCode + "','" + event.name + "'," + event.allowAnonymousAttendees + ");");

@@ -47,14 +47,6 @@
     text-align: center;
 }
 
-#event-list th,
-#past-event-list th,
-#attendee-list th,
-#past-attendee-list th {
-    background-color: royalblue;
-    color: #fff;
-}
-
 /* Apply a border on the left of the first cell in each row */
 #event-list tr>td:first-child, 
 #event-list tr>th:first-child,

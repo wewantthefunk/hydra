@@ -69,18 +69,22 @@ async function showEventAttendees(invitecode) {
             // Create a <td> element for the 'name' column and append it to the row
             const nameCell = document.createElement('td');
             nameCell.textContent = attendee.name;
+            nameCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(nameCell);
 
             const emailCell = document.createElement('td');
             emailCell.textContent = attendee.email;
+            emailCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(emailCell);
 
             const uniqueIdCell = document.createElement('td');
             uniqueIdCell.textContent = attendee.uniqueId;
+            uniqueIdCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(uniqueIdCell);
 
             const userTypeIdCell = document.createElement('td');
             userTypeIdCell.textContent = attendee.userType;
+            userTypeIdCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(userTypeIdCell);
 
             const userTypeCell = document.createElement('td');
@@ -93,22 +97,26 @@ async function showEventAttendees(invitecode) {
                 userType = USER_LEVEL_ADMIN_NAME;
             }
             userTypeCell.textContent = userType;
+            userTypeCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(userTypeCell);
 
             const badgeNumberCell = document.createElement('td');
             badgeNumberCell.textContent = attendee.badgeNumber;
+            badgeNumberCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(badgeNumberCell);
 
             const checkInLink = document.createElement('td');
+            checkInLink.className = "primarybackgroundcolor";
             const checkIn = document.createElement('img');
             checkIn.src = 'static/check-in.png';
             checkIn.setAttribute("onclick", "direct_check_in('" + attendee.badgeNumber + "');");
             checkIn.setAttribute('title', "Check In Attendee");
-            checkIn.className = 'clickable';
+            checkIn.className = 'clickable primarybackgroundcolor tertiarytextcolor';
             checkInLink.appendChild(checkIn);
             row.appendChild(checkInLink);
 
             const receipt = document.createElement('td');
+            receipt.className = "primarybackgroundcolor tertiarytextcolor";
             const receiptPaper = document.createElement('img');
             receiptPaper.src = 'static/receipt.png';
             receiptPaper.setAttribute("onclick", "showReceipt('" + attendee.receiptUrl + "');");

@@ -36,13 +36,13 @@
             </div>
         </div>
     </div>
-    <div id="heading">
+    <div class="primarybackgroundcolor" id="heading">
         <h2 onclick="home();" id="bannerhome">{{ app_name }}&nbsp;<span id="testmode">TEST MODE</span></h2>
         <span id="user" onclick="toggleUserMenu();"><span>Hello,&nbsp;</span><span id="mnu-username"></span><img id="userMenuImg" src="/static/menu.jpg"/></span>
         <input type="button" id="createEvent" onclick="createNewEvent();" value="Create" class="headerButton"/>
     </div>
     <div id="userMenu">
-        <span class="closeModal" onclick="toggleUserMenu();">x</span>
+        <span class="closeModal primarybackgroundcolor" onclick="toggleUserMenu();">x</span>
         <span id="menu_username"></span>
         <br/>
         <span id="menu_level"></span>
@@ -52,11 +52,11 @@
             <li onclick="exit();">Exit</li>
         </ul>
     </div>
-    <div id="confirm-exit-div">
-        <div>
+    <div id="confirm-exit-div" class="primarybackgroundcolor">
+        <div class="primarybackgroundcolor">
             <span>Are you sure you want to exit?</span>
         </div>
-        <div>
+        <div class="primarybackgroundcolor">
             <input type="button" id="confirm-exit-ok-btn" onclick="confirmExit();" value="Exit"/>
             <input type="button" id="cancel-exit-btn" onclick="hide(document.getElementById('confirm-exit-div'));" value="Cancel"/>
         </div>
@@ -73,7 +73,7 @@
     </div>
     <div id="autoLogoutWarning">
         <div class="center-div-horizontal">
-            <h1>You will be automatically logged out in 1 minute</h1>
+            <h1 class="primarytextcolor">You will be automatically logged out in 1 minute</h1>
             <div>Press the button below to remain logged in</div>
             <div class="topspacer">
                 <input type="button" id="stay-logged-in" value="Stay Logged In" onclick="stayLoggedIn();" />

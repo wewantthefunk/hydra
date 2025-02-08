@@ -20,10 +20,6 @@
     padding-top: 5px;
 }
 
-#event-list th {
-    background-color: royalblue;
-    color: #fff;
-}
 
 /* Apply a border on the left of the first cell in each row */
 #event-list tr>td:first-child, tr>th:first-child {

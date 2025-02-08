@@ -46,59 +46,73 @@ async function displayEventsTable(events, table, tbody, level, header, future) {
             // Create a <td> element for the 'name' column and append it to the row
             const nameCell = document.createElement('td');
             nameCell.textContent = event.name;
+            nameCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(nameCell);
 
             // Create a <td> element for the 'id' column and append it to the row
             const idCell = document.createElement('td');
             idCell.textContent = event.id;
+            idCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(idCell);
 
             const aaCell = document.createElement('td');
             aaCell.textContent = event.allowAnonymousAttendees;
+            aaCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(aaCell);
 
             const rsiCell = document.createElement('td');
             rsiCell.textContent = event.requireSignIn;
+            rsiCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(rsiCell);
 
             const locationCell = document.createElement('td');
             locationCell.textContent = event.location;
+            locationCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(locationCell);
 
             const startDateCell = document.createElement('td');
             startDateCell.textContent = event.startDate;
+            startDateCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(startDateCell);
 
             const startTimeeCell = document.createElement('td');
             startTimeeCell.textContent = event.startTime;
+            startTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(startTimeeCell);
 
             const endDateCell = document.createElement('td');
             endDateCell.textContent = event.endDate;
+            endDateCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(endDateCell);
 
             const endTimeeCell = document.createElement('td');
             endTimeeCell.textContent = event.endTime;
+            endTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(endTimeeCell);
 
             const max = document.createElement('td');
             max.textContent = event.maxAttendees;
+            max.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(max);
 
             const current = document.createElement('td');
             const spotsLeft = parseInt(event.maxAttendees) - parseInt(event.currentAttendees);
             current.textContent = String(spotsLeft);
+            current.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(current);
 
             const cost = document.createElement('td');
             cost.textContent = event.cost;
+            cost.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(cost);
 
             const sku = document.createElement('td');
             sku.textContent = event.sku;
+            sku.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(sku);
 
             const ed = document.createElement('td');
+            ed.className = "primarybackgroundcolor tertiarytextcolor";
             const cal = document.createElement('img');
             cal.src = 'static/edit.png';
             cal.setAttribute("onclick", "updateEvent(this.parentElement.parentElement);");
@@ -112,11 +126,12 @@ async function displayEventsTable(events, table, tbody, level, header, future) {
             deli.src = 'static/delete.png';
             deli.setAttribute("onclick", "delete_event(this.parentElement.parentElement);");
             deli.setAttribute('title', "Delete");
-            deli.className = 'clickable';
+            deli.className = 'clickable primarybackgroundcolor tertiarytextcolor';
             del.appendChild(deli);
             row.appendChild(del);
 
             const link = document.createElement('td');
+            link.className = "primarybackgroundcolor tertiarytextcolor";
             const code = document.createElement('input');
             code.setAttribute('type', 'text');
             code.setAttribute('readonly', 'readonly');
@@ -135,25 +150,31 @@ async function displayEventsTable(events, table, tbody, level, header, future) {
 
             const eventType = document.createElement('td');
             eventType.textContent = event.inviteType;
+            eventType.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(eventType);
 
             const paymentType = document.createElement('td');
             paymentType.textContent = event.paymentType;
+            paymentType.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(paymentType);
 
             const lastCancel = document.createElement('td');
             lastCancel.textContent = event.lastCancel;
+            lastCancel.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(lastCancel);
 
             const organizerAsAttendee = document.createElement('td');
             organizerAsAttendee.textContent = event.organizerAsAttendee;
+            organizerAsAttendee.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(organizerAsAttendee);
 
             const stripePriceCode = document.createElement('td');
             stripePriceCode.textContent = event.stripePriceCode;
+            stripePriceCode.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(stripePriceCode);
 
             const goto = document.createElement('td');
+            goto.className = "primarybackgroundcolor tertiarytextcolor";
             const gotoi = document.createElement('img');
             gotoi.src = 'static/start.png';
             gotoi.setAttribute("onclick", "gotoEvent('" + event.inviteCode + "', this);");
@@ -196,19 +217,23 @@ async function displayAttendeeTable(events, table, tbody, level, header, future)
             // Create a <td> element for the 'name' column and append it to the row
             const nameCell = document.createElement('td');
             nameCell.textContent = event.name;
+            nameCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(nameCell);
 
             // Create a <td> element for the 'id' column and append it to the row
             const idCell = document.createElement('td');
             idCell.textContent = event.id;
+            idCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(idCell);
 
             const aaCell = document.createElement('td');
             aaCell.textContent = event.allowAnonymousAttendees;
+            aaCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(aaCell);
 
             const rsiCell = document.createElement('td');
             rsiCell.textContent = event.requireSignIn;
+            rsiCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(rsiCell);
 
             const locationCell = document.createElement('td');
@@ -217,39 +242,47 @@ async function displayAttendeeTable(events, table, tbody, level, header, future)
 
             const startDateCell = document.createElement('td');
             startDateCell.textContent = event.startDate;
+            startDateCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(startDateCell);
 
             const startTimeeCell = document.createElement('td');
             startTimeeCell.textContent = event.startTime;
+            startTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(startTimeeCell);
 
             const endDateCell = document.createElement('td');
             endDateCell.textContent = event.endDate;
+            endDateCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(endDateCell);
 
             const endTimeeCell = document.createElement('td');
             endTimeeCell.textContent = event.endTime;
+            endTimeeCell.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(endTimeeCell);
 
             const max = document.createElement('td');
             max.textContent = event.maxAttendees;
+            max.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(max);
 
             const current = document.createElement('td');
             const spotsLeft = parseInt(event.maxAttendees) - parseInt(event.currentAttendees);
             current.textContent = String(spotsLeft);
+            current.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(current);
 
             const cost = document.createElement('td');
             cost.textContent = event.cost;
+            cost.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(cost);
 
             const sku = document.createElement('td');
             sku.textContent = event.sku;
+            sku.className = "primarybackgroundcolor tertiarytextcolor";
             row.appendChild(sku);
 
-            const link = document.createElement('td');
             const attend = document.createElement('td');
+            attend.className = "primarybackgroundcolor tertiarytextcolor";
             const cal = document.createElement('img');
             cal.src = 'static/calendar.png';
             cal.setAttribute("onclick", "attend('" + event.inviteCode + "');");
