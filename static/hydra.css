@@ -13,7 +13,6 @@ h2 {
     font-weight: bold;
     font-size: larger;
     font-family: 'Lato', sans-serif;
-    color: #fff;
 }
 
 h3 {
@@ -65,7 +64,7 @@ select {
 }
 
 .tertiarytextcolor {
-    color: #fff;
+    color: #eee;
 }
 
 #text-copy-temp {
@@ -161,7 +160,6 @@ label {
 }
 
 #user {
-    color: #fff;
     right: 15px;
     top: 15px;
     position: absolute;
@@ -364,7 +362,6 @@ label {
     border: 1px solid #333;
     border-radius: 8px;
     padding:20px;
-    color: #fff;
     max-height: 65px;
     height: 65px;
     min-height: 65px;

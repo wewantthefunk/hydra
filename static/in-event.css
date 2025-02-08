@@ -70,11 +70,11 @@
     display:none;
 }
 
-input[type="text"] {
+/*input[type="text"] {
     border-radius: 7px;
     padding: 5px;
     background-color: #fff;
-}
+}*/
 
 .label {
     margin-right: 10px;

@@ -30,7 +30,6 @@
 }
 
 #skip-event-div {
-    background-color: aliceblue;
     height:40%;
     width:30%;
     border:2px solid #333;
@@ -45,7 +44,6 @@
 }
 
 #confirm-event-div {
-    background-color: aliceblue;
     height:50%;
     width:50%;
     border:2px solid #333;

@@ -37,8 +37,8 @@
         </div>
     </div>
     <div class="primarybackgroundcolor" id="heading">
-        <h2 onclick="home();" id="bannerhome">{{ app_name }}&nbsp;<span id="testmode">TEST MODE</span></h2>
-        <span id="user" onclick="toggleUserMenu();"><span>Hello,&nbsp;</span><span id="mnu-username"></span><img id="userMenuImg" src="/static/menu.jpg"/></span>
+        <h2 onclick="home();" id="bannerhome" class="tertiarytextcolor">{{ app_name }}&nbsp;<span id="testmode">TEST MODE</span></h2>
+        <span id="user" class="tertiarytextcolor" onclick="toggleUserMenu();"><span>Hello,&nbsp;</span><span id="mnu-username"></span><img id="userMenuImg" src="/static/menu.jpg"/></span>
         <input type="button" id="createEvent" onclick="createNewEvent();" value="Create" class="secondarybackgroundcolor"/>
     </div>
     <div id="userMenu" class="secondarybackgroundcolor">
@@ -52,7 +52,7 @@
             <li onclick="exit();">Exit</li>
         </ul>
     </div>
-    <div id="confirm-exit-div" class="primarybackgroundcolor">
+    <div id="confirm-exit-div" class="primarybackgroundcolor tertiarytextcolor">
         <div class="primarybackgroundcolor">
             <span>Are you sure you want to exit?</span>
         </div>
