@@ -13,7 +13,7 @@
     <script type="text/javascript" src="/static/newuser.js?v={{ buster }}"></script>
 </head>
 
-<body onload="finishedLoad();">
+<body onload="finishedLoad();" class="secondarybackgroundcolor">
     <div id="main">
         <h1 class="primarytextcolor">{{ app_name }}</h1>
         <h1 class="primarytextcolor">Create New Account</h1>
@@ -47,7 +47,7 @@
 
         {% include 'out-menus.html' %}
     </div>
-    <div id="password-requirements-div">
+    <div id="password-requirements-div" class="secondarybackgroundcolor">
         <div>
             All passwords must meet the following requirements:<br/>
             <ol>

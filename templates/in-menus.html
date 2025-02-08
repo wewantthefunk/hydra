@@ -2,7 +2,7 @@
     <!--
         These are the semi-static elements and they need to be rendered last for the z-index
     -->
-    <div id="leftmenu">
+    <div id="leftmenu" class="secondarybackgroundcolor">
         <div>
             &nbsp;
         </div>
@@ -25,7 +25,7 @@
             <span>Exit</span>
         </div>
         <div id="text-copy-temp-div">
-            <input type="text" id="text-copy-temp" />
+            <input type="text" id="text-copy-temp" class="secondarybackgroundcolor secondarytextcolor" />
         </div>
         <div id="footer-menu">
             <div>
@@ -39,9 +39,9 @@
     <div class="primarybackgroundcolor" id="heading">
         <h2 onclick="home();" id="bannerhome">{{ app_name }}&nbsp;<span id="testmode">TEST MODE</span></h2>
         <span id="user" onclick="toggleUserMenu();"><span>Hello,&nbsp;</span><span id="mnu-username"></span><img id="userMenuImg" src="/static/menu.jpg"/></span>
-        <input type="button" id="createEvent" onclick="createNewEvent();" value="Create" class="headerButton"/>
+        <input type="button" id="createEvent" onclick="createNewEvent();" value="Create" class="secondarybackgroundcolor"/>
     </div>
-    <div id="userMenu">
+    <div id="userMenu" class="secondarybackgroundcolor">
         <span class="closeModal primarybackgroundcolor" onclick="toggleUserMenu();">x</span>
         <span id="menu_username"></span>
         <br/>
@@ -61,12 +61,12 @@
             <input type="button" id="cancel-exit-btn" onclick="hide(document.getElementById('confirm-exit-div'));" value="Cancel"/>
         </div>
     </div>
-    <div id="license-div">
+    <div id="license-div" class="secondarybackgroundcolor">
         <div class="center-div-horizontal">
             {% include 'license-popup.html' %}
         </div>
     </div>
-    <div id="disclaimer-div">
+    <div id="disclaimer-div" class="secondarybackgroundcolor">
         <div class="center-div-horizontal">
             {% include 'disclaimer-popup.html' %}
         </div>

@@ -13,7 +13,7 @@
     <script type="text/javascript" src="/static/universal.js?v={{ buster }}"></script>
 </head>
 
-<body onload="finishedLoad();">
+<body onload="finishedLoad();" class="secondarybackgroundcolor">
     <div id="main">
         <h1 class="primarytextcolor">{{ app_name }}</h1>
         <div>
@@ -23,17 +23,17 @@
             <table id="event-list">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Location</th>
-                        <th>Start Date</th>
-                        <th>Start Time</th>
-                        <th>End Date</th>
-                        <th>End Time</th>
-                        <th>Max Attendees</th>
-                        <th>Spots Left</th>
-                        <th>Allow Anonymous Attendees</th>
-                        <th>Attend</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Name</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">ID</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Location</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Start Date</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Start Time</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">End Date</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">End Time</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Max Attendees</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Spots Left</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Allow Anonymous Attendees</th>
+                        <th class="primarybackgroundcolor tertiarytextcolor">Attend</th>
                     </tr>
                 </thead>
                 <tbody id="event-list-body">
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <div id="loggedOutMsgDiv">
+    <div id="loggedOutMsgDiv" class="secondarybackgroundcolor">
         <div class="center-div-horizontal">
             <h1 class="primarytextcolor">You must be Logged In to Signup for this Event</h1>
             <div class="topspacer" id="event-name">        
@@ -71,7 +71,7 @@
             </div>
         </div>
     </div>
-    <div id="anonymousSignupDiv">
+    <div id="anonymousSignupDiv" class="secondarybackgroundcolor">
         <div class="center-div-horizontal">
             <h1 class="primarytextcolor">Attend Event</h1>
             <div class="topspacer" id="a-event-name"></div>

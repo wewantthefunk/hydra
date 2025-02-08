@@ -36,11 +36,6 @@
     padding-top: 5px;
 }
 
-#event-list th {
-    background-color: ;
-    color: #fff;
-}
-
 /* Apply a border on the left of the first cell in each row */
 #event-list tr>td:first-child, tr>th:first-child {
     border-left: 1px solid #333;
@@ -67,7 +62,6 @@
 }
 
 #loggedOutMsgDiv, #anonymousSignupDiv {
-    background-color: aliceblue;
     height:30%;
     width:30%;
     border:2px solid #333;

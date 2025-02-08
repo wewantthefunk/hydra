@@ -1,5 +1,4 @@
 body, div {
-    background-color: aliceblue;
     padding: 0;
     margin: 0;
 }
@@ -49,12 +48,20 @@ select {
     background-color: #fff;
 }
 
+.primarybackgroundcolor {
+    background-color: royalblue;
+}
+
+.secondarybackgroundcolor {
+    background-color: aliceblue;
+}
+
 .primarytextcolor {
     color: royalblue;
 }
 
-.primarybackgroundcolor {
-    background-color: royalblue;
+.secondarytextcolor {
+    color: aliceblue;
 }
 
 .tertiarytextcolor {
@@ -62,8 +69,6 @@ select {
 }
 
 #text-copy-temp {
-    background-color: aliceblue;
-    color: aliceblue;
     border:none;
     position:absolute;
     top:-40px;
@@ -167,14 +172,6 @@ label {
     display:none;
 }
 
-.headerButton {
-    background-color: aliceblue;
-}
-
-.nonHeaderButton {
-    color: #fff;
-}
-
 #bannerhome:hover {
     cursor: pointer;
     text-decoration: underline;
@@ -200,7 +197,6 @@ label {
     right: 10px;
     border: 1px solid #333;
     border-radius: 10px;
-    background-color: aliceblue;
 }
 
 #userMenuImg {
@@ -245,7 +241,6 @@ label {
     height: 93.5%;
     padding-left: 15px;
     overflow: auto;
-    background-color: aliceblue;
 }
 
 .link {
@@ -290,10 +285,6 @@ label {
 
 .center-text {
     text-align: center;
-}
-
-.padding-chars {
-    color: aliceblue;
 }
 
 #popup-msg-div, #popup-error-msg-div {
