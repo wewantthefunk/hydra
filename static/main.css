@@ -22,7 +22,6 @@
     position: fixed;
     margin-top: 5px;
     font-style: italic;
-    color: #666;
     display: none;
 }
 
@@ -36,4 +35,8 @@
 
 #pass-hint {
     margin-left: 30px;
+}
+
+.hinttextcolor {
+    color: #666;
 }

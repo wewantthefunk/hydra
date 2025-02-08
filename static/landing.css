@@ -158,17 +158,11 @@
     font-family: 'Lato', sans-serif;
 }
 
-#delete-event-name {
-    margin-left: 100px;
-    color: #C70039;
-}
-
 #delete-event-id {
     display: none;
 }
 
 #delete-confirm-code {
-    color: #C70039;
     font-style: italic;
 }
 

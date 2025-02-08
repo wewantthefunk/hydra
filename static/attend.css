@@ -67,7 +67,6 @@
 
 #skip-event-name {
     margin-left: 100px;
-    color: #C70039;
 }
 
 #skip-event-id {
@@ -75,7 +74,6 @@
 }
 
 #skip-confirm-code {
-    color: #C70039;
     font-style: italic;
 }
 

@@ -72,11 +72,15 @@ select {
 }
 
 .tertiarytextcolor {
-    color: #eee;
+    color: #ddd;
 }
 
 .msgtextcolor {
     color: #333;
+}
+
+.errtextcolor {
+    color: #C70039;
 }
 
 #text-copy-temp {
